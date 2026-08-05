@@ -1,0 +1,13 @@
+Número,Pregunta,A,B,C,D,Correcta
+1,"¿Qué cmdlet de PowerShell cambia el directorio actual a la carpeta personal del usuario?","Set-Location $HOME","cd $HOME","Push-Location $HOME","Enter-PSDrive $HOME",A
+2,"En CMD, ¿qué variable se expande a la ruta del perfil del usuario actual?","%USERNAME%","%USERPROFILE%","%HOMEDIR%","%HOME%",B
+3,"¿Qué comando crea una carpeta nueva llamada Practica en PowerShell?","New-Item -ItemType Directory -Path .\\Practica","mkdir Practica","New-Folder Practica","Create-Directory Practica",A
+4,"¿Qué comando CMD crea un archivo vacío llamado info.txt dentro de la carpeta Practica?","copy NUL Practica\\info.txt","type NUL > Practica\\info.txt","echo. > Practica\\info.txt","newfile Practica\\info.txt",B
+5,"¿Qué cmdlet de PowerShell escribe el texto \"Actividad de comandos\" en info.txt?","Add-Content -Path .\\Practica\\info.txt -Value \"Actividad de comandos\"","Set-Content -Path .\\Practica\\info.txt -Value \"Actividad de comandos\"","Out-File -FilePath .\\Practica\\info.txt -InputObject \"Actividad de comandos\"","Write-Host \"Actividad de comandos\" > .\\Practica\\info.txt",B
+6,"¿Qué comando CMD elimina la carpeta Practica y todo su contenido?","del /S /Q Practica","rmdir /S /Q Practica","erase /F Practica","rd /A Practica",B
+7,"¿Qué cmdlet de PowerShell detiene un proceso con PID 1234?","Stop-Process -Id 1234 -Force","Kill-Process 1234","Terminate-Process -PID 1234","Stop-Process 1234",A
+8,"¿Qué comando CMD finaliza forzosamente un proceso con PID 1234?","taskkill /PID 1234 /F","kill /F 1234","endproc 1234","stop /PID 1234",A
+9,"¿Qué nombre de servicio se usa en la actividad para comprobar el estado de Windows Update?","wuauserv","windowsupdate","wuauclt","updateSvc",A
+10,"¿Qué cmdlet de PowerShell inicia el servicio wuauserv?","Start-Service -Name wuauserv","Enable-Service wuauserv","Run-Service wuauserv","Launch-Service wuauserv",A
+11,"¿Qué comando CMD abre el Monitor de recursos?","start resmon.exe","open resmon","launch resmon","run resmon",A
+12,"¿Qué comando CMD muestra las conexiones de red activas?","netstat -an","ipconfig /all","ping -t localhost","tracert",A

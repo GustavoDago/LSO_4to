@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trivia: ¡Desenmascara al Impostor de la Interfaz!</title>
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* DESIGN SYSTEM VARIABLES */
+    :root {
+      --bg-dark: #07080f;
+      --bg-card: rgba(18, 20, 38, 0.75);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --text-main: #f8f9fa;
+      --text-muted: #94a3b8;
+      
+      /* KAHOOT ACCENT NEONS */
+      --kahoot-red: #ff3366;
+      --kahoot-blue: #00f2fe;
+      --kahoot-green: #00e676;
+      --kahoot-yellow: #ffea00;
+      
+      --glow-red: rgba(255, 51, 102, 0.4);
+      --glow-blue: rgba(0, 242, 254, 0.4);
+      --glow-green: rgba(0, 230, 118, 0.4);
+      --glow-yellow: rgba(255, 234, 0, 0.4);
+      
+      --transition-speed: 0.4s;
+    }
+
+    /* GLOBAL RESET */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* BACKGROUND STARS */
+    .stars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #0f132a 0%, #030407 100%);
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      background-color: #fff;
+      border-radius: 50%;
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* MAIN CONTAINER CARD */
+    .game-container {
+      position: relative;
+      width: 90%;
+      max-width: 850px;
+      min-height: 550px;
+      z-index: 2;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: 28px;
+      padding: 40px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.5s ease;
+    }
+
+    /* HEADER & STATUS */
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+
+    .game-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+      color: var(--kahoot-blue);
+      text-transform: uppercase;
+    }
+
+    .game-score-tracker {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      background: rgba(255,255,255,0.05);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-main);
+    }
+
+    /* SCREEN FLOWS */
+    .screen {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      flex-grow: 1;
+      animation: fadeIn var(--transition-speed) ease-in-out forwards;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* START SCREEN */
+    .start-screen-layout {
+      text-align: center;
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .badge {
+      background: rgba(255, 51, 102, 0.15);
+      border: 1px solid var(--kahoot-red);
+      color: var(--kahoot-red);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0 auto 10px auto;
+      display: inline-block;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(135deg, var(--kahoot-blue) 0%, var(--kahoot-green) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, var(--kahoot-blue) 0%, #7000ff 100%);
+      border: none;
+      color: #fff;
+      padding: 16px 36px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      border-radius: 35px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0, 242, 254, 0.25);
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      margin: 20px auto 0 auto;
+      display: inline-block;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 242, 254, 0.5);
+      filter: brightness(1.1);
+    }
+
+    /* QUESTION SCREEN */
+    .question-counter {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1.35;
+      margin-bottom: 25px;
+    }
+
+    /* OPTIONS GRID */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glass);
+      border-radius: 16px;
+      padding: 18px 24px;
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* SHAPE ICONS FOR KAHOOT FEEL */
+    .option-shape {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 900;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .btn-red .option-shape { background-color: var(--kahoot-red); color: white; border-radius: 50% 50% 0 50%; } /* Triangle-ish */
+    .btn-blue .option-shape { background-color: var(--kahoot-blue); color: black; transform: rotate(45deg); border-radius: 4px; } /* Diamond */
+    .btn-green .option-shape { background-color: var(--kahoot-green); color: black; border-radius: 4px; } /* Square */
+    .btn-yellow .option-shape { background-color: var(--kahoot-yellow); color: black; border-radius: 50%; } /* Circle */
+    
+    .btn-blue .option-shape span { transform: rotate(-45deg); display: block; } /* Correct diamond orientation */
+
+    /* HOVER EFFECT BEFORE CLICK */
+    .option-btn:not(.disabled):hover {
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateY(-2px);
+    }
+
+    .btn-red:not(.disabled):hover { border-color: var(--kahoot-red); box-shadow: 0 0 15px var(--glow-red); }
+    .btn-blue:not(.disabled):hover { border-color: var(--kahoot-blue); box-shadow: 0 0 15px var(--glow-blue); }
+    .btn-green:not(.disabled):hover { border-color: var(--kahoot-green); box-shadow: 0 0 15px var(--glow-green); }
+    .btn-yellow:not(.disabled):hover { border-color: var(--kahoot-yellow); box-shadow: 0 0 15px var(--glow-yellow); }
+
+    /* STATES AFTER ANSWER IS SELECTED */
+    .option-btn.correct {
+      background: rgba(0, 230, 118, 0.12) !important;
+      border-color: var(--kahoot-green) !important;
+      box-shadow: 0 0 20px var(--glow-green) !important;
+      color: #fff !important;
+    }
+
+    .option-btn.incorrect {
+      background: rgba(255, 51, 102, 0.08) !important;
+      border-color: var(--kahoot-red) !important;
+      box-shadow: 0 0 20px var(--glow-red) !important;
+      opacity: 0.65;
+    }
+
+    .option-btn.fade-out {
+      opacity: 0.25;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* FEEDBACK CARD */
+    .feedback-container {
+      display: none;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 15px;
+      animation: slideUp 0.4s ease forwards;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feedback-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .feedback-correct { color: var(--kahoot-green); }
+    .feedback-incorrect { color: var(--kahoot-red); }
+
+    .feedback-explanation {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    /* NEXT ACTION BUTTON */
+    .action-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .btn-next {
+      background: var(--text-main);
+      color: var(--bg-dark);
+      border: none;
+      padding: 12px 28px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255,255,255,0.25);
+    }
+
+    /* FINAL RESULTS SCREEN */
+    .end-screen-layout {
+      text-align: center;
+      gap: 25px;
+      padding: 20px 0;
+    }
+
+    .result-score {
+      font-family: 'Outfit', sans-serif;
+      font-size: 4.5rem;
+      font-weight: 800;
+      color: var(--kahoot-blue);
+      text-shadow: 0 0 20px var(--glow-blue);
+      margin: 10px 0;
+    }
+
+    .result-rank {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+
+    .rank-legendary { color: var(--kahoot-green); }
+    .rank-sabotaged { color: var(--kahoot-red); }
+    .rank-crew { color: var(--kahoot-yellow); }
+
+    /* FOOTER CREDIT */
+    .game-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 20px;
+      margin-top: 25px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .game-footer .brand {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* RESPONSIVE SCALING */
+    @media (max-width: 600px) {
+      .game-container {
+        padding: 20px;
+      }
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+      h1 { font-size: 2.1rem; }
+      .question-text { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BACKGROUND STARS -->
+  <div class="stars-container" id="stars"></div>
+
+  <!-- MAIN GAME WRAPPER -->
+  <div class="game-container">
+    
+    <!-- HEADER -->
+    <div class="game-header">
+      <span class="game-title" id="headerTitle">Desafío: Dark Patterns</span>
+      <span class="game-score-tracker" id="scoreTracker" style="display: none;">Puntaje: 0</span>
+    </div>
+
+    <!-- SCREENS -->
+    
+    <!-- 1. START SCREEN -->
+    <div class="screen active" id="startScreen">
+      <div class="start-screen-layout">
+        <div class="badge">Votación de Emergencia</div>
+        <h1>¡Desenmascara al Impostor!</h1>
+        <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 15px auto;">
+          Pon a prueba tus conocimientos sobre interfaces manipuladoras (<span class="highlight-cyan">Dark Patterns</span>) con este test interactivo. ¿Eres un tripulante ético o te dejarás sabotear?
+        </p>
+        <p style="font-size: 0.9rem; color: var(--kahoot-yellow); font-weight: bold;">
+          Contiene 7 preguntas de opción múltiple inspiradas en Among Us.
+        </p>
+        <button class="btn-action" onclick="startGame()">Comenzar Desafío</button>
+      </div>
+    </div>
+
+    <!-- 2. GAME/QUESTION SCREEN -->
+    <div class="screen" id="gameScreen">
+      <div class="question-counter" id="questionCounter">Pregunta 1 de 7</div>
+      <div class="question-text" id="questionText">Cargando pregunta...</div>
+      
+      <div class="options-grid">
+        <button class="option-btn btn-red" onclick="selectAnswer(0)">
+          <div class="option-shape">▲</div>
+          <span class="option-text" id="opt0">Opción A</span>
+        </button>
+        <button class="option-btn btn-blue" onclick="selectAnswer(1)">
+          <div class="option-shape"><span>◆</span></div>
+          <span class="option-text" id="opt1">Opción B</span>
+        </button>
+        <button class="option-btn btn-green" onclick="selectAnswer(2)">
+          <div class="option-shape">■</div>
+          <span class="option-text" id="opt2">Opción C</span>
+        </button>
+        <button class="option-btn btn-yellow" onclick="selectAnswer(3)">
+          <div class="option-shape">●</div>
+          <span class="option-text" id="opt3">Opción D</span>
+        </button>
+      </div>
+
+      <!-- FEEDBACK DETAILS -->
+      <div class="feedback-container" id="feedbackBox">
+        <div class="feedback-title" id="feedbackTitle">Respuesta Correcta</div>
+        <div class="feedback-explanation" id="feedbackExplanation">Justificación...</div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="action-row">
+        <button class="btn-next" id="nextBtn" onclick="nextQuestion()">Siguiente Pregunta ▶</button>
+      </div>
+    </div>
+
+    <!-- 3. END SCREEN -->
+    <div class="screen" id="endScreen">
+      <div class="end-screen-layout">
+        <div class="badge">Reporte Final de la Nave</div>
+        <h2 style="font-size: 2.2rem; margin-bottom: 5px;">¡Misión Completada!</h2>
+        <p style="color: var(--text-muted);">Lograste resolver las anomalías del sistema</p>
+        
+        <div class="result-score" id="finalScore">5/7</div>
+        <div class="result-rank" id="finalRank">¡Tripulante Ejemplar!</div>
+        <p style="font-size: 1.05rem; max-width: 550px; margin: 0 auto 20px auto; color: var(--text-muted);" id="finalDescription">
+          Tienes una excelente vista para detectar al Impostor en la interfaz. ¡Continúa diseñando de forma ética y accesible!
+        </p>
+        
+        <button class="btn-action" onclick="restartGame()">Volver a Jugar</button>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="game-footer">
+      <span class="brand">LSO 4to Año</span>
+      <span id="footerSlideCount">Diapositiva Interactiva</span>
+    </div>
+
+  </div>
+
+  <!-- JS TRIVIA LOGIC -->
+  <script>
+    // STARS GENERATION
+    const starsContainer = document.getElementById('stars');
+    const starCount = 60;
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      const size = Math.random() * 2.5 + 1;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.animationDelay = `${Math.random() * 3}s`;
+      star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+      starsContainer.appendChild(star);
+    }
+
+    // QUESTIONS DATA
+    const questions = [
+      {
+        question: "¿Qué es técnicamente un \"Dark Pattern\" (Patrón Oscuro)?",
+        options: [
+          "Un error de programación (Bug) que rompe los estilos CSS de una web.",
+          "Un diseño de interfaz oscuro diseñado para ahorrar batería en pantallas OLED.",
+          "Un truco de diseño de UI creado a propósito para engañar y manipular a los usuarios.",
+          "Un protocolo de encriptación de datos del sistema operativo."
+        ],
+        correct: 2,
+        explanation: "El patrón oscuro es una decisión de diseño intencional y planificada, no un accidente o un error técnico involuntario del programador."
+      },
+      {
+        question: "En nuestra analogía, ¿a qué equivale un contador de oferta falso que te presiona para comprar rápido?",
+        options: [
+          "A usar la ventilación (Venteo).",
+          "A fingir tareas legítimas para ganarse tu confianza.",
+          "A reportar un cuerpo (Self-report).",
+          "A sabotear las puertas de administración."
+        ],
+        correct: 1,
+        explanation: "El sistema simula realizar una tarea útil (darte información de stock en tiempo real) para que confíes, pero la escasez está programada estáticamente solo para meterte prisa."
+      },
+      {
+        question: "Te suscribes a un servicio en 1 segundo con tu huella, pero darte de baja exige mandar correo postal. ¿Qué patrón es?",
+        options: [
+          "Roach Motel (Fácil entrar, casi imposible salir).",
+          "Sneak into Basket (Colar compras sorpresa).",
+          "Confirmshaming (Manipulación con culpa).",
+          "Misdirection (Redirección visual)."
+        ],
+        correct: 0,
+        explanation: "Se le conoce como \"Roach Motel\" o trampa de cucarachas: un diseño asimétrico donde la suscripción es directa y el abandono es un laberinto burocrático."
+      },
+      {
+        question: "Un banner destaca un botón verde brillante de \"Aceptar Todo\" y oculta la opción \"Rechazar\" en un texto gris minúsculo. ¿Cómo se llama?",
+        options: [
+          "Sabotaje de Oxígeno.",
+          "Confirmshaming.",
+          "Misdirection (Desorientación / Redirección visual).",
+          "Telemetría oculta."
+        ],
+        correct: 2,
+        explanation: "La desorientación (Misdirection) manipula intencionalmente la jerarquía visual del usuario, forzándolo a hacer clic en la opción que beneficia al creador."
+      },
+      {
+        question: "Si cancelas una suscripción y el pop-up dice: \"No, prefiero pagar el precio completo y perder mis ahorros\". ¿Qué técnica es?",
+        options: [
+          "Confirmshaming (Manipulación emocional con culpa).",
+          "Venteo silencioso.",
+          "Escasez artificial.",
+          "Ingeniería social inversa."
+        ],
+        correct: 0,
+        explanation: "Confirmshaming avergüenza emocionalmente al usuario para hacerlo sentir culpable por tomar una decisión racional."
+      },
+      {
+        question: "¿Por qué los Dark Patterns perjudican gravemente la Accesibilidad Técnica (A11y)?",
+        options: [
+          "Porque hacen que las páginas web tarden más de 10 segundos en cargar.",
+          "Porque los lectores de pantalla no leen botones de colores brillantes.",
+          "Porque rompen la semántica del Árbol de Accesibilidad (Accessibility Tree), impidiendo que tecnologías asistivas comprendan la interfaz.",
+          "Porque desinstalan los drivers de accesibilidad del Kernel del sistema."
+        ],
+        correct: 2,
+        explanation: "Las trabas semánticas (ej: falsas cruces de cierre que son imágenes sin texto alternativo) ocultan la estructura real de datos al lector de pantalla, aislando a personas con discapacidad."
+      },
+      {
+        question: "Como futuros técnicos de software, ¿cuál es nuestro rol ético frente a los Dark Patterns?",
+        options: [
+          "Programarlos siempre que la empresa nos pague un plus salarial por ello.",
+          "Diseñar interfaces honestas, transparentes y accesibles basadas en las necesidades reales del usuario.",
+          "Instalar adblockers en los servidores de base de datos de nuestros clientes.",
+          "Programar patrones oscuros solo los fines de semana."
+        ],
+        correct: 1,
+        explanation: "La ética profesional del programador y el diseñador exige crear software que respete al usuario y garantice un acceso inclusivo, equitativo y transparente."
+      }
+    ];
+
+    // GAME STATE VARIABLES
+    let currentIdx = 0;
+    let score = 0;
+    let answered = false;
+
+    const startScreen = document.getElementById('startScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const endScreen = document.getElementById('endScreen');
+    const scoreTracker = document.getElementById('scoreTracker');
+    const headerTitle = document.getElementById('headerTitle');
+    const footerSlideCount = document.getElementById('footerSlideCount');
+    
+    const questionText = document.getElementById('questionText');
+    const questionCounter = document.getElementById('questionCounter');
+    const feedbackBox = document.getElementById('feedbackBox');
+    const feedbackTitle = document.getElementById('feedbackTitle');
+    const feedbackExplanation = document.getElementById('feedbackExplanation');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function startGame() {
+      currentIdx = 0;
+      score = 0;
+      answered = false;
+      
+      startScreen.classList.remove('active');
+      endScreen.classList.remove('active');
+      gameScreen.classList.add('active');
+      
+      scoreTracker.style.display = 'inline-block';
+      scoreTracker.textContent = `Puntaje: ${score}`;
+      headerTitle.textContent = "Desafío de Emergencia";
+      
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      answered = false;
+      feedbackBox.style.display = 'none';
+      nextBtn.style.display = 'none';
+      
+      const q = questions[currentIdx];
+      questionCounter.textContent = `Pregunta ${currentIdx + 1} de ${questions.length}`;
+      footerSlideCount.textContent = `Progreso: ${Math.round(((currentIdx + 1) / questions.length) * 100)}%`;
+      questionText.textContent = q.question;
+      
+      // Populate and reset options
+      const btns = document.querySelectorAll('.option-btn');
+      btns.forEach((btn, index) => {
+        btn.classList.remove('correct', 'incorrect', 'fade-out', 'disabled');
+        const textSpan = document.getElementById(`opt${index}`);
+        textSpan.textContent = q.options[index];
+      });
+    }
+
+    function selectAnswer(optionIndex) {
+      if (answered) return;
+      answered = true;
+      
+      const q = questions[currentIdx];
+      const btns = document.querySelectorAll('.option-btn');
+      
+      // Disable hover on all
+      btns.forEach(btn => btn.classList.add('disabled'));
+
+      if (optionIndex === q.correct) {
+        // Correct
+        score++;
+        scoreTracker.textContent = `Puntaje: ${score}`;
+        btns[optionIndex].classList.add('correct');
+        
+        feedbackTitle.textContent = "¡Tripulante Correcto! 🟢";
+        feedbackTitle.className = "feedback-title feedback-green";
+      } else {
+        // Incorrect
+        btns[optionIndex].classList.add('incorrect');
+        btns[q.correct].classList.add('correct');
+        
+        feedbackTitle.textContent = "¡Sabotaje Detectado! 🔴 (Respuesta incorrecta)";
+        feedbackTitle.className = "feedback-title feedback-red";
+      }
+      
+      // Fade out others
+      btns.forEach((btn, idx) => {
+        if (idx !== optionIndex && idx !== q.correct) {
+          btn.classList.add('fade-out');
+        }
+      });
+      
+      // Reveal explanation
+      feedbackExplanation.textContent = q.explanation;
+      feedbackBox.style.display = 'block';
+      
+      // Reveal Next Button
+      nextBtn.style.display = 'inline-block';
+      if (currentIdx === questions.length - 1) {
+        nextBtn.textContent = "Ver Resultados Finales 📊";
+      } else {
+        nextBtn.textContent = "Siguiente Pregunta ▶";
+      }
+    }
+
+    function nextQuestion() {
+      if (currentIdx < questions.length - 1) {
+        currentIdx++;
+        loadQuestion();
+      } else {
+        endGame();
+      }
+    }
+
+    function endGame() {
+      gameScreen.classList.remove('active');
+      endScreen.classList.add('active');
+      
+      scoreTracker.style.display = 'none';
+      headerTitle.textContent = "Resultados del Desafío";
+      footerSlideCount.textContent = "Misión Finalizada";
+      
+      const finalScore = document.getElementById('finalScore');
+      const finalRank = document.getElementById('finalRank');
+      const finalDescription = document.getElementById('finalDescription');
+      
+      finalScore.textContent = `${score} / ${questions.length}`;
+      
+      if (score === questions.length) {
+        finalRank.textContent = "¡Tripulante Legendario! 🏆";
+        finalRank.className = "result-rank rank-legendary";
+        finalDescription.textContent = "¡Increíble! Lograste una tasa de detección del 100%. Los impostores no tienen ninguna oportunidad contigo. Tienes el potencial de diseñar las interfaces del futuro con máxima ética y accesibilidad.";
+      } else if (score >= 4) {
+        finalRank.textContent = "¡Tripulante Ejemplar! 🛡️";
+        finalRank.className = "result-rank rank-crew";
+        finalDescription.textContent = "¡Muy buen trabajo! Tienes un ojo entrenado para detectar patrones manipuladores en el software. Con un poco más de práctica técnica, serás inmune a todos los sabotajes visuales.";
+      } else {
+        finalRank.textContent = "¡Saboteado por el Impostor! 💀";
+        finalRank.className = "result-rank rank-sabotaged";
+        finalDescription.textContent = "¡Oh no! Fuiste víctima de los trucos de diseño. Los Dark Patterns lograron engañarte esta vez. Te recomendamos repasar los conceptos y volver a intentarlo para reforzar tus defensas éticas.";
+      }
+    }
+
+    function restartGame() {
+      startGame();
+    }
+  </script>
+</body>
+</html>

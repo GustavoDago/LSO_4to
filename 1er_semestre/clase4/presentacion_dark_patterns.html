@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presentación: El Impostor en la Interfaz (Dark Patterns)</title>
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  
+  <style>
+    /* VARIABLES & DESIGN SYSTEM */
+    :root {
+      --bg-dark: #0b0c16;
+      --bg-card: rgba(20, 22, 41, 0.75);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --primary-cyan: #00f2fe;
+      --primary-purple: #9b51e0;
+      --accent-red: #ff3366;
+      --accent-green: #00e676;
+      --accent-yellow: #ffea00;
+      --text-main: #f8f9fa;
+      --text-muted: #a0aec0;
+      --transition-speed: 0.5s;
+    }
+
+    /* GLOBAL STYLES */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* STARS BACKGROUND */
+    .stars-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #111428 0%, #05060b 100%);
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      background-color: #fff;
+      border-radius: 50%;
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.15; }
+      50% { opacity: 0.85; }
+    }
+
+    /* PRESENTATION SLIDE WRAPPER */
+    .presentation-container {
+      position: relative;
+      width: 92%;
+      max-width: 1100px;
+      height: 80vh;
+      max-height: 650px;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* INDIVIDUAL SLIDE STYLE */
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 40px 50px;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glass);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      transform: translateY(20px) scale(0.99);
+      pointer-events: none;
+      transition: opacity var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1),
+                  transform var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: all;
+    }
+
+    /* TYPOGRAPHY & HEADER SLIDE Elements */
+    h1, h2, h3 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      background: linear-gradient(135deg, var(--primary-cyan) 0%, var(--primary-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-size: 2.1rem;
+      color: var(--primary-cyan);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 12px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--text-main);
+      margin-bottom: 15px;
+    }
+
+    .highlight-red { color: var(--accent-red); font-weight: 600; }
+    .highlight-cyan { color: var(--primary-cyan); font-weight: 600; }
+    .highlight-green { color: var(--accent-green); font-weight: 600; }
+    .highlight-purple { color: var(--primary-purple); font-weight: 600; }
+    .highlight-yellow { color: var(--accent-yellow); font-weight: 600; }
+
+    /* CONTENT LAYOUTS */
+    .content-split {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+      flex-grow: 1;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      flex-grow: 1;
+      margin-top: 10px;
+    }
+
+    .grid-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 20px;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .grid-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-3px);
+      border-color: var(--primary-cyan);
+    }
+
+    .grid-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .card-red h3 { color: var(--accent-red); }
+    .card-cyan h3 { color: var(--primary-cyan); }
+    .card-purple h3 { color: var(--primary-purple); }
+    .card-yellow h3 { color: var(--accent-yellow); }
+
+    /* IMPOSTOR RADAR VISUAL */
+    .visual-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .radar-circle {
+      position: relative;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      border: 2px dashed rgba(0, 242, 254, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: spin 30s linear infinite;
+    }
+
+    .radar-center {
+      width: 130px;
+      height: 130px;
+      background: radial-gradient(circle, var(--accent-red) 0%, transparent 70%);
+      border-radius: 50%;
+      position: absolute;
+      animation: pulse-glow 2s infinite ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.15rem;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { transform: scale(0.92); opacity: 0.55; box-shadow: 0 0 10px rgba(255,51,102,0.25); }
+      50% { transform: scale(1.08); opacity: 0.95; box-shadow: 0 0 30px rgba(255,51,102,0.65); }
+    }
+
+    /* SLIDE FOOTER */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 15px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .slide-footer .logo {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* NAVIGATION INTERFACE */
+    .nav-controls {
+      position: absolute;
+      bottom: 25px;
+      z-index: 3;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      color: var(--text-main);
+      padding: 12px 24px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn:hover {
+      background: var(--text-main);
+      color: var(--bg-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .slide-indicator {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* TITLE SLIDE UNIQUE DESIGN */
+    .slide-title-layout {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+      gap: 18px;
+    }
+
+    .slide-title-layout h1 {
+      font-size: 3.4rem;
+    }
+
+    .badge {
+      background: rgba(255, 51, 102, 0.15);
+      border: 1px solid var(--accent-red);
+      color: var(--accent-red);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    /* KEYBOARD HINT */
+    .keyboard-hint {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      z-index: 3;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      padding: 6px 12px;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+
+    /* BULLET LIST STYLES */
+    ul {
+      list-style-type: none;
+    }
+    li {
+      margin-bottom: 12px;
+      position: relative;
+      padding-left: 25px;
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+    li::before {
+      content: "•";
+      color: var(--primary-cyan);
+      font-size: 1.5rem;
+      position: absolute;
+      left: 5px;
+      top: -3px;
+    }
+
+    /* RESPONSIVE SCALE FOR PROJECTORS */
+    @media (max-width: 768px) {
+      .slide {
+        padding: 20px 30px;
+      }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      .content-split {
+        grid-template-columns: 1fr;
+      }
+      .visual-container {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- STARS BACKGROUND -->
+  <div class="stars-container" id="stars"></div>
+
+  <!-- KEYBOARD INSTRUCTION -->
+  <div class="keyboard-hint">Usa las flechas ◄ ► o Espacio para navegar</div>
+
+  <!-- PRESENTATION CONTAINER -->
+  <div class="presentation-container">
+
+    <!-- SLIDE 1: PORTADA -->
+    <div class="slide active">
+      <div class="slide-title-layout">
+        <div class="badge">Reunión de Emergencia Detectada</div>
+        <h1>El Impostor en la Interfaz</h1>
+        <p style="font-size: 1.25rem; max-width: 700px; color: var(--text-muted);">
+          Cómo los videojuegos nos enseñan a identificar los <span class="highlight-cyan">Dark Patterns</span> y a diseñar interfaces honestas.
+        </p>
+        <p style="font-size: 0.95rem; color: var(--primary-purple); font-weight: 600; margin-top: 10px;">
+          Laboratorio de Sistemas Operativos | 4to Año Técnica
+        </p>
+      </div>
+      <div class="slide-footer">
+        <span class="logo">LSO 2026</span>
+        <span>Diapositiva 1 de 9</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: ¿QUÉ ES UN DARK PATTERN? -->
+    <div class="slide">
+      <h2>🛸 ¿Qué es un Dark Pattern?</h2>
+      <div class="content-split">
+        <div>
+          <p>Un <strong>Dark Pattern</strong> (Patrón Oscuro) es un truco de diseño de interfaz de usuario creado intencionalmente para manipular a las personas a hacer cosas que no harían de otro modo.</p>
+          <ul>
+            <li><span class="highlight-red">No es un error:</span> Está programado y diseñado adrede.</li>
+            <li><span class="highlight-purple">Prioriza las métricas corporativas</span> (ventas, retención, datos) sobre los deseos reales del usuario.</li>
+            <li>Ataca directamente la <span class="highlight-cyan">ética del programador</span> y quebranta la <span class="highlight-yellow">accesibilidad técnica</span>.</li>
+          </ul>
+        </div>
+        <div class="visual-container">
+          <div class="radar-circle">
+            <div class="radar-center">IMPOSTOR</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span class="logo">LSO 2026</span>
+        <span>Diapositiva 2 de 9</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: LA ANOLOGÍA DE AMONG US -->
+    <div class="slide">
+      <h2>🎮 La Analogía: Among Us vs. Interfaces</h2>
+      <p style="margin-bottom: 20px;">En <strong>Among Us</strong>, el Impostor usa el engaño para sabotear a la tripulación. En el software, ocurre exactamente lo mismo:</p>
+      <div class="content-grid">
+        <div class="grid-card card-cyan">
+          <h3>Fingir Tareas</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">El impostor finge arreglar cables. La interfaz te muestra alarmas o contadores de urgencia falsos para apurarte.</p>
+        </div>
+        <div class="grid-card card-red">
+          <h3>Sabotajes de Luz/Oxígeno</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">El impostor bloquea tu paso. La app te esconde los botones de baja o te manipula emocionalmente.</p>
+        </div>
+        <div class="grid-card card-purple">
+          <h3>Desviar Culpa en Discusión</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">El impostor miente en el chat. La UI resalta con colores vibrantes la opción dañina y esconde la correcta.</p>
+        </div>
+        <div class="grid-card card-yellow">
+          <h3>Viajar por Ventilación</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">El impostor viaja por ductos invisibles. El código cuela de forma encubierta cobros sorpresa en tu compra.</p>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span class="logo">LSO 2026</span>
+        <span>Diapositiva 3 de 9</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: PATRÓN 1 - ACTIVIDAD / ESCASEZ FALSA -->
+    <div class="slide">
+      <h2>🔌 Impostor 1: Actividad / Escasez Falsa</h2>
+      <div class="content-split">
+        <div>
+          <p class="highlight-cyan" style="font-size: 1.2rem; font-weight: 800;">Mecánica: Fingir Tareas</p>
+          <p>El sistema genera información ficticia para hacerte sentir urgencia o validación social artificial.</p>
+          <ul>
+            <li><strong>¿Qué te dicen?</strong> <em>"¡Solo queda 1 disponible!"</em>, <em>"45 personas están comprando este producto ahora"</em> o contadores regresivos que se reinician.</li>
+            <li><strong>El truco técnico:</strong> Muchas veces esa escasez está programada de forma estática con un bucle aleatorio de Javascript (ej: <code>Math.random()</code>) para inducir estrés.</li>
+          </ul>
+        </div>
+        <div class="visual-container">
+          <div style="text-align: center; border: 1px dashed var(--accent-yellow); padding: 25px; border-radius: 16px; background: rgba(0,0,0,0.2); width: 80%;">
+            <div style="color: var(--accent-yellow); font-size: 3rem; font-weight: 800; font-family: monospace;">01:59</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">"¡Oferta especial! Expira pronto..."</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span class="logo">LSO 2026</span>
+        <span>Diapositiva 4 de 9</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: PATRÓN 2 - EL LABERINTO & CONFIRMSHAMING -->
+    <div class="slide">
+      <h2>🚪 Impostor 2: Roach Motel & Confirmshaming</h2>
+      <div class="content-split">
+        <div>
+          <p class="highlight-red" style="font-size: 1.2rem; font-weight: 800;">Mecánica: El Sabotaje de Puertas</p>
+          <p>Fricción extrema para deshacer una suscripción, combinado con manipulación y culpa emocional.</p>
+          <ul>
+            <li><strong>Roach Motel (Trampa de Cucarachas):</strong> Es súper fácil suscribirse (1 solo clic) pero dar de baja requiere pasar por 10 pantallas de confirmación o llamar por teléfono.</li>
+            <li><strong>Confirmshaming (Culpa Semántica):</strong> Textos que te juzgan moralmente si decides no aceptar el software. Ej: <em>"No, prefiero pagar de más y perder mis beneficios"</em>.</li>
+          </ul>
+        </div>
+        <div class="visual-container">
+          <div style="background: rgba(255,51,102,0.05); border: 1px solid var(--accent-red); padding: 20px; border-radius: 12px; width: 80%;">
+            <p style="font-size: 0.95rem; font-weight: 600; text-align: center; margin-bottom: 15px;">¿Desea rechazar la propina automática?</p>
+            <button style="width: 100%; padding: 10px; background: var(--accent-green); border: none; border-radius: 8px; color: black; font-weight: 800; margin-bottom: 8px;">Deseo dejar propina y apoyar a la comunidad</button>
+            <button style="width: 100%; padding: 8px; background: transparent; border: none; color: var(--text-muted); font-size: 0.8rem; text-decoration: underline; cursor: pointer;">No, prefiero dejar sin sustento al repartidor</button>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span class="logo">LSO 2026</span>
+        <span>Diapositiva 5 de 9</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: PATRÓN 3 - REDIRECCIÓN DE ATENCIÓN -->
+    <div class="slide">
+      <h2>🎯 Impostor 3: Redirección de la Atención</h2>
+      <div class="content-split">
+        <div>
+          <p class="highlight-purple" style="font-size: 1.2rem; font-weight: 800;">Mecánica: Desviar la Culpa</p>
+          <p>Jugar con la fatiga del usuario y desviar su atención hacia el botón que le conviene a la corporación.</p>
+          <ul>
+            <li><strong>Misdirection (Desorientación):</strong> Uso deliberado del contraste y los colores.</li>
+            <li>El botón para <strong>"Aceptar rastreo y telemetría"</strong> es un botón verde, 3D, gigante y llamativo.</li>
+            <li>La opción de <strong>"Gestionar privacidad (Rechazar todo)"</strong> es un texto gris pequeño, sin borde, sobre fondo gris oscuro, casi indetectable.</li>
+          </ul>
+        </div>
+        <div class="visual-container">
+          <div style="display: flex; gap: 15px; flex-direction: column; width: 80%;">
+            <button style="background: var(--primary-cyan); border: none; color: black; text-align: center; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 0.9rem; cursor: pointer;">
+              ACEPTAR TODO E INSTALAR AHORA
+            </button>
+            <div style="color: rgba(255,255,255,0.25); text-align: center; padding: 5px; font-size: 0.75rem; text-decoration: underline; cursor: pointer;">
+              personalizar y rechazar opcionales
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span class="logo">LSO 2026</span>
+        <span>Diapositiva 6 de 9</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: PATRÓN 4 - COLAR EN EL CARRITO -->
+    <div class="slide">
+      <h2>🛒 Impostor 4: Colar en el Carrito (Sneak into Basket)</h2>
+      <div class="content-split">
+        <div>
+          <p class="highlight-yellow" style="font-size: 1.2rem; font-weight: 800;">Mecánica: Usar la Ventilación</p>
+          <p>Aparecer de la nada cobros sorpresa al momento de pagar gracias a casillas pre-marcadas en el código.</p>
+          <ul>
+            <li>El usuario avanza pacientemente en un proceso de compra largo y complejo.</li>
+            <li>Al llegar a la pasarela de pago final, el sistema ha insertado de forma silenciosa un seguro de viaje, una donación o una garantía extendida.</li>
+            <li>Se aprovecha del cansancio de la mente del usuario (<strong>fatiga cognitiva</strong>) para que complete el pago sin re-verificar.</li>
+          </ul>
+        </div>
+        <div class="visual-container">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; width: 90%;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; font-size: 0.9rem;">
+              <span>Subtotal:</span> <span>$100.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 8px 0; font-size: 0.9rem; color: var(--accent-yellow);">
+              <span>Seguro Antivirus (Auto-añadido):</span> <span>+$14.99</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-top: 10px; font-weight: 800; font-size: 1.05rem;">
+              <span>Total:</span> <span style="color: var(--accent-green);">$114.99</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span class="logo">LSO 2026</span>
+        <span>Diapositiva 7 de 9</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: LA ACTIVIDAD DE HOY -->
+    <div class="slide">
+      <h2>🚨 La Misión: "Reunión de Emergencia"</h2>
+      <p style="margin-bottom: 15px;">Hoy nos convertiremos en tripulantes técnicos. Cada equipo tendrá un sector asignado:</p>
+      <ul>
+        <li><strong>Fase de Búsqueda:</strong> Naveguen en sus dispositivos por el sector web/app asignado buscando al Impostor (un Dark Pattern real).</li>
+        <li><strong>Completar la Ficha de Reporte:</strong> Describan la anomalía, clasifiquen al impostor y tomen su evidencia (captura).</li>
+        <li><strong>Reparar el Sabotaje:</strong> Rediseñen esa interfaz en papel o texto para que sea honesta y respete los estándares éticos.</li>
+        <li><strong>Convocatoria a Votación:</strong> Disponen de 2 minutos para acusar la interfaz engañosa ante la clase y votar si es expulsada.</li>
+      </ul>
+      <div class="slide-footer">
+        <span class="logo">LSO 2026</span>
+        <span>Diapositiva 8 de 9</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: CONCLUSIÓN Y ÉTICA -->
+    <div class="slide">
+      <div class="slide-title-layout">
+        <h2>⚖️ Código de Ética del Programador</h2>
+        <p style="font-size: 1.25rem; max-width: 800px; line-height: 1.7; text-align: center;">
+          <em>"Como futuros profesionales de informática, ustedes serán los arquitectos de las interfaces del mañana. En un mundo donde muchas corporaciones eligen usar <span class="highlight-red">Impostores</span>, decidan siempre ser el tripulante que diseña código <span class="highlight-green">honesto</span>, <span class="highlight-cyan">transparente</span> e <span class="highlight-yellow">inclusivo</span>."</em>
+        </p>
+        <p style="font-size: 1.1rem; color: var(--primary-cyan); font-weight: bold; margin-top: 15px;">
+          ¡Que comience la Reunión de Emergencia! 🚀
+        </p>
+      </div>
+      <div class="slide-footer">
+        <span class="logo">LSO 2026</span>
+        <span>Diapositiva 9 de 9</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NAVIGATION CONTROLS -->
+  <div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" disabled>◀ Diap. Anterior</button>
+    <div class="slide-indicator" id="slideIndicator">1 / 9</div>
+    <button class="nav-btn" id="nextBtn">Diap. Siguiente ▶</button>
+  </div>
+
+  <!-- JAVASCRIPT FOR DYNAMIC STARS & CONTROLS -->
+  <script>
+    // DYNAMIC STARS GENERATION
+    const starsContainer = document.getElementById('stars');
+    const starCount = 80;
+    
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      
+      const size = Math.random() * 3 + 1;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      
+      star.style.animationDelay = `${Math.random() * 3}s`;
+      star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+      
+      starsContainer.appendChild(star);
+    }
+
+    // PRESENTATION CONTROLS
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const slideIndicator = document.getElementById('slideIndicator');
+    
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+
+    function updateSlides() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      
+      slideIndicator.textContent = `${currentSlide + 1} / ${totalSlides}`;
+      
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlides();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlides();
+      }
+    }
+
+    // CLICK EVENTS
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+
+    // KEYBOARD EVENTS
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>

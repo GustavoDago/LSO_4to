@@ -1,0 +1,13 @@
+Question,Answer 1,Answer 2,Answer 3,Answer 4,Time limit (in seconds),Correct answer
+"¿Qué herramienta gráfica de Windows permite modificar el ""ADN"" del sistema cambiando claves y valores?","Editor del Registro (regedit.exe)","Administrador de Dispositivos","Monitor de Recursos","Propiedades del Sistema",20,1
+"Para diagnosticar en tiempo real qué proceso está saturando la CPU, el Disco o consumiendo red, la mejor herramienta es:","Visor de Eventos","Monitor de Recursos (resmon.exe)","Monitor de Confiabilidad","Consola de Servicios",20,2
+"¿Qué herramienta gráfica te muestra una línea de tiempo del 1 al 10 con la estabilidad de tu PC y el historial de fallos?","Monitor de Confiabilidad (perfmon /rel)","Visor de Eventos","Administrador de Tareas","Símbolo del Sistema",20,1
+"Para auditar y buscar registros (logs) de seguridad, accesos o errores del Kernel de Windows, se debe abrir el:","Monitor de Rendimiento","Bloc de Notas","Visor de Eventos (eventvwr.msc)","Panel de Control clásico",20,3
+"¿Qué utilidad de línea de comandos de Windows permite configurar y consultar el almacén de datos de arranque (BCD)?","regedit","bcdedit.exe","netstat","sysdm.cpl",20,2
+"Escribir ""sysdm.cpl"" en la ventana Ejecutar (Win + R) abre directamente:","Las Propiedades del Sistema","La Consola de Servicios","El Editor del Registro","El Visor de Eventos",20,1
+"¿Qué panel del sistema permite detener, iniciar o deshabilitar procesos de fondo que no tienen interfaz gráfica?","Administrador de Tareas","Servicios (services.msc)","Monitor de Recursos","Propiedades del Sistema",20,2
+"¿Qué consola moderna de comandos utiliza scripts con extensión .ps1 y permite administrar recursos como objetos?","CMD (Símbolo del sistema)","Bash","Windows PowerShell", "Telnet",20,3
+"El intérprete de comandos clásico de Windows (CMD) se utiliza principalmente en las prácticas para:","Automatizar con pipelines complejos y objetos","Compatibilidad y ejecución de comandos tradicionales","Modificar directamente el registro del Kernel","Ver el historial de estabilidad gráfica",20,2
+"Si un programa se ha colgado y deseas finalizar su proceso rápidamente desde una interfaz visual de lista, usas:","Administrador de Tareas (taskmgr.exe)","Bloc de Notas","Visor de Eventos","Monitor de Confiabilidad",20,1
+"¿Qué editor básico del sistema se utiliza para examinar archivos de registro .reg o escribir scripts rápidos?","Wordpad","Microsoft Word","Bloc de Notas (notepad.exe)","Paint",20,3
+"¿Qué proceso del sistema operativo se encarga de la composición visual de las ventanas y genera carga gráfica?","dwm.exe (Desktop Window Manager)","explorer.exe","svchost.exe","spoolsv.exe",20,1
