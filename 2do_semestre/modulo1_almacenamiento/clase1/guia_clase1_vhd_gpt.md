@@ -39,11 +39,11 @@ En este laboratorio utilizaremos la consola de CMD y la herramienta nativa `disk
 ---
 
 ### Escenario B: Contingencia Netbooks Escolares (Setup Automatizado de 128 MB)
-En netbooks escolares, también podés ejecutar la variante automatizada con `diskpart`:
+En netbooks escolares, también podés ejecutar la variante automatizada desde CMD:
 
-```powershell
-# Ejecutar script de setup de contingencia
-.\setup_clase1.ps1 -UltraLight
+```cmd
+:: Ejecutar script de setup de contingencia en CMD
+setup_clase1.bat ultralight
 ```
 
 ---
