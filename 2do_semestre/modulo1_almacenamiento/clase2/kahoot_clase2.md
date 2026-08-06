@@ -1,91 +1,91 @@
-# Trivia Kahoot: Clase 2 - Particionamiento y Formateo NTFS (`diskpart` & PowerShell) (10 Preguntas - 4 Opciones)
+# Trivia Kahoot: Clase 2 - Particionamiento y Formateo NTFS por Consola (`diskpart` en CMD) (10 Preguntas - 4 Opciones)
 
 ---
 
 ## ❓ Pregunta 1
-**¿Qué función cumple el mecanismo de "Journaling" en el sistema de archivos NTFS?**
+**¿Qué función cumple el mecanismo de 'Journaling' en el sistema de archivos NTFS?**
 * A) Aumentar la velocidad de descarga de archivos desde Internet.
-* B) **Registrar las transacciones antes de escribirlas para evitar la corrupción por cortes repentinos de energía.** (Correcto).
-* C) Limpiar automáticamente los archivos de la papelera de reciclaje.
+* B) Limpiar automáticamente los archivos de la papelera de reciclaje.
+* C) **Registrar las transacciones antes de escribirlas para evitar corrupción.** (Correcto - Mantiene la integridad y consistencia del disco).
 * D) Comprimir los archivos para que ocupen la mitad de espacio.
 
 ---
 
 ## ❓ Pregunta 2
-**¿Qué estructura interna de NTFS actúa como base de datos relacional para registrar metadatos, permisos y ubicaciones de archivos?**
-* A) La Tabla de Inodos.
-* B) **La MFT (Master File Table).** (Correcto - MFT es la estructura central del sistema de archivos NTFS).
+**¿Qué estructura de NTFS actúa como base de datos relacional para registrar metadatos, permisos y archivos?**
+* A) **La MFT (Master File Table).** (Correcto - La MFT es la estructura central donde todo archivo posee registros de 1024 bytes).
+* B) La Tabla de Inodos.
 * C) El Superbloque.
 * D) El Sector MBR.
 
 ---
 
-## ❓ Pregunta 3
-**En la herramienta interactiva `diskpart`, ¿qué comando limpia completamente todas las particiones y tablas del disco seleccionado?**
+## 3. Pregunta 3
+**En diskpart, ¿qué comando borra la tabla de particiones y firmas dejando el disco en estado RAW (sin inicializar)?**
 * A) `delete partition all`
-* B) **`clean`** (Correcto - `clean` deja el disco en estado RAW).
-* C) `format quick`
-* D) `reset disk`
+* B) `format quick`
+* C) `reset disk`
+* D) **`clean`** (Correcto - `clean` elimina la información de configuración dejando el disco en estado puro o RAW).
 
 ---
 
 ## ❓ Pregunta 4
-**En `diskpart`, ¿qué comando asigna la letra de unidad `Z:` al volumen seleccionado?**
-* A) `set drive=Z:`
-* B) **`assign letter=Z`** (Correcto - Vincula el volumen a la letra de unidad Z:).
-* C) `map letter=Z`
-* D) `mount Z:`
+**Para desconectar (ocultar) un disco virtual VHDX en diskpart sin eliminar datos, ¿cuál es el procedimiento correcto?**
+* A) Ejecutar `detach disk` habiendo usado `select disk 3`.
+* B) **Seleccionar el VHDX con `select vdisk file="..."` y ejecutar `detach vdisk`.** (Correcto - El comando `detach vdisk` requiere primero dar foco al archivo contenedor).
+* C) Ejecutar `delete vdisk`.
+* D) Formatear el disco con `format /detach`.
 
 ---
 
 ## ❓ Pregunta 5
-**En PowerShell de Windows 11, ¿qué cmdlet se utiliza para formatear una partición directamente en NTFS sin abrir `diskpart`?**
-* A) `New-Format`
-* B) **`Format-Volume`** (Correcto - Sintaxis: `Format-Volume -Partition $partition -FileSystem NTFS`).
-* C) `Initialize-NTFS`
-* D) `Clear-Volume`
+**Al ejecutar `format fs=ntfs quick label="LSO_DATOS"` en diskpart, ¿qué función cumple el parámetro `label="..."`?**
+* A) **Asignar un nombre amigable al volumen para identificarlo en Windows.** (Correcto - Como la etiqueta `"LabPro"` usada en la Clase 1).
+* B) Definir el tamaño máximo de la partición en Megabytes.
+* C) Encriptar el disco con una clave de seguridad.
+* D) Cambiar automáticamente la letra de unidad asignada.
 
 ---
 
 ## ❓ Pregunta 6
-**¿Cuál es el tamaño estándar de la unidad de asignación (Cluster) por defecto en un volumen NTFS en Windows 11?**
-* A) 512 bytes.
-* B) **4 KB (4096 bytes).** (Correcto - 4 KB es el tamaño de cluster estándar).
-* C) 64 KB.
-* D) 1 MB.
+**¿Qué diferencia existe entre el Formateo Rápido (`format fs=ntfs quick`) y el Formateo Completo en diskpart?**
+* A) El formateo rápido instala Linux y el completo instala Windows.
+* B) El formateo completo borra la BIOS del equipo.
+* C) **El rápido escribe la MFT en segundos; el completo escanea y ceréa el disco.** (Correcto - El formateo completo toma mucho más tiempo).
+* D) No existe ninguna diferencia técnica entre ambos.
 
 ---
 
 ## ❓ Pregunta 7
-**¿Qué cmdlet de PowerShell se utiliza para crear una nueva partición asignando automáticamente la máxima capacidad disponible?**
-* A) `Create-Partition -Full`
-* B) **`New-Partition -UseMaximumSize -AssignDriveLetter`** (Correcto).
-* C) `Add-Partition -AllSpace`
-* D) `Make-Volume -Max`
+**¿Cómo se denomina al espacio interno desperdiciado cuando un archivo de 1 KB se guarda en un cluster de 4 KB?**
+* A) Fragmentación Externa.
+* B) Memoria Cache.
+* C) Sector Defectuoso.
+* D) **Slack Space (o espacio inutilizado del cluster).** (Correcto - Es la diferencia entre el tamaño del archivo y el bloque mínimo de 4 KB).
 
 ---
 
 ## ❓ Pregunta 8
-**¿Qué sucede con el espacio en disco cuando guardamos un archivo de 1 KB en un sistema de archivos NTFS con cluster de 4 KB?**
-* A) Ocupa exactamente 1 KB en el disco físico.
-* B) **Ocupa 4 KB de espacio en disco (1 cluster completo asignado).** (Correcto - El cluster es la unidad mínima indivisible).
-* C) El archivo se corrompe.
-* D) El SO rechaza guardar el archivo.
+**En `diskpart` (CMD), ¿qué comando permite inspeccionar la lista de volúmenes creados y sus letras asignadas?**
+* A) `show all`
+* B) **`list volume`** (Correcto - Muestra todos los volúmenes, etiquetas, letras de unidad y sistema de archivos formateado).
+* C) `get drives`
+* D) `view partitions`
 
 ---
 
 ## ❓ Pregunta 9
-**¿Qué comando de `diskpart` se utiliza para convertir un disco con tabla MBR al esquema moderno GPT?**
-* A) `change style=gpt`
-* B) **`convert gpt`** (Correcto - Requiere haber ejecutado `clean` previamente).
+**En `diskpart` (CMD), ¿qué comando se utiliza para inicializar un disco limpio en la tabla de particiones GPT?**
+* A) **`convert gpt`** (Correcto - Requiere haber ejecutado `clean` previamente sobre el disco).
+* B) `change style=gpt`
 * C) `set gpt`
 * D) `format gpt`
 
 ---
 
 ## ❓ Pregunta 10
-**Al descargar un script `.ps1` desde Google Drive o Classroom a Windows 11, ¿qué cmdlet de PowerShell elimina la marca de bloqueo Web (`Zone.Identifier`)?**
-* A) `Remove-File`
-* B) **`Unblock-File`** (Correcto - Sintaxis: `Unblock-File -Path .\script.ps1`).
-* C) `Enable-Script`
-* D) `Bypass-Security`
+**¿Cuál es la relación entre la Capa Sintética (Clase 1: VHDX/GPT) y la Capa Lógica de Datos (Clase 2: NTFS)?**
+* A) En la Clase 1 creamos carpetas y en la Clase 2 compramos discos rígidos.
+* B) MBR y GPT solo funcionan si formateamos en EXT4.
+* C) **Clase 1 crea el VHDX y GPT; Clase 2 delimita la Partición y el NTFS.** (Correcto).
+* D) Las particiones lógicas reemplazan por completo a la memoria RAM.

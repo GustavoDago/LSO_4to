@@ -10,28 +10,28 @@
 ## 🎯 Objetivos del Módulo
 1. Comprender la arquitectura de almacenamiento físico y lógico en sistemas operativos modernos (MBR vs GPT).
 2. Comparar la estructura interna y metadatos de **NTFS** (MFT) en Windows 11 y **EXT4** (Inodos) en Linux.
-3. Operar con soltura comandos de particionamiento, formateo y montaje desde terminal (`diskpart`, PowerShell, `fdisk`, `mkfs`, `mount`).
+3. Operar con soltura comandos de particionamiento, formateo y montaje desde terminal (`diskpart` en CMD, PowerShell, `fdisk`, `mkfs`, `mount`).
 4. Aplicar técnicas de automatización y contingencia para garantizar prácticas en máquinas freezadas y netbooks escolares.
 
 ---
 
 ## 📅 Estructura Detallada de Clases (4 Clases de 2 Horas)
 
-### 🗓️ Clase 1 (Miércoles - 2 hs): Arquitectura de Almacenamiento y Discos Virtuales en Windows 11
+### 🗓️ Clase 1 (Miércoles - 2 hs): Arquitectura de Almacenamiento y Discos Virtuales en Windows 11 (CMD & Diskpart)
 * **Momento 1 - Inicio (15 min):** Presentación del tema mediante infografía/resumen en **NotebookLM** ("De MBR a GPT: El salto arquitectónico en Windows 11").
 * **Momento 2 - Desarrollo (75 min):** 
-  * *Nodo Tecnológico:* Ejecución de `script_setup_almacenamiento.ps1`. Creación y montaje de discos virtuales VHD dinámicos (`New-VHD`, `Mount-VHD`).
-  * *Contingencia Netbooks:* Uso de VHD ultra-liviano de 128 MB.
-  * Análisis de estados de disco con `Get-Disk` y `Initialize-Disk -PartitionStyle GPT`.
-* **Momento 3 - Cierre (15 min):** Trivia Kahoot N.º 1 (5 preguntas sobre MBR vs GPT y discos VHD).
+  * *Nodo Tecnológico:* Uso de la consola **CMD** y la herramienta nativa `diskpart` para la creación y montaje de discos virtuales VHD/VHDX dinámicos (`create vdisk`, `attach vdisk`).
+  * *Contingencia Netbooks:* Uso de VHD ultra-liviano de 128 MB ejecutando el script `setup_clase1.bat` en CMD.
+  * Inicialización en formato moderno **GPT** (`convert gpt`), particionamiento (`create partition primary`) y asignación de formato NTFS (`format fs=ntfs quick`, `assign letter`).
+* **Momento 3 - Cierre (15 min):** Trivia Kahoot N.º 1 (5 preguntas sobre MBR vs GPT, discos VHD y comandos de `diskpart` en CMD).
 
 ---
 
-### 🗓️ Clase 2 (Jueves - 2 hs): Particionamiento y Formateo NTFS por Consola (`diskpart` & PowerShell)
+### 🗓️ Clase 2 (Jueves - 2 hs): Particionamiento y Formateo NTFS por Consola (`diskpart` en CMD & PowerShell)
 * **Momento 1 - Inicio (15 min):** Introducción a la estructura MFT de NTFS y unidades lógicas con soporte visual de **NotebookLM**.
 * **Momento 2 - Desarrollo (75 min):** 
-  * Laboratorio CLI en `diskpart`: `list disk`, `select disk`, `clean`, `create partition primary`, `format fs=ntfs quick`, `assign letter`.
-  * Equivalencia en cmdlet de PowerShell: `New-Partition`, `Format-Volume -FileSystem NTFS`.
+  * Laboratorio CLI avanzado en CMD con `diskpart`: `list disk`, `select disk`, `clean`, `create partition primary`, `format fs=ntfs quick`, `assign letter`.
+  * Análisis conceptual y equivalencia puntual con cmdlets de PowerShell (`New-Partition`, `Format-Volume -FileSystem NTFS`).
 * **Momento 3 - Cierre (15 min):** Trivia Kahoot N.º 2 (5 preguntas sobre comandos de `diskpart` y formateo NTFS).
 
 ---
