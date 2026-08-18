@@ -8,8 +8,13 @@
 
 ---
 
-## 📅 Contenidos Específicos
-* **Permisos en Windows 11 (NTFS / ACL):** Lectura, Escritura, Modificación, Control Total, permisos especiales. Comandos `icacls`, `Get-ACL`, `Set-ACL`.
-* **Permisos en Linux (POSIX):** Usuario (*owner*), Grupo (*group*), Otros (*others*). Permisos de lectura (`r`), escritura (`w`), ejecución (`x`). Comandos `chmod`, `chown`, `chgrp`, `umask`.
-* **Usuarios y Grupos:** Cuentas locales, grupos del sistema, creación y modificación (`net user` / `useradd`, `usermod`).
-* **Elevación e Identidad:** Control de cuentas de usuario (UAC) en Windows 11 vs. `sudo` / `su` en Linux.
+## 🗂️ Estructura del Módulo por Entorno Operativo
+
+### 🪟 Bloque 1: Windows 11 (Host Nativo)
+* **[Clase 1 (Miércoles)](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/modulo2_seguridad_permisos/windows/clase1):** Cuentas de usuario locales, grupos de seguridad, identificadores SID, base SAM y Control de Cuentas de Usuario (UAC / Token Filtrado vs Elevado).
+  - Herramientas: `whoami`, `net user`, `net localgroup`, `Get-LocalUser`, `New-LocalUser`.
+* **[Clase 2 (Jueves)](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/modulo2_seguridad_permisos/windows/clase2):** Permisos NTFS, Listas de Control de Acceso (DACL/SACL), reglas ACE, herencia (`/inheritance:d|r`), toma de posesión y matriz de precedencia (Deny > Allow).
+  - Herramientas: `icacls`, `takeown`, `Get-Acl`, `Set-Acl`.
+
+### 🐧 Bloque 2: Linux (Lubuntu Live USB Persistente)
+* **[Clases Linux](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/modulo2_seguridad_permisos/linux):** Modelo de seguridad POSIX, permisos octales/simbólicos (`chmod`), propietarios (`chown`, `chgrp`), máscara `umask`, permisos especiales (SUID, SGID, Sticky Bit), administración de cuentas (`/etc/passwd`, `/etc/shadow`, `useradd`) y elevación con `sudo` (`/etc/sudoers`).
