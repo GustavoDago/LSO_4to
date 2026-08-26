@@ -1,7 +1,7 @@
-# Trivia Kahoot: Clase 2 - Permisos NTFS, ACLs, Herencia y Takeown
+# Trivia Kahoot: Clase 2 - Permisos NTFS, ACLs, Herencia, Takeown y GUI
 **Módulo 2 (Windows 11):** Seguridad, Permisos y Gestión de Usuarios  
 **Destinatarios:** 4.º Año — Tecnicatura en Informática Personal y Profesional  
-**Formato:** 10 Preguntas de Opción Múltiple (1 Correcta + 3 Distractores con Justificación Técnica)
+**Formato:** 12 Preguntas de Opción Múltiple (1 Correcta + 3 Distractores con Justificación Técnica)
 
 ---
 
@@ -43,7 +43,7 @@
 - D) *Online Index / Cached Index* (Indexación en la nube).
 
 > **Justificación didáctica:**
-> - **B (Correcta):** `(OI)` propaga la regla a archivos (objetos) y `(CI)` a subcarpetas (contenedores) que se creen dentro del directorio.
+> - **B (Correcta):** `(OI)` propaga la regla a archivos (objetos) y `(CI)` a subcarpetas (contenedores) que se creen dentro del directorio. En la GUI equivale a la opción *"Esta carpeta, subcarpetas y archivos"*.
 > - **A, C, D:** Distractores conceptuales que no corresponden a la nomenclatura oficial de Microsoft ACLs.
 
 ---
@@ -64,6 +64,34 @@
 ---
 
 ### Pregunta 5
+**En la interfaz gráfica del Explorador de Windows, ¿a qué comando de consola equivale presionar "Deshabilitar herencia" y elegir "Convertir los permisos heredados en permisos explícitos en este objeto"?**
+- A) `icacls "carpeta" /inheritance:d` ✅ *(Correcta)*
+- B) `icacls "carpeta" /inheritance:r`
+- C) `takeown /F "carpeta"`
+- D) `attrib +h "carpeta"`
+
+> **Justificación didáctica:**
+> - **A (Correcta):** `/inheritance:d` duplica los permisos heredados como explícitos locales, que es exactamente lo que hace esa opción gráfica.
+> - **B:** `/inheritance:r` equivale a la opción gráfica *"Quitar todos los permisos heredados de este objeto"*.
+> - **C:** `takeown` cambia el propietario, no gestiona la herencia de ACLs.
+> - **D:** `attrib +h` oculta la carpeta en DOS.
+
+---
+
+### Pregunta 6
+**¿Qué herramienta nativa dentro de "Configuración de seguridad avanzada" permite diagnosticar si un usuario puede o no realizar una acción simulando todos sus grupos y reglas de conflicto?**
+- A) La pestaña "Acceso efectivo" (*Effective Access*). ✅ *(Correcta)*
+- B) El Administrador de Tareas.
+- C) El Desfragmentador de Disco.
+- D) El panel de Control Parental.
+
+> **Justificación didáctica:**
+> - **A (Correcta):** La pestaña "Acceso efectivo" ejecuta el algoritmo del SRM calculando en tiempo real si cada uno de los 14 permisos NTFS resulta permitido o denegado para un usuario específico.
+> - **B, C, D:** Herramientas del sistema no vinculadas a la resolución de conflictos de DACLs.
+
+---
+
+### Pregunta 7
 **¿Qué comando de consola nativo permite a un administrador tomar la propiedad (*Ownership*) de un archivo cuyo acceso está bloqueado?**
 - A) `takeown /F "archivo.txt"` ✅ *(Correcta)*
 - B) `chown root "archivo.txt"`
@@ -71,14 +99,14 @@
 - D) `format /q "archivo.txt"`
 
 > **Justificación didáctica:**
-> - **A (Correcta):** `takeown` es la utilidad de línea de comandos de Windows para tomar posesión de archivos y directorios.
+> - **A (Correcta):** `takeown` es la utilidad de línea de comandos de Windows para tomar posesión de archivos y directorios. En la GUI equivale al enlace *"Cambiar"* junto al nombre del Propietario.
 > - **B:** `chown` es la utilidad estándar de sistemas GNU/Linux.
-> - **C:** `attrib` modifica atributos DOS de solo lectura, oculto y sistema, pero no la propiedad de seguridad NTFS.
-> - **D:** `format` se utiliza para formatear unidades y sistemas de archivos completos.
+> - **C:** `attrib` modifica atributos DOS de solo lectura, oculto y sistema.
+> - **D:** `format` se utiliza para formatear unidades lógicas.
 
 ---
 
-### Pregunta 6
+### Pregunta 8
 **¿Qué permiso especial posee de manera inalienable el Propietario (*Owner*) de un archivo en NTFS, incluso si carece de permisos de lectura y escritura?**
 - A) El derecho a cambiar los permisos del objeto (`WRITE_DAC`). ✅ *(Correcta)*
 - B) El derecho a formatear la partición C:.
@@ -91,7 +119,7 @@
 
 ---
 
-### Pregunta 7
+### Pregunta 9
 **¿Cuál es la sintaxis correcta de `icacls` para conceder permiso de Modificar (`M`) al usuario "alumno_4to" de forma recursiva con herencia completa en una carpeta?**
 - A) `icacls "C:\Carpeta" /grant alumno_4to:(OI)(CI)M` ✅ *(Correcta)*
 - B) `chmod -R 777 alumno_4to "C:\Carpeta"`
@@ -101,25 +129,25 @@
 > **Justificación didáctica:**
 > - **A (Correcta):** La sintaxis oficial de `icacls` es `/grant <Entidad>:(Banderas)Permiso`.
 > - **B:** `chmod` es la herramienta de sistemas Linux/POSIX.
-> - **C:** `net user` gestiona atributos de cuentas en la SAM, no permisos de archivos en carpetas.
+> - **C:** `net user` gestiona cuentas en la base SAM local, no permisos de archivos.
 > - **D:** Cmdlet ficticio con sintaxis inventada.
 
 ---
 
-### Pregunta 8
-**En la salida del comando `icacls`, si observas una entrada con el código `(I)`, ¿qué significa?**
-- A) Que la regla fue **Heredada** (*Inherited*) de una carpeta contenedora superior. ✅ *(Correcta)*
-- B) Que el archivo está **Infectado** por un virus.
+### Pregunta 10
+**En la salida del comando `icacls`, si observas una entrada con el código `(I)`, ¿qué significa y cómo se refleja en la ventana gráfica?**
+- A) Indica que la regla fue **Heredada** (*Inherited*) y en la GUI figura el nombre de la carpeta padre en la columna *"Heredado de"*. ✅ *(Correcta)*
+- B) Que el archivo está **Infectado** y la GUI lo marca en color rojo.
 - C) Que la regla aplica solo a archivos de **Imagen**.
-- D) Que el permiso es **Invalido** y debe ser borrado.
+- D) Que el permiso es **Invalido** y la GUI deshabilita el Explorador.
 
 > **Justificación didáctica:**
-> - **A (Correcta):** `(I)` identifica visualmente que la ACE no fue creada en ese archivo específico, sino heredada del directorio padre.
+> - **A (Correcta):** `(I)` identifica visualmente que la ACE no fue creada en ese objeto específico, sino heredada del directorio contenedor superior.
 > - **B, C, D:** Distractores técnicos falsos.
 
 ---
 
-### Pregunta 9
+### Pregunta 11
 **¿Qué cmdlet de PowerShell se utiliza para consultar la Lista de Control de Acceso y el Propietario de un archivo en NTFS?**
 - A) `Get-Acl` ✅ *(Correcta)*
 - B) `Get-PermissionList`
@@ -132,7 +160,7 @@
 
 ---
 
-### Pregunta 10
+### Pregunta 12
 **Si un técnico desea restablecer todos los permisos de una carpeta para que vuelva a heredar limpiamente los permisos de su carpeta padre, ¿qué parámetro de `icacls` debe ejecutar?**
 - A) `/reset` ✅ *(Correcta)*
 - B) `/format`
@@ -140,6 +168,6 @@
 - D) `/clean-all`
 
 > **Justificación didáctica:**
-> - **A (Correcta):** El modificador `/reset` reemplaza las ACLs personalizadas por las ACLs heredadas de forma predeterminada.
+> - **A (Correcta):** El modificador `/reset` reemplaza las ACLs personalizadas por las ACLs heredadas de forma predeterminada (equivalente a presionar *"Habilitar herencia"* en la GUI).
 > - **B:** `/format` es para dar formato a volúmenes lógicos de disco.
 > - **C, D:** Parámetros inválidos en la herramienta `icacls`.

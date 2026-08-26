@@ -145,3 +145,52 @@ takeown /F "C:\Temp\LSO_Modulo2\Clase2\Archivos_Bloqueados" /R /D S
 $acl = Get-Acl "C:\Temp\LSO_Modulo2\Clase2\Empresa_Escuela\Secretaria"
 Set-Acl -Path "C:\Temp\LSO_Modulo2\Clase2\Empresa_Escuela\Docentes_Examenes" -AclObject $acl
 ```
+
+---
+
+## 6. 🖥️ Guía de Equivalencias: Consola (CLI) vs. Interfaz Gráfica (GUI)
+
+En entornos de administración de sistemas, es vital comprender cómo se corresponden las operaciones de línea de comandos con las ventanas del Explorador de Windows:
+
+### Matriz de Equivalencias Operativas
+
+| Operación | Comando CMD / PowerShell | Ruta en la Interfaz Gráfica de Windows (GUI) |
+| :--- | :--- | :--- |
+| **Ver DACL / Permisos** | `icacls "ruta"`<br>`Get-Acl "ruta"` | Clic derecho → *Propiedades* → pestaña *Seguridad* → botón *Opciones avanzadas*. |
+| **Deshabilitar Herencia (Copiando)** | `icacls "ruta" /inheritance:d` | *Opciones avanzadas* → Botón *Deshabilitar herencia* → *"Convertir los permisos heredados en permisos explícitos en este objeto"*. |
+| **Deshabilitar Herencia (Aislando)** | `icacls "ruta" /inheritance:r` | *Opciones avanzadas* → Botón *Deshabilitar herencia* → *"Quitar todos los permisos heredados de este objeto"*. |
+| **Restablecer Herencia** | `icacls "ruta" /reset /T` | *Opciones avanzadas* → Botón *Habilitar herencia* o marcar *"Reemplazar todas las entradas de permisos de objetos secundarios..."*. |
+| **Conceder Permisos** | `icacls "ruta" /grant User:(OI)(CI)M` | *Seguridad* → *Editar* → *Agregar* → Seleccionar usuario y tildar *Modificar*. |
+| **Denegar Permisos** | `icacls "ruta" /deny User:(OI)(CI)W` | *Seguridad* → *Editar* → Marcar columna *Denegar* en *Escritura*. |
+| **Tomar Posesión** | `takeown /F "ruta"` | *Opciones avanzadas* → En cabecera *Propietario:* clic en *Cambiar* → Escribir nuevo usuario → *Aceptar*. |
+| **Auditar Acceso Real** | Script PowerShell de análisis de tokens | *Opciones avanzadas* → pestaña **Acceso efectivo** → *Seleccionar un usuario* → *Ver acceso efectivo*. |
+
+---
+
+### Mapeo de Banderas de Propagación: `icacls` vs. Desplegable *"Se aplica a"*
+
+Cuando creas o editas una ACE en la ventana de **Permisos de entrada**, el menú desplegable *"Se aplica a"* configura internamente las banderas binarias de herencia:
+
+```text
+┌───────────────────────────────────────────────────┬────────────────────────┐
+│ Opción en la GUI ("Se aplica a")                  │ Banderas icacls        │
+├───────────────────────────────────────────────────┼────────────────────────┤
+│ Esta carpeta, subcarpetas y archivos              │ (OI)(CI)               │
+│ Solo esta carpeta                                 │ (Sin banderas / None)  │
+│ Esta carpeta y subcarpetas                        │ (CI)                   │
+│ Esta carpeta y archivos                           │ (OI)                   │
+│ Subcarpetas y archivos únicamente                 │ (OI)(CI)(IO)           │
+│ Solo subcarpetas                                  │ (CI)(IO)               │
+│ Solo archivos                                     │ (OI)(IO)               │
+└───────────────────────────────────────────────────┴────────────────────────┘
+```
+
+---
+
+### 🔍 Diagnóstico Profesional: La Pestaña "Acceso Efectivo"
+
+La herramienta **Acceso efectivo** (*Effective Access*) simula el proceso que realiza el Administrador de Referencia de Seguridad (SRM) del kernel de Windows:
+1. Toma el token de seguridad del usuario seleccionado (incluyendo todos los SIDs de grupos a los que pertenece).
+2. Evalúa todas las ACEs (Allow y Deny, explícitas y heredadas).
+3. Determina el resultado booleano exacto para cada uno de los 14 derechos avanzados de NTFS.
+4. Muestra un reporte gráfico instantáneo que permite identificar qué regla específica (por ejemplo, un grupo olvidado con regla `Deny`) está bloqueando el acceso de un empleado.
