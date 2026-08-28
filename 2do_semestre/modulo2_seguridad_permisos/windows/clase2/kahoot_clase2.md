@@ -1,173 +1,180 @@
 # Trivia Kahoot: Clase 2 - Permisos NTFS, ACLs, Herencia, Takeown y GUI
 **Módulo 2 (Windows 11):** Seguridad, Permisos y Gestión de Usuarios  
 **Destinatarios:** 4.º Año — Tecnicatura en Informática Personal y Profesional  
-**Formato:** 12 Preguntas de Opción Múltiple (1 Correcta + 3 Distractores con Justificación Técnica)
+**Formato:** 12 Preguntas de Opción Múltiple (1 Correcta + 3 Distractores con Justificación Técnica)  
+**Distribución de Claves Correctas:** Equitativa (3 A, 3 B, 3 C, 3 D)
 
 ---
 
 ### Pregunta 1
-**En la arquitectura de seguridad NTFS de Windows, ¿qué elemento contiene las reglas que determinan qué usuarios pueden leer o modificar un archivo?**
-- A) La DACL (*Discretionary Access Control List*). ✅ *(Correcta)*
-- B) La SACL (*System Access Control List*).
-- C) La tabla FAT de asignación de clústeres.
-- D) El MBR (*Master Boot Record*).
+**En la seguridad NTFS, ¿qué elemento contiene las reglas que permiten o deniegan el acceso a un archivo?**
+- A) La SACL (*System Access Control List*).
+- B) La tabla FAT de asignación de clústeres.
+- C) La DACL (*Discretionary Access Control List*). ✅ *(Correcta)*
+- D) El MBR (*Master Boot Record*) del disco.
 
 > **Justificación didáctica:**
-> - **A (Correcta):** La DACL almacena las entradas ACE que conceden o deniegan acceso a los recursos.
-> - **B:** La SACL se utiliza para registrar eventos de auditoría en el Visor de Eventos, no para conceder accesos.
-> - **C:** La FAT es una tabla de asignación de archivos de un formato antiguo que no soporta listas ACL de seguridad.
+> - **C (Correcta):** La DACL almacena las entradas ACE que conceden o deniegan acceso a los recursos.
+> - **A:** La SACL se utiliza para registrar eventos de auditoría en el Visor de Eventos, no para conceder accesos.
+> - **B:** La FAT es una tabla de asignación de archivos de un formato antiguo que no soporta listas ACL de seguridad.
 > - **D:** El MBR es una estructura de particionamiento del disco físico.
 
 ---
 
 ### Pregunta 2
-**¿Qué ocurre cuando un usuario tiene permiso explícito de "Control Total" sobre un archivo, pero pertenece a un grupo que tiene asignado un permiso explícito de "Denegar Lectura"?**
-- A) El usuario puede leer el archivo porque el Control Total siempre prevalece.
-- B) El acceso de lectura es denegado porque el permiso "Deny" tiene precedencia absoluta. ✅ *(Correcta)*
-- C) Windows promedia ambos permisos y sólo permite ejecución.
-- D) Se abre una ventana de UAC solicitando una segunda contraseña.
+**¿Qué ocurre si un usuario tiene "Control Total" pero su grupo tiene "Denegar Lectura" explícito?**
+- A) Puede leer porque el Control Total siempre prevalece.
+- B) Se deniega la lectura: la regla Deny tiene máxima prioridad. ✅ *(Correcta)*
+- C) Windows promedia los permisos y solo permite ejecución.
+- D) Se solicita confirmación por UAC como administrador.
 
 > **Justificación didáctica:**
-> - **B (Correcta):** En el modelo de evaluación de seguridad de Windows, una regla *Deny* explícita cancela y supera cualquier regla *Allow*.
-> - **A:** Error muy común; Control Total no anula una denegación explícita sobre el mismo recurso.
+> - **B (Correcta):** En el modelo de evaluación de seguridad de Windows, una regla Deny explícita cancela y supera cualquier regla Allow.
+> - **A:** Error muy común: Control Total no anula una denegación explícita sobre el mismo recurso.
 > - **C:** Los permisos no se promedian de forma aritmética.
-> - **D:** UAC controla tokens de administración de procesos, no conflictos de ACLs NTFS.
+> - **D:** UAC controla tokens de administración de procesos, no resolución de conflictos de ACLs NTFS.
 
 ---
 
 ### Pregunta 3
-**Al ejecutar el comando `icacls`, ¿qué significan las banderas `(OI)(CI)` al asignar permisos sobre una carpeta?**
-- A) *Only Input / Cancel Input* (Solo lectura por teclado).
-- B) *Object Inherit / Container Inherit* (Los permisos se propagan tanto a archivos como a subcarpetas hijas). ✅ *(Correcta)*
-- C) *Owner Identity / Client Identity* (El propietario y el cliente comparten la misma clave).
-- D) *Online Index / Cached Index* (Indexación en la nube).
+**En el comando `icacls`, ¿qué significan las banderas `(OI)(CI)` al asignar permisos a una carpeta?**
+- A) *Only Input / Cancel Input* (solo entrada por teclado).
+- B) *Owner Identity / Client Identity* (claves compartidas).
+- C) *Online Index / Cached Index* (indexación en la nube).
+- D) *Object Inherit / Container Inherit* (heredan archivos y carpetas). ✅ *(Correcta)*
 
 > **Justificación didáctica:**
-> - **B (Correcta):** `(OI)` propaga la regla a archivos (objetos) y `(CI)` a subcarpetas (contenedores) que se creen dentro del directorio. En la GUI equivale a la opción *"Esta carpeta, subcarpetas y archivos"*.
-> - **A, C, D:** Distractores conceptuales que no corresponden a la nomenclatura oficial de Microsoft ACLs.
+> - **D (Correcta):** (OI) propaga la regla a archivos (objetos) y (CI) a subcarpetas (contenedores). En la GUI equivale a la opción 'Esta carpeta, subcarpetas y archivos'.
+> - **A, B, C:** Distractores conceptuales que no corresponden a la nomenclatura oficial de Microsoft ACLs.
 
 ---
 
 ### Pregunta 4
-**¿Cuál es la diferencia entre los modificadores `/inheritance:d` y `/inheritance:r` en el comando `icacls`?**
-- A) `/inheritance:d` copia los permisos heredados como explícitos, mientras que `/inheritance:r` borra todos los permisos heredados. ✅ *(Correcta)*
-- B) `/inheritance:d` borra el disco duro y `/inheritance:r` lo recupera.
-- C) `/inheritance:d` activa la herencia y `/inheritance:r` la deshabilita.
-- D) No hay diferencia; ambos comandos realizan exactamente la misma acción.
+**¿Cuál es la diferencia entre `/inheritance:d` y `/inheritance:r` en el comando `icacls`?**
+- A) `/inheritance:d` convierte herencia en explícita; `/inheritance:r` quita permisos heredados. ✅ *(Correcta)*
+- B) `/inheritance:d` desactiva el disco y `/inheritance:r` lo repara automáticamente.
+- C) `/inheritance:d` habilita la herencia y `/inheritance:r` la deshabilita por completo.
+- D) No hay diferencia; ambos modificadores hacen exactamente lo mismo.
 
 > **Justificación didáctica:**
-> - **A (Correcta):** `d` significa *disable & duplicate* (convierte la herencia en permisos explícitos editables) y `r` significa *disable & remove* (aísla la carpeta eliminando toda regla heredada).
-> - **B:** Distractor absurdo.
-> - **C:** Para activar la herencia se utiliza `/inheritance:e`.
+> - **A (Correcta):** 'd' (disable & duplicate) convierte la herencia en permisos explícitos editables y 'r' (remove) elimina toda regla heredada.
+> - **B:** Distractor absurdo sin relación con el sistema de archivos.
+> - **C:** Para activar la herencia se utiliza el parámetro /inheritance:e.
 > - **D:** Son dos modos de ruptura con comportamientos diametralmente opuestos sobre los permisos existentes.
 
 ---
 
 ### Pregunta 5
-**En la interfaz gráfica del Explorador de Windows, ¿a qué comando de consola equivale presionar "Deshabilitar herencia" y elegir "Convertir los permisos heredados en permisos explícitos en este objeto"?**
-- A) `icacls "carpeta" /inheritance:d` ✅ *(Correcta)*
-- B) `icacls "carpeta" /inheritance:r`
-- C) `takeown /F "carpeta"`
+**En la GUI, ¿a qué comando equivale "Convertir los permisos heredados en permisos explícitos en este objeto"?**
+- A) `icacls "carpeta" /inheritance:r`
+- B) `takeown /F "carpeta"`
+- C) `icacls "carpeta" /inheritance:d` ✅ *(Correcta)*
 - D) `attrib +h "carpeta"`
 
 > **Justificación didáctica:**
-> - **A (Correcta):** `/inheritance:d` duplica los permisos heredados como explícitos locales, que es exactamente lo que hace esa opción gráfica.
-> - **B:** `/inheritance:r` equivale a la opción gráfica *"Quitar todos los permisos heredados de este objeto"*.
-> - **C:** `takeown` cambia el propietario, no gestiona la herencia de ACLs.
-> - **D:** `attrib +h` oculta la carpeta en DOS.
+> - **C (Correcta):** /inheritance:d duplica los permisos heredados como explícitos locales, que es exactamente lo que hace esa opción gráfica.
+> - **A:** /inheritance:r equivale a la opción gráfica 'Quitar todos los permisos heredados de este objeto'.
+> - **B:** takeown cambia el propietario, no gestiona la herencia de ACLs.
+> - **D:** attrib +h solo modifica atributos DOS para ocultar el archivo/carpeta.
 
 ---
 
 ### Pregunta 6
-**¿Qué herramienta nativa dentro de "Configuración de seguridad avanzada" permite diagnosticar si un usuario puede o no realizar una acción simulando todos sus grupos y reglas de conflicto?**
+**En Configuración de seguridad avanzada, ¿qué pestaña calcula los permisos reales de un usuario?**
 - A) La pestaña "Acceso efectivo" (*Effective Access*). ✅ *(Correcta)*
-- B) El Administrador de Tareas.
-- C) El Desfragmentador de Disco.
-- D) El panel de Control Parental.
+- B) La pestaña "Auditoría" de seguridad del sistema.
+- C) La pestaña "Cuotas de disco" y almacenamiento.
+- D) La pestaña "Propietario" y herencia de dominio.
 
 > **Justificación didáctica:**
-> - **A (Correcta):** La pestaña "Acceso efectivo" ejecuta el algoritmo del SRM calculando en tiempo real si cada uno de los 14 permisos NTFS resulta permitido o denegado para un usuario específico.
-> - **B, C, D:** Herramientas del sistema no vinculadas a la resolución de conflictos de DACLs.
+> - **A (Correcta):** La pestaña 'Acceso efectivo' ejecuta el algoritmo del SRM calculando en tiempo real si cada permiso resulta permitido o denegado para un usuario específico.
+> - **B:** La pestaña de auditoría se utiliza para configurar eventos SACL en el registro de Windows.
+> - **C:** Las cuotas de disco limitan el espacio en megabytes por usuario, no calculan permisos.
+> - **D:** La pestaña de propietario solo muestra y transfiere la titularidad del objeto.
 
 ---
 
 ### Pregunta 7
-**¿Qué comando de consola nativo permite a un administrador tomar la propiedad (*Ownership*) de un archivo cuyo acceso está bloqueado?**
-- A) `takeown /F "archivo.txt"` ✅ *(Correcta)*
-- B) `chown root "archivo.txt"`
-- C) `attrib -s -h "archivo.txt"`
-- D) `format /q "archivo.txt"`
+**¿Qué comando nativo de Windows permite a un administrador tomar posesión (*Ownership*) de un archivo?**
+- A) `chown root "archivo.txt"`
+- B) `attrib -s -h "archivo.txt"`
+- C) `format /q "archivo.txt"`
+- D) `takeown /F "archivo.txt"` ✅ *(Correcta)*
 
 > **Justificación didáctica:**
-> - **A (Correcta):** `takeown` es la utilidad de línea de comandos de Windows para tomar posesión de archivos y directorios. En la GUI equivale al enlace *"Cambiar"* junto al nombre del Propietario.
-> - **B:** `chown` es la utilidad estándar de sistemas GNU/Linux.
-> - **C:** `attrib` modifica atributos DOS de solo lectura, oculto y sistema.
-> - **D:** `format` se utiliza para formatear unidades lógicas.
+> - **D (Correcta):** takeown es la utilidad de línea de comandos de Windows para tomar posesión de archivos y carpetas. En la GUI equivale al enlace 'Cambiar' junto al Propietario.
+> - **A:** chown es la utilidad de cambio de propietario en sistemas GNU/Linux.
+> - **B:** attrib modifica atributos DOS de solo lectura, oculto y sistema.
+> - **C:** format se utiliza para formatear volúmenes lógicos completos.
 
 ---
 
 ### Pregunta 8
-**¿Qué permiso especial posee de manera inalienable el Propietario (*Owner*) de un archivo en NTFS, incluso si carece de permisos de lectura y escritura?**
-- A) El derecho a cambiar los permisos del objeto (`WRITE_DAC`). ✅ *(Correcta)*
-- B) El derecho a formatear la partición C:.
-- C) La capacidad de descifrar claves BitLocker sin contraseña.
-- D) Acceso ilimitado a internet sin proxy.
+**¿Qué derecho especial inalienable posee el Propietario (*Owner*) de un archivo NTFS?**
+- A) Formatear la partición C: sin confirmación.
+- B) Cambiar y reescribir los permisos del objeto (`WRITE_DAC`). ✅ *(Correcta)*
+- C) Descifrar claves BitLocker sin contraseña.
+- D) Navegar por internet sin restricciones de proxy.
 
 > **Justificación didáctica:**
-> - **A (Correcta):** El propietario siempre conserva el derecho `WRITE_DAC`, lo que le permite reescribir la DACL y volver a concederse permisos a sí mismo.
-> - **B, C, D:** Privilegios no relacionados con la propiedad de un objeto en el sistema de archivos.
+> - **B (Correcta):** El propietario siempre conserva el derecho WRITE_DAC, lo que le permite reescribir la DACL y volver a concederse permisos a sí mismo.
+> - **A:** Formatear unidades requiere privilegios administrativos sobre el volumen de almacenamiento.
+> - **C:** BitLocker es un cifrado de volumen a nivel de bloque y no se gestiona con la propiedad NTFS.
+> - **D:** El acceso a la red y proxies es independiente del sistema de archivos local.
 
 ---
 
 ### Pregunta 9
-**¿Cuál es la sintaxis correcta de `icacls` para conceder permiso de Modificar (`M`) al usuario "alumno_4to" de forma recursiva con herencia completa en una carpeta?**
+**¿Cuál es la sintaxis correcta de `icacls` para conceder permiso de Modificar (`M`) con herencia en una carpeta?**
 - A) `icacls "C:\Carpeta" /grant alumno_4to:(OI)(CI)M` ✅ *(Correcta)*
 - B) `chmod -R 777 alumno_4to "C:\Carpeta"`
 - C) `net user alumno_4to /permission:modify "C:\Carpeta"`
 - D) `set-permission -User alumno_4to -Path "C:\Carpeta" -Level M`
 
 > **Justificación didáctica:**
-> - **A (Correcta):** La sintaxis oficial de `icacls` es `/grant <Entidad>:(Banderas)Permiso`.
-> - **B:** `chmod` es la herramienta de sistemas Linux/POSIX.
-> - **C:** `net user` gestiona cuentas en la base SAM local, no permisos de archivos.
+> - **A (Correcta):** La sintaxis oficial de icacls es /grant <Entidad>:(Banderas)Permiso, donde (OI)(CI) propaga a objetos y contenedores y M otorga Modificar.
+> - **B:** chmod es el comando de permisos octales de sistemas POSIX / Linux.
+> - **C:** net user gestiona cuentas de usuario en la base SAM local, no permisos de archivos.
 > - **D:** Cmdlet ficticio con sintaxis inventada.
 
 ---
 
 ### Pregunta 10
-**En la salida del comando `icacls`, si observas una entrada con el código `(I)`, ¿qué significa y cómo se refleja en la ventana gráfica?**
-- A) Indica que la regla fue **Heredada** (*Inherited*) y en la GUI figura el nombre de la carpeta padre en la columna *"Heredado de"*. ✅ *(Correcta)*
-- B) Que el archivo está **Infectado** y la GUI lo marca en color rojo.
-- C) Que la regla aplica solo a archivos de **Imagen**.
-- D) Que el permiso es **Invalido** y la GUI deshabilita el Explorador.
+**En la salida de `icacls`, si observas una entrada con el código `(I)`, ¿qué significa?**
+- A) Que el archivo está **Infectado** y requiere revisión.
+- B) Que la regla aplica únicamente a archivos de **Imagen**.
+- C) Que la regla fue **Heredada** (*Inherited*) de la carpeta superior. ✅ *(Correcta)*
+- D) Que el permiso es **Inválido** y debe ser eliminado.
 
 > **Justificación didáctica:**
-> - **A (Correcta):** `(I)` identifica visualmente que la ACE no fue creada en ese objeto específico, sino heredada del directorio contenedor superior.
-> - **B, C, D:** Distractores técnicos falsos.
+> - **C (Correcta):** (I) identifica visualmente que la ACE no fue creada en ese objeto específico, sino heredada del directorio contenedor superior (en la GUI figura en 'Heredado de').
+> - **A, B, D:** Distractores técnicos falsos.
 
 ---
 
 ### Pregunta 11
-**¿Qué cmdlet de PowerShell se utiliza para consultar la Lista de Control de Acceso y el Propietario de un archivo en NTFS?**
-- A) `Get-Acl` ✅ *(Correcta)*
-- B) `Get-PermissionList`
+**¿Qué cmdlet de PowerShell se utiliza para consultar la Lista de Control de Acceso y el Propietario de un archivo?**
+- A) `Get-PermissionList`
+- B) `Get-Acl` ✅ *(Correcta)*
 - C) `Show-NTFSSecurity`
 - D) `Test-FileAccess`
 
 > **Justificación didáctica:**
-> - **A (Correcta):** `Get-Acl` devuelve el objeto `FileSecurity` con el propietario, grupo y lista de reglas de acceso del archivo.
-> - **B, C, D:** Nombres de cmdlets inexistentes en PowerShell estándar.
+> - **B (Correcta):** Get-Acl devuelve el objeto FileSecurity con el propietario, grupo de auditoría y lista de reglas de acceso del archivo.
+> - **A, C, D:** Nombres de cmdlets inexistentes en PowerShell estándar.
 
 ---
 
 ### Pregunta 12
-**Si un técnico desea restablecer todos los permisos de una carpeta para que vuelva a heredar limpiamente los permisos de su carpeta padre, ¿qué parámetro de `icacls` debe ejecutar?**
-- A) `/reset` ✅ *(Correcta)*
-- B) `/format`
-- C) `/delete`
-- D) `/clean-all`
+**Si deseas restablecer los permisos de una carpeta para volver a heredar de la carpeta padre, ¿qué parámetro de `icacls` usas?**
+- A) `/format`
+- B) `/delete`
+- C) `/clean-all`
+- D) `/reset` ✅ *(Correcta)*
 
 > **Justificación didáctica:**
-> - **A (Correcta):** El modificador `/reset` reemplaza las ACLs personalizadas por las ACLs heredadas de forma predeterminada (equivalente a presionar *"Habilitar herencia"* en la GUI).
-> - **B:** `/format` es para dar formato a volúmenes lógicos de disco.
-> - **C, D:** Parámetros inválidos en la herramienta `icacls`.
+> - **D (Correcta):** El modificador /reset reemplaza las ACLs personalizadas por las ACLs heredadas de forma predeterminada (equivalente a presionar 'Habilitar herencia' en la GUI).
+> - **A:** /format es para dar formato a volúmenes lógicos de disco.
+> - **B, C:** Parámetros inválidos en la herramienta icacls.
+
+---
