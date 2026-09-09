@@ -6,31 +6,32 @@
 * **Carga Horaria Semanal:** 4 Horas Reloj / Cátedra
   * 🔹 **Miércoles:** 2 horas (Teoría Aplicada & Laboratorio 1)
   * 🔹 **Jueves:** 2 horas (Laboratorio 2 & Desafíos Prácticos)
-* **Sistemas Operativos Objeto de Estudio:** Windows 11 y Linux (Lubuntu / Linux Mint XFCE en Pendrive Persistente)
-* **Entorno de Laboratorio:** Computadoras con Windows 11 Home freezadas (Deep Freeze) + Arranque por Live USB Persistente (Rufus)
+* **Sistemas Operativos Objeto de Estudio:** Windows 11 (Administración Técnica Nativa, CLI y Herramientas Clínicas del Sistema)
+* **Entorno de Laboratorio:** Computadoras con Windows 11 Home freezadas (Deep Freeze) sin credenciales de administración. Enfoque 100% Windows nativo sin dependencia de booteo externo.
 
 ---
 
-## 🎯 Fundamentación y Estrategia de Entorno (Máquinas Freezadas & Windows 11 Home)
+## 🎯 Fundamentación y Estrategia de Entorno (Transición a 100% Windows Nativo)
 
-Para superar las restricciones de las computadoras con **Windows 11 Home** y **Deep Freeze activo sin credenciales de administración**, y maximizar el tiempo de práctica efectiva en el laboratorio, la estrategia operativa se basa en:
+Tras la experiencia de la Clase 1 de almacenamiento en Linux mediante Live USB con persistencia, se evidenciaron dificultades operativas severas inherentes a las restricciones del laboratorio escolar (equipos congelados con Deep Freeze, disparidad de interfaces UEFI/BIOS, bloqueos de booteo externo y latencia en unidades USB). Asimismo, dada la necesidad de consolidar competencias técnicas sin requerir formación en programación/scripting algorítmico prematuro, **se toma la decisión pedagógica y técnica de concentrar el 100% del segundo semestre en el ecosistema Windows 11**.
 
-1. **Dualidad Operativa Host Windows 11 / Live USB Linux:**
-   * **Prácticas Windows:** Se ejecutan de forma nativa en el sistema anfitrión (`diskpart`, VHDs dinámicos, NTFS, `icacls`, `Get-ACL`, firewall de Windows).
-   * **Prácticas Linux:** Se ejecutan booteando desde un **Pendrive Persistente** (preparado con **Lubuntu / Linux Mint XFCE** mediante **Rufus** y partición de persistencia `casper-rw`). Esto otorga acceso completo a Kernel, `systemd`, `fdisk`, `mkfs.ext4`, `mount`, `sshd` y `ufw` sin tocar el disco del colegio ni alterar la congelación.
-2. **Persistencia Híbrida (Pendrive + Cloud):** Los alumnos conservan su sistema Linux, configuraciones y paquetes en la partición persistente de su pendrive, y respaldan sus scripts y entregas en Google Drive / Google Classroom.
-3. **Arranque Rápido por Menú de Inicio (Boot Menu):** El inicio en Linux se realiza seleccionando la unidad USB mediante teclas de acceso directo (**F12, F11 o Esc**) sin requerir ingreso a la configuración del BIOS ni descongelar Deep Freeze.
-4. **Scripts de Setup Inmediatos (< 1 Minuto):** Cada clase cuenta con scripts en Batch (`setup_claseX.bat`) para Windows y scripts Bash (`setup_claseX.sh`) para Linux que preparan los escenarios y archivos de prueba al instante.
+La estrategia operativa se redefine para garantizar máxima fluidez y tiempo efectivo de clase:
+
+1. **Operación Nativa en Windows 11 Host:**
+   * Prácticas ejecutadas directamente sobre el sistema anfitrión utilizando herramientas técnicas consolidadas: `diskpart`, VHDs dinámicos, arquitectura NTFS, listas de control de acceso (`icacls`, `Get-ACL`), Administrador de Tareas, Monitor de Recursos (`resmon.exe`) y `netsh`.
+   * Se elimina la dependencia del arranque por Live USB y la complejidad de sintaxis de programación (Bash), priorizando el análisis arquitectónico del sistema operativo.
+2. **Persistencia Híbrida (USB de Datos + Cloud):** Los alumnos utilizan sus pendrives exclusivamente como unidades de almacenamiento de datos y respaldos (Google Drive / Google Classroom) sin requerir particiones de booteo complejas.
+3. **Scripts de Setup Inmediatos (< 1 Minuto):** Cada práctica cuenta con scripts Batch (`setup_claseX.bat`) o PowerShell ligeros que preparan y restauran los escenarios de laboratorio de forma instantánea sin romper la congelación del Deep Freeze.
 
 ---
 
 ## 🎮 Herramientas Pedagógicas e Infraestructura Flexible
 
-* **Gamificación con Kahoot (10 Preguntas con 4 Opciones):** Cada clase desarrollada incluye una trivia de repaso lúdico al inicio o cierre con al menos 10 preguntas de opción múltiple (1 correcta y 3 distractores técnicos justificados) para fijar comandos y conceptos clave.
-* **Integración con NotebookLM:** Se proveen guías, podcasts/audios explicativos, infografías y cuestionarios integrables al cuaderno digital **"LSO 4to - 2do semestre"** en NotebookLM para facilitar el estudio interactivo dentro y fuera del aula.
+* **Gamificación con Kahoot (10 Preguntas con 4 Opciones):** Cada clase desarrollada incluye una trivia de repaso lúdico al inicio o cierre con al menos 10 preguntas de opción múltiple (1 correcta y 3 distractores técnicos justificados) para fijar conceptos clave y diagnósticos técnicos.
+* **Integración con NotebookLM:** Se proveen guías, podcasts/audios explicativos, infografías y cuestionarios integrables al cuaderno digital **"LSO 4to - 2do semestre"** en NotebookLM para facilitar el estudio interactivo y autónomo.
 * **Flexibilidad de Hardware (Plan de Contingencia Netbooks):**
-  * **Modo A (Laboratorio Principal con Windows 11 + Live USB):** Prácticas completas en Windows 11 con discos VHD y arranque en Linux Lubuntu/Mint con persistencia de 4 GB o superior.
-  * **Modo B (Contingencia Netbooks Escolares):** Para días con netbooks de bajos recursos, se utilizan imágenes reducidas (VHD de 128 MB en Windows, imágenes loop de 64 MB en Linux) y scripts portables de baja huella de memoria.
+  * **Modo A (Laboratorio Principal Windows 11):** Prácticas completas con discos VHDX, monitoreo detallado de memoria con `resmon.exe`, inspección de pools del Kernel y seguridad local.
+  * **Modo B (Contingencia Netbooks Escolares):** Prácticas optimizadas de baja huella de memoria con VHDs de tamaño reducido (128 MB) y comandos CLI directos.
 
 ---
 
@@ -38,63 +39,61 @@ Para superar las restricciones de las computadoras con **Windows 11 Home** y **D
 
 ### 🗓️ Bloque I: Desarrollo de Contenidos (Agosto a Mediados de Octubre)
 
-* **Semanas 1 y 2 (Agosto) — Bloque Windows Inicial:**
-  * **Módulo 1 (Windows - 4 hs):**
-    * *Clase 1 (2 hs):* Discos físicos y lógicos, MBR vs GPT, discos virtuales VHDX dinámicos con `diskpart` (CMD/PowerShell).
+* **Semanas 1 y 2 (Agosto) — Almacenamiento y Seguridad Inicial en Windows:**
+  * **Módulo 1 (Almacenamiento en Windows - 4 hs):**
+    * *Clase 1 (2 hs):* Discos físicos y lógicos, MBR vs GPT, discos virtuales VHD/VHDX dinámicos con `diskpart`.
     * *Clase 2 (2 hs):* Sistemas de archivos, arquitectura NTFS, creación de volúmenes y formateo con `diskpart`.
-  * **Módulo 2 (Windows - 4 hs):**
+  * **Módulo 2 (Seguridad y Permisos en Windows - 4 hs):**
     * *Clase 1 (2 hs):* Cuentas de usuario locales, grupos de seguridad, SIDs, base SAM y Control de Cuentas de Usuario (UAC).
     * *Clase 2 (2 hs):* Permisos NTFS, Listas de Control de Acceso (DACL/ACEs), herencia (`icacls`), toma de posesión (`takeown`) y precedencia Deny/Allow.
 
-* **Semanas 3 y 4 (Agosto / Septiembre) — Bloque Linux (Lubuntu Live USB Persistente):**
-  * **Módulo 1 (Linux - 4 hs):**
-    * *Clase 1 (2 hs):* Dispositivos de bloque (`lsblk`, `fdisk`), tablas GPT/MBR y particionamiento en Linux.
-    * *Clase 2 (2 hs):* Sistemas de archivos (`mkfs.ext4`, `mkfs.vfat`), puntos de montaje (`mount`), `/etc/fstab` y dispositivos loopback.
-  * **Módulo 2 (Linux - 4 hs):**
-    * *Clase 1 (2 hs):* Modelo POSIX, permisos octales y simbólicos (`chmod`), propietarios (`chown`, `chgrp`) y máscara `umask`.
-    * *Clase 2 (2 hs):* Permisos especiales (SUID, SGID, Sticky Bit), administración de cuentas (`useradd`, `/etc/passwd`, `/etc/shadow`) y elevación con `sudo` (`/etc/sudoers`).
+* **Semanas 3 y 4 (Agosto / Septiembre) — Transición y Cierre de Bloque Almacenamiento/Seguridad:**
+  * Consolidación de prácticas de almacenamiento virtual (VHD) y listas de control de acceso NTFS sobre terminales del laboratorio.
+  * Análisis comparativo conceptual de sistemas de archivos y modelos de seguridad (FAT32 vs NTFS vs POSIX en teoría).
 
-* **Semanas 5 y 6 (Septiembre):** **Módulo 3 - Administración Linux & Bash Scripting (Parte 1)**
-  * *Miércoles (2 hs):* Arquitectura del Kernel Linux, árbol de directorios `/`, variables de entorno, permisos de ejecución y estructura de scripts `.sh`.
-  * *Jueves (2 hs):* Sintaxis Bash (`.sh`), shebang, variables, condicionales `if`, códigos de salida (`$?`) y lectura de parámetros (`$1`, `$@`).
-* **Semanas 7 y 8 (Septiembre / Octubre):** **Módulo 3 - Bash Scripting (Parte 2) + Módulo 4 - Redes y SSH**
-  * *Miércoles (2 hs):* Bucles `for`/`while`, tuberías (*pipelines*), filtros (`grep`, `awk`, `sed`) y automatización con `cron` (`crontab`).
-  * *Jueves (2 hs):* Pila TCP/IP, puertos/sockets (`ss`, `netstat`), servicio SSH nativo (`openssh-server`), configuración de `/etc/ssh/sshd_config` y claves criptográficas.
-* **Semana 9 (Mediados de Octubre):** **Módulo 4 - Firewalls y Cierre de Contenidos**
-  * *Miércoles (2 hs):* Filtrado de paquetes con `netsh advfirewall` (Windows 11) y `ufw` / `iptables` (Linux).
-  * *Jueves (2 hs):* Evaluación teórica/práctica integradora de los Módulos 1 al 4.
+* **Semanas 5 y 6 (Septiembre) — Módulo 3: Arquitectura y Administración de Memoria Real y Virtual en Windows:**
+  * *Clase 1 (2 hs - Miércoles):* **Formación Teórica Magistral de Memoria en Windows:** Jerarquía de memoria, la ilusión de la memoria virtual, rol de la MMU, Espacio de Direcciones Virtuales (VAS de 32 y 64 bits, modo Usuario vs modo Kernel), Paginación (marcos y páginas de 4 KB, Page Tables), Fallos de Página (*Soft* vs *Hard Page Faults*), el archivo `pagefile.sys`, y Pools del Kernel (*Paged* vs *Non-Paged Pool*).
+  * *Clase 2 (2 hs - Jueves):* **Diagnóstico Clínico y Monitoreo de Memoria:** Análisis de métricas en Administrador de Tareas y Monitor de Recursos (`resmon.exe`): memoria en uso, en espera (*Standby*), libre y modificada. Límite de compromiso (*Commit Limit*), detección de cuellos de botella por swapping y fugas de memoria (*memory leaks*).
+
+* **Semanas 7 y 8 (Septiembre / Octubre) — Módulo 4: Redes Locales, Recursos Compartidos y Seguridad en Windows:**
+  * *Clase 1 (2 hs - Miércoles):* Pila TCP/IP, direccionamiento IPv4, resolución de nombres (DNS/NetBIOS), diagnóstico de conectividad (`ipconfig`, `ping`, `tracert`, `Test-NetConnection`).
+  * *Clase 2 (2 hs - Jueves):* Grupos de trabajo, recursos compartidos mediante SMB (`net share`, `net use`), combinación de permisos compartidos vs permisos NTFS, y filtrado con Windows Defender Firewall (`netsh advfirewall`).
+
+* **Semana 9 (Mediados de Octubre) — Integración y Evaluación:**
+  * *Clase 1 (2 hs - Miércoles):* Taller práctico de integración de almacenamiento, permisos, diagnóstico de memoria y conectividad.
+  * *Clase 2 (2 hs - Jueves):* Evaluación teórica/práctica integradora de los Módulos 1 al 4.
 
 ---
 
 ### 🏆 Bloque II: Proyecto Integrador Final (Mediados de Octubre a Fin de Año)
 
-* **Semanas 10 a 14 (Mediados de Octubre a Noviembre / Diciembre):** **Desafío Híbrido y Ciberseguridad**
-  * *Fase 1 (Semana 10):* Inyección del escenario de incidentes mediante scripts automatizados, diagnóstico de discos y permisos en ambos entornos.
-  * *Fase 2 (Semana 11):* Remediación de almacenamiento (VHD en Windows / discos loopback en Linux), reconstrucción de ACLs y permisos POSIX.
-  * *Fase 3 (Semana 12):* Reconfiguración de servicios SSH, generación de claves, apertura controlada de puertos en UFW y `netsh`.
-  * *Fase 4 (Semana 13):* Desarrollo del script de auditoría, monitoreo y respaldo automatizado en Bash.
-  * *Fase 5 (Semana 14):* Pruebas finales de interconectividad, entrega de documentación técnica y **defensa práctica en vivo en la terminal del laboratorio**.
+* **Semanas 10 a 14 (Mediados de Octubre a Noviembre / Diciembre):** **Desafío de Auditoría, Diagnóstico y Ciberseguridad en Windows**
+  * *Fase 1 (Semana 10):* Inyección del escenario de incidentes en Windows: diagnóstico de discos, particiones alteradas y permisos comprometidos.
+  * *Fase 2 (Semana 11):* Remediación de almacenamiento (reconstrucción de VHDs y volúmenes NTFS) y reestructuración de ACLs con `icacls`.
+  * *Fase 3 (Semana 12):* Detección y mitigación de procesos anomalos que saturan la memoria virtual, análisis con `resmon.exe` y optimización de paginación.
+  * *Fase 4 (Semana 13):* Configuración de carpetas compartidas seguras en red local, auditoría de accesos y reglas de Windows Firewall con `netsh`.
+  * *Fase 5 (Semana 14):* Pruebas de validación global, entrega de documentación técnica y **defensa práctica en vivo en la terminal del laboratorio**.
 
 ---
 
 ## 📋 Resumen por Módulo
 
-### 📁 Módulo 1: Almacenamiento y Sistemas de Archivos (Windows 11 vs. Linux)
-* **Contenidos:** Estructura de particiones (MBR vs GPT), sistemas de archivos (NTFS, FAT32, EXT4), volúmenes simples, montaje de unidades, inodos vs tabla MFT.
-* **Herramientas & Comandos:** `diskpart`, `Get-Disk`, `Get-Partition`, `Format-Volume`, `fdisk`, `mkfs.ext4`, `mount`/`umount`, `df -h`, `lsblk`.
+### 📁 Módulo 1: Almacenamiento y Sistemas de Archivos en Windows 11
+* **Contenidos:** Estructura de particiones (MBR vs GPT), sistemas de archivos (NTFS, FAT32, exFAT), volúmenes simples, montaje de unidades VHD/VHDX dinámicas, arquitectura de la tabla MFT.
+* **Herramientas & Comandos:** `diskpart`, `Get-Disk`, `Get-Partition`, `Format-Volume`.
 
-### 📁 Módulo 2: Seguridad, Permisos y Gestión de Usuarios
-* **Contenidos:** Modelos de seguridad NTFS vs POSIX, herencia de permisos, Listas de Control de Acceso (ACL), usuarios, grupos de sistema, elevación de privilegios (UAC vs `sudo`), auditoría de accesos.
-* **Herramientas & Comandos:** `icacls`, `Get-ACL`, `Set-ACL`, `chmod`, `chown`, `chgrp`, `umask`, `useradd`, `usermod`, `net user`.
+### 📁 Módulo 2: Seguridad, Permisos y Gestión de Usuarios en Windows
+* **Contenidos:** Cuentas de usuario y grupos locales, identificadores de seguridad (SID), base SAM, elevación con UAC, arquitectura de permisos NTFS, DACL/ACEs, herencia y precedencia.
+* **Herramientas & Comandos:** `icacls`, `Get-ACL`, `Set-ACL`, `takeown`, `net user`, `net localgroup`, `whoami /all`.
 
-### 📁 Módulo 3: Administración de Sistemas Linux & Bash Scripting
-* **Contenidos:** Jerarquía del FHS de Linux, administración de procesos, scripting en Bash, variables, estructuras de control, tuberías (*pipelines*), filtros de texto (`grep`, `awk`, `sed`) y automatización con `cron`.
-* **Herramientas & Comandos:** `bash`, `chmod +x`, `ps aux`, `top`/`htop`, `kill`, `grep`, `awk`, `sed`, `crontab`.
+### 📁 Módulo 3: Arquitectura y Administración de Memoria Real y Virtual en Windows
+* **Contenidos:** Jerarquía de almacenamiento, memoria física vs virtual, MMU, Espacio de Direcciones Virtuales (User vs Kernel Mode), paginación (4 KB), tablas de páginas, fallos de página suaves y duros, archivo `pagefile.sys`, Pools de Kernel (Paged y Non-Paged), métricas de rendimiento y diagnóstico en el Monitor de Recursos (`resmon.exe`).
+* **Herramientas & Diagnóstico:** Administrador de Tareas (Pestaña Rendimiento/Memoria), Monitor de Recursos (`resmon.exe`), `systeminfo` (memoria virtual disponible/total).
 
-### 📁 Módulo 4: Redes, Conectividad y Administración Remota
-* **Contenidos:** Configuración de pila TCP/IP, resolución de nombres (DNS / `/etc/hosts`), diagnóstico de red, inspección de puertos y sockets, administración remota segura vía SSH, configuración de firewalls (`netsh advfirewall` vs `ufw`).
-* **Herramientas & Comandos:** `ipconfig`, `ip a`, `ping`, `traceroute` / `tracepath`, `netstat` / `ss -tulpn`, `ssh`, `scp`, `systemctl`, `netsh`, `ufw`.
+### 📁 Módulo 4: Redes Locales, Recursos Compartidos y Seguridad en Windows
+* **Contenidos:** Configuración de red IPv4, resolución de nombres, grupos de trabajo, recursos compartidos SMB, permisos compartidos vs NTFS, mapeo de unidades de red, firewall de Windows.
+* **Herramientas & Comandos:** `ipconfig`, `ping`, `tracert`, `Test-NetConnection`, `net share`, `net use`, `netsh advfirewall`.
 
 ### 📁 Módulo 5: TP Integrador Final Gamificado
-* **Título:** *"Desafío Integrador: Infraestructura Híbrida y Ciberseguridad"*
-* **Dinámica:** Simulación de un escenario de producción híbrido (Windows 11 Host + Linux Live USB en red de laboratorio) desconfigurado por un incidente de seguridad. Los alumnos deben restablecer almacenamiento, corregir permisos comprometidos, levantar servicios SSH seguros y automatizar el monitoreo.
+* **Título:** *"Desafío Integrador: Infraestructura y Ciberseguridad en Windows"*
+* **Dinámica:** Simulación de un entorno de red de laboratorio Windows 11 desconfigurado tras una brecha de seguridad. Los alumnos deben diagnosticar el estado del almacenamiento, reconstruir permisos NTFS, resolver cuellos de botella de memoria y asegurar recursos compartidos en red.
