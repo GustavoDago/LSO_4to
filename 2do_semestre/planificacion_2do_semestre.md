@@ -55,13 +55,17 @@ La estrategia operativa se redefine para garantizar máxima fluidez y tiempo efe
   * *Clase 1 (2 hs - Miércoles):* **Formación Teórica Magistral de Memoria en Windows:** Jerarquía de memoria, la ilusión de la memoria virtual, rol de la MMU, Espacio de Direcciones Virtuales (VAS de 32 y 64 bits, modo Usuario vs modo Kernel), Paginación (marcos y páginas de 4 KB, Page Tables), Fallos de Página (*Soft* vs *Hard Page Faults*), el archivo `pagefile.sys`, y Pools del Kernel (*Paged* vs *Non-Paged Pool*).
   * *Clase 2 (2 hs - Jueves):* **Diagnóstico Clínico y Monitoreo de Memoria:** Análisis de métricas en Administrador de Tareas y Monitor de Recursos (`resmon.exe`): memoria en uso, en espera (*Standby*), libre y modificada. Límite de compromiso (*Commit Limit*), detección de cuellos de botella por swapping y fugas de memoria (*memory leaks*).
 
-* **Semanas 7 y 8 (Septiembre / Octubre) — Módulo 4: Redes Locales, Recursos Compartidos y Seguridad en Windows:**
+* **Semana 7 (Septiembre) — [Semana de Repaso Intensivo (Módulos 1, 2 y 3)](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/repaso_y_evaluacion_parcial):**
+  * *Clase 1 (2 hs - Miércoles):* **Ticket #401 - Incidente de Infraestructura y Control de Accesos:** Recomposición de discos virtuales VHDX en consola con `diskpart`, inicialización GPT, partición y formato NTFS, auditoría de identidades (`whoami /all`, SIDs) y reestructuración de permisos DACL con `icacls` (desactivación de herencia y precedencia *Deny > Allow*).
+  * *Clase 2 (2 hs - Jueves):* **Ticket #402 - Diagnóstico Clínico de Saturación de Memoria y Kernel:** Radiografía médica de memoria en `resmon.exe`, análisis de *Hard Page Faults*, diagnóstico del *Commit Limit*, monitoreo de Pools de Kernel (*Paged* vs *Non-Paged Pool*) y simulación controlada de consumo de memoria.
+
+* **Semana 8 (Septiembre / Octubre) — Evaluación Parcial Integradora (Módulos 1, 2 y 3):**
+  * *Clase 1 (2 hs - Miércoles):* Evaluación Mixta: Cuestionario conceptual/arquitectura (Google Forms) + Desafío técnico en terminal de laboratorio.
+  * *Clase 2 (2 hs - Jueves):* Devolución técnica, análisis grupal de casos de error y nivelación.
+
+* **Semanas 9 y 10 (Octubre) — Módulo 4: Redes Locales, Recursos Compartidos y Seguridad en Windows:**
   * *Clase 1 (2 hs - Miércoles):* Pila TCP/IP, direccionamiento IPv4, resolución de nombres (DNS/NetBIOS), diagnóstico de conectividad (`ipconfig`, `ping`, `tracert`, `Test-NetConnection`).
   * *Clase 2 (2 hs - Jueves):* Grupos de trabajo, recursos compartidos mediante SMB (`net share`, `net use`), combinación de permisos compartidos vs permisos NTFS, y filtrado con Windows Defender Firewall (`netsh advfirewall`).
-
-* **Semana 9 (Mediados de Octubre) — Integración y Evaluación:**
-  * *Clase 1 (2 hs - Miércoles):* Taller práctico de integración de almacenamiento, permisos, diagnóstico de memoria y conectividad.
-  * *Clase 2 (2 hs - Jueves):* Evaluación teórica/práctica integradora de los Módulos 1 al 4.
 
 ---
 
