@@ -58,6 +58,7 @@ La estrategia operativa se redefine para garantizar máxima fluidez y tiempo efe
 * **Semana 7 (Septiembre) — [Semana de Repaso Intensivo (Módulos 1, 2 y 3)](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/repaso_y_evaluacion_parcial):**
   * *Clase 1 (2 hs - Miércoles):* **Ticket #401 - Incidente de Infraestructura y Control de Accesos:** Recomposición de discos virtuales VHDX en consola con `diskpart`, inicialización GPT, partición y formato NTFS, auditoría de identidades (`whoami /all`, SIDs) y reestructuración de permisos DACL con `icacls` (desactivación de herencia y precedencia *Deny > Allow*).
   * *Clase 2 (2 hs - Jueves):* **Ticket #402 - Diagnóstico Clínico de Saturación de Memoria y Kernel:** Radiografía médica de memoria en `resmon.exe`, análisis de *Hard Page Faults*, diagnóstico del *Commit Limit*, monitoreo de Pools de Kernel (*Paged* vs *Non-Paged Pool*) y simulación controlada de consumo de memoria.
+  * *Clase 3 (2 hs):* **Simulacro y Práctica de Evaluación Parcial:** Ensayo integrador en doble modalidad: examen teórico escrito en papel (3 preguntas fundamentales de arquitectura) y práctica clínica en terminal CLI (bloque CMD y bloque PowerShell con informe de capturas para Google Classroom).
 
 * **Semana 8 (Septiembre / Octubre) — Evaluación Parcial Integradora (Módulos 1, 2 y 3):**
   * *Clase 1 (2 hs - Miércoles):* Evaluación Mixta: Cuestionario conceptual/arquitectura (Google Forms) + Desafío técnico en terminal de laboratorio.
