@@ -3,11 +3,11 @@
 ### Tecnicatura en Informática Personal y Profesional (Res. 3828/09)
 ### Eje de Evaluación: Almacenamiento, Seguridad/Permisos y Arquitectura de Memoria
 
-> **Documento de Referencia Exclusivo:** [Compendio Integral de Cátedra (Módulos 1, 2 y 3)](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/compendio_completo_modulos_1_2_3.md)  
+> **Documento de Referencia Exclusivo:** compendio_completo_modulos_1_2_3.md  
 > **Criterio de Evaluación:** Rigor técnico, precisión conceptual, justificación arquitectónica y ejecución correcta en laboratorio.  
-> **Escala de Calificación (Total: 10 Puntos):**  
-> * 📝 **Parte 1 (Teoría Conceptual):** 4 Puntos (1.33 puntos por cada pregunta respondida con fundamentación técnica).  
-> * 💻 **Parte 2 (Práctica en Laboratorio):** 6 Puntos (2 puntos por cada práctica acreditada mediante su respectiva captura de pantalla en Google Classroom).
+> **Escala de Calificación y Modalidad (Total: 10 Puntos):**  
+> * 📝 **Parte 1 (Teoría Conceptual - 4 Puntos):** Las 3 preguntas deben ser **respondidas en papel, de forma manuscrita/por escrito**, con vocabulario técnico y debida justificación (1.33 puntos c/u).  
+> * 💻 **Parte 2 (Práctica en Laboratorio - 6 Puntos):** 3 tareas prácticas (2 puntos c/u), acreditadas mediante sus respectivas **capturas de pantalla subidas a Google Classroom**.
 
 ---
 
@@ -20,6 +20,7 @@
 ---
 
 ## 📌 PARTE 1: Preguntas Conceptuales de Examen (4 Puntos)
+> ✍️ *Nota obligatoria:* Estas preguntas deben responderse **en papel, por escrito**, utilizando letra clara y vocabulario técnico riguroso.
 
 1. **Arquitectura de Particionado y el Límite de los 2 TB (1.33 Puntos):**  
    Un técnico informático debe instalar una unidad de disco rígido de **4 TB** en una estación de trabajo con Windows 11.
@@ -92,6 +93,7 @@
 ---
 
 ## 📌 PARTE 1: Preguntas Conceptuales de Examen (4 Puntos)
+> ✍️ *Nota obligatoria:* Estas preguntas deben responderse **en papel, por escrito**, utilizando letra clara y vocabulario técnico riguroso.
 
 1. **Estructura Interna de NTFS y Asignación por Clusters (1.33 Puntos):**  
    Al particionar y preparar un volumen con `diskpart` se ejecuta la instrucción: `format fs=ntfs quick label="DATOS"`.
@@ -153,6 +155,7 @@
 ---
 
 ## 📌 PARTE 1: Preguntas Conceptuales de Examen (4 Puntos)
+> ✍️ *Nota obligatoria:* Estas preguntas deben responderse **en papel, por escrito**, utilizando letra clara y vocabulario técnico riguroso.
 
 1. **Discos Virtuales en Windows (VHD/VHDX) y Gestión CLI con `diskpart` (1.33 Puntos):**  
    En el laboratorio de la escuela se requiere implementar entornos de práctica aislados para los alumnos sin modificar el congelador de disco (*Deep Freeze*) ni reconfigurar particiones físicas.
