@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>manual_teorico_redes_windows.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="manual-te%C3%B3rico-de-c%C3%A1tedra-redes-tcpip-dns-y-sockets-en-windows-11">Manual Teórico de Cátedra: Redes TCP/IP, DNS y Sockets en Windows 11</h1>
+<h2 id="laboratorio-de-sistemas-operativos-lso--4%C2%BA-a%C3%B1o">Laboratorio de Sistemas Operativos (LSO) — 4.º Año</h2>
+<h3 id="tecnicatura-en-inform%C3%A1tica-personal-y-profesional-res-382809">Tecnicatura en Informática Personal y Profesional (Res. 3828/09)</h3>
+<h3 id="m%C3%B3dulo-4-redes-recursos-compartidos-y-seguridad--clase-1">Módulo 4: Redes, Recursos Compartidos y Seguridad — Clase 1</h3>
+<hr>
+<h2 id="%F0%9F%8E%AF-fundamentaci%C3%B3n-%C2%BFpor-qu%C3%A9-el-sistema-operativo-gestiona-la-red">🎯 Fundamentación: ¿Por qué el Sistema Operativo gestiona la red?</h2>
+<p>Hasta ahora en el año aprendimos cómo el Sistema Operativo administra la <strong>CPU</strong> (creando procesos con sus PIDs), la <strong>Memoria RAM</strong> (aislando a cada programa con memoria virtual para que no se pisen) y el <strong>Disco</strong> (con particiones y permisos NTFS).</p>
+<p>Pero una computadora aislada hoy en día casi no sirve: necesita comunicarse con otras máquinas del laboratorio, servidores en la nube y sitios web.</p>
+<p>Aquí surge una pregunta técnica fundamental:</p>
+<blockquote>
+<p><strong>¿Google Chrome o Spotify tienen permiso para controlar directamente la placa de red física y enviar señales eléctricas por el cable?</strong></p>
+</blockquote>
+<p><strong>La respuesta es un rotundo NO.</strong> Ninguna aplicación de usuario (<em>Modo Usuario / Ring 3</em>) toca el hardware de red. Si pudieran hacerlo, un virus podría espiar las claves de todas las demás aplicaciones.</p>
+<p>El Sistema Operativo actúa como el <strong>gran administrador y aduana</strong>:</p>
+<ol>
+<li>Tu navegador le pide al Kernel de Windows: <em>&quot;Por favor, enviá este mensaje a tal servidor&quot;</em>.</li>
+<li>El Kernel de Windows (<code>tcpip.sys</code> en <em>Modo Kernel / Ring 0</em>) toma el mensaje, lo empaqueta con las normas internacionales de red, le pega las etiquetas de seguridad y se lo entrega al controlador (<em>driver</em>) de la placa de red.</li>
+</ol>
+<hr>
+<h2 id="1-la-gran-met%C3%A1fora-la-ciudad-el-edificio-y-el-correo-postal">1. La Gran Metáfora: La Ciudad, el Edificio y el Correo Postal</h2>
+<p>Para entender las redes sin marearse con tecnicismos, imaginá que Internet es una <strong>red postal de cartas gigantesca</strong>:</p>
+<pre class="hljs"><code><div>+---------------------------------------------------------------------------------+
+|                                LA ANALOGÍA POSTAL                                |
++---------------------------------------+-----------------------------------------+
+| Concepto de Red                       | Equivalente en el Mundo Real            |
++---------------------------------------+-----------------------------------------+
+| Dirección MAC (Capa 2 - Enlace)       | La matrícula o chasis grabado del auto. |
+| Dirección IP (Capa 3 - Internet)      | La dirección del edificio (Calle y N.º) |
+| Puerto TCP/UDP (Capa 4 - Transporte)  | El número de departamento o timbre.     |
+| Socket de Red (IP + Puerto)           | El sobre con remitente y destinatario.  |
+| Proceso en Ejecución (PID)            | La persona (inquilino) que atiende.     |
++---------------------------------------+-----------------------------------------+
+</div></code></pre>
+<h3 id="%C2%BFpor-qu%C3%A9-no-alcanza-con-la-direcci%C3%B3n-ip-sola">¿Por qué no alcanza con la dirección IP sola?</h3>
+<p>Imaginá que un cartero llega a un edificio de 50 departamentos y la carta solo dice <em>&quot;Calle Falsa 123&quot;</em>, pero no aclara a qué departamento va. El cartero no sabría a qué timbre tocar.</p>
+<p>En tu computadora pasa exactamente lo mismo: tu máquina tiene <strong>una sola dirección IP</strong>, pero al mismo tiempo tenés abierto Discord, una pestaña de YouTube, Steam descargando un juego y WhatsApp Web.</p>
+<ul>
+<li>Cuando llega un paquete de datos desde Internet a tu placa de red (al edificio), ¿cómo sabe Windows si ese paquete es un mensaje de WhatsApp o un fotograma de YouTube?</li>
+<li><strong>Por el número de Puerto.</strong> WhatsApp escucha en un timbre, YouTube en otro y Steam en otro. El <strong>Puerto</strong> dirige el dato al <strong>Proceso (PID)</strong> correcto.</li>
+</ul>
+<hr>
+<h2 id="2-el-modelo-tcpip-el-viaje-de-una-carta-de-chrome-al-cable">2. El Modelo TCP/IP: El Viaje de una Carta (de Chrome al Cable)</h2>
+<p>Cuando navegás en la web, la información no viaja en un solo bloque gigante. Se divide en paquetes pequeños y atraviesa <strong>4 capas lógicas</strong>. Cada capa hace un trabajo específico y le pega una &quot;etiqueta&quot; (<em>encabezado</em>) al paquete:</p>
+<pre><code class="language-mermaid"><div class="mermaid">graph TD
+    subgraph "1. Capa de Aplicación (El Contenido de la Carta)"
+        APP["Tu navegador escribe: 'Quiero ver la página principal' (HTTP / HTTPS / DNS)"]
+    end
+
+    subgraph "2. Capa de Transporte (El Timbre y el Tipo de Entrega)"
+        TRANS["Agrega Puertos: Origen 51234 -> Destino 443<br>Define el protocolo: TCP (con acuse de recibo) o UDP (rápido sin confirmación)"]
+    end
+
+    subgraph "3. Capa de Internet (La Dirección Postal Global)"
+        NET["Agrega Direcciones IP: Origen 192.168.1.35 -> Destino 142.250.190.46<br>Calcula el camino y el límite de saltos (TTL)"]
+    end
+
+    subgraph "4. Capa de Acceso a Red (El Transporte Físico)"
+        PHYS["Convierte todo en pulsos eléctricos o de luz (Cable Ethernet) u ondas de radio (Wi-Fi)"]
+    end
+
+    APP --> TRANS
+    TRANS --> NET
+    NET --> PHYS
+</div></code></pre>
+<h3 id="la-regla-de-oro-del-t%C3%A9cnico">La regla de oro del técnico:</h3>
+<blockquote>
+<p>Las capas se leen y se diagnostican <strong>de abajo hacia arriba</strong>. Si el cable está roto o desenchufado (Capa 1/4), es imposible que funcione el direccionamiento IP (Capa 3), y mucho menos la página web (Capa 4).</p>
+</blockquote>
+<hr>
+<h2 id="3-direccionamiento-ipv4-explicado-f%C3%A1cil">3. Direccionamiento IPv4 Explicado Fácil</h2>
+<p>Una dirección IPv4 se escribe como 4 números separados por puntos (por ejemplo, <code>192.168.1.35</code>). Para que una PC pueda comunicarse en una red, necesita <strong>4 datos fundamentales</strong>:</p>
+<pre class="hljs"><code><div>[ Dirección IPv4 ] ---------&gt; Tu número identificatorio en la red local.
+[ Máscara de Subred ] ------&gt; La línea divisoria: qué parte es tu barrio y qué parte es tu casa.
+[ Puerta de Enlace ] -------&gt; El Router: la puerta de salida para hablar con el exterior.
+[ Servidores DNS ] ---------&gt; La libreta de contactos que traduce nombres a números.
+</div></code></pre>
+<h3 id="1-la-puerta-de-enlace-predeterminada-gateway">1. La Puerta de Enlace Predeterminada (<em>Gateway</em>)</h3>
+<p>Es la dirección IP del <strong>Router</strong> de tu red local.</p>
+<ul>
+<li>Si querés enviarle un archivo a la PC que está al lado tuyo en el laboratorio, el mensaje viaja directo sin pasar por el router.</li>
+<li>Pero si querés comunicarte con un servidor en Japón o con <code>google.com</code>, tu PC no sabe cómo llegar a Japón: simplemente le entrega el paquete a la <strong>Puerta de Enlace</strong> y le dice: <em>&quot;Tomá, encargate vos de sacarlo a Internet&quot;</em>.</li>
+</ul>
+<h3 id="2-el-servidor-dns-la-agenda-de-contactos">2. El Servidor DNS: La Agenda de Contactos</h3>
+<p>Las computadoras solo entienden números IP (<code>142.250.190.46</code>), pero los seres humanos recordamos nombres (<code>google.com</code>).<br>
+El <strong>DNS (Domain Name System)</strong> es la agenda de tu teléfono:</p>
+<ul>
+<li>Vos no marcás de memoria el número de 10 dígitos de tu amigo; buscás <em>&quot;Lucas&quot;</em> y el teléfono marca solo.</li>
+<li>En Internet, cuando escribís <code>google.com</code>, Windows le pregunta al servidor DNS: <em>&quot;¿Qué IP tiene google.com?&quot;</em>. El DNS responde <em>&quot;Tiene la 142.250.190.46&quot;</em>, y recién ahí tu máquina se conecta.</li>
+</ul>
+<blockquote>
+<p>[!TIP]
+<strong>Caché DNS:</strong> Para no andar preguntándole al servidor DNS a cada segundo la misma cosa, Windows guarda las respuestas recientes en su memoria local. Podés verla con <code>ipconfig /displaydns</code> y vaciarla con <code>ipconfig /flushdns</code>.</p>
+</blockquote>
+<hr>
+<h2 id="4-las-tres-direcciones-%22raras%22-que-todo-t%C3%A9cnico-debe-conocer">4. Las Tres Direcciones &quot;Raras&quot; que Todo Técnico Debe Conocer</h2>
+<p>En la consola de comandos te vas a cruzar con direcciones especiales que tienen un significado clínico concreto:</p>
+<h3 id="a-la-direcci%C3%B3n-127001-loopback-%22hablarte-al-espejo%22">A. La dirección <code>127.0.0.1</code> (Loopback): &quot;Hablarte al espejo&quot;</h3>
+<ul>
+<li>Es la dirección de <strong>tu propia máquina</strong>.</li>
+<li>Cuando ejecutás <code>ping 127.0.0.1</code>, los paquetes no salen al cable ni a la antena Wi-Fi; bajan hasta la pila de red del Kernel y vuelven a subir.</li>
+<li><strong>¿Para qué sirve?</strong> Si te hacés ping a vos mismo y responde, sabés con total certeza que el software de red de Windows (<code>tcpip.sys</code>) y tu sistema operativo están funcionando bien. Es como tomarte el pulso para ver si estás vivo.</li>
+</ul>
+<h3 id="b-las-ips-privadas-192168xx-10xxx-%22los-nombres-de-entrecasa%22">B. Las IPs Privadas (<code>192.168.x.x</code>, <code>10.x.x.x</code>): &quot;Los nombres de entrecasa&quot;</h3>
+<ul>
+<li>En tu casa, tu mamá te llama por tu nombre de pila (<em>&quot;Martín&quot;</em>), pero para el Estado sos un DNI único.</li>
+<li>Las IPs privadas solo tienen validez adentro de tu casa o del colegio. Miles de casas en el mundo usan al mismo tiempo la IP <code>192.168.1.100</code>. Para salir a Internet, el router las traduce a una única <strong>IP Pública</strong> mediante una técnica llamada <strong>NAT</strong>.</li>
+</ul>
+<h3 id="c-la-direcci%C3%B3n-169254xx-apipa-%22el-n%C3%BAmero-de-la-fila-cuando-no-hay-nadie-en-la-ventanilla%22">C. La dirección <code>169.254.x.x</code> (APIPA): &quot;El número de la fila cuando no hay nadie en la ventanilla&quot;</h3>
+<ul>
+<li>Normalmente, cuando enchufás la PC, un servicio llamado <strong>DHCP</strong> (que corre en el router) te asigna automáticamente tu IP, tu máscara y tu DNS.</li>
+<li>Si enchufás el cable pero el router está apagado, roto o el cable no hace buen contacto, la PC pide auxilio: <em>&quot;¡Hola! ¿Hay algún servidor DHCP que me dé una IP?&quot;</em>. Nadie responde.</li>
+<li>Tras unos segundos de silencio, Windows no se queda con las manos vacías: se autoasigna una IP de emergencia que siempre empieza con <strong><code>169.254.</code></strong>.</li>
+<li><strong>Diagnóstico instantáneo:</strong> Si ves <code>169.254.x.x</code>, <strong>DHCP falló</strong>. No busques problemas en Google ni en el navegador: la PC no tiene comunicación con el router.</li>
+</ul>
+<hr>
+<h2 id="5-herramientas-de-sondeo-ping-ttl-y-tracert">5. Herramientas de Sondeo: Ping, TTL y Tracert</h2>
+<h3 id="%C2%BFc%C3%B3mo-funciona-el-ping">¿Cómo funciona el <code>ping</code>?</h3>
+<p>Envía un pequeño paquete de saludo llamado <strong>ICMP Echo Request</strong> y espera la respuesta (<strong>Echo Reply</strong>). Mide dos cosas:</p>
+<ol>
+<li><strong>Conectividad:</strong> Si el otro equipo está encendido y accesible.</li>
+<li><strong>Latencia:</strong> Cuántos milisegundos tarda la señal en ir y volver.</li>
+</ol>
+<h3 id="el-misterio-del-campo-ttl-time-to-live">El misterio del campo <code>TTL</code> (<em>Time To Live</em>)</h3>
+<p>¿Te imaginás qué pasaría si un paquete de datos busca una dirección que no existe y los routers se lo van pasando en círculos eternamente? La red mundial colapsaría llena de paquetes perdidos.</p>
+<p>Para evitar esto, cada paquete nace con un contador de vidas llamado <strong>TTL</strong> (por ejemplo, 128 o 64).</p>
+<ul>
+<li>Cada vez que el paquete atraviesa un router intermedio, ese router le resta 1 al TTL: <code>128 -&gt; 127 -&gt; 126...</code>.</li>
+<li>Si el TTL llega a <code>0</code>, el router descarta el paquete y avisa: <em>&quot;Se agotó el tiempo de vida&quot;</em>.</li>
+</ul>
+<h3 id="%C2%BFc%C3%B3mo-hace-tracert-para-dibujar-la-ruta-del-paquete">¿Cómo hace <code>tracert</code> para dibujar la ruta del paquete?</h3>
+<p>El comando <code>tracert</code> aprovecha el TTL de una manera brillante:</p>
+<ol>
+<li>Manda un primer paquete con <code>TTL = 1</code>. El primer router (tu gateway) le resta 1, llega a 0, descarta el paquete y responde diciendo: <em>&quot;Hola, soy el router 192.168.1.1 y acá murió tu paquete&quot;</em>. ¡Listo! Ya sabemos quién es el primer salto.</li>
+<li>Manda un segundo paquete con <code>TTL = 2</code>. Supera el primer router, llega al segundo, muere ahí y ese segundo router se identifica.</li>
+<li>Repite esto sucesivamente hasta llegar al destino final, dibujando mapa y latencia de cada parada en el camino.</li>
+</ol>
+<hr>
+<h2 id="6-el-portero-el%C3%A9ctrico-puertos-sockets-y-procesos">6. El Portero Eléctrico: Puertos, Sockets y Procesos</h2>
+<p>Volvamos a la metáfora del edificio. En Windows existen <strong>65.536 puertos posibles</strong> (del 0 al 65535) tanto en TCP como en UDP:</p>
+<pre class="hljs"><code><div>[ Puerto 80 ]   ------&gt; Tráfico Web estándar (HTTP sin cifrar)
+[ Puerto 443 ]  ------&gt; Tráfico Web seguro y bancario (HTTPS con cifrado SSL/TLS)
+[ Puerto 53 ]   ------&gt; Consultas a servidores de nombres (DNS)
+[ Puerto 445 ]  ------&gt; Recursos compartidos de archivos en red de Windows (SMB)
+[ Puerto 8080 ] ------&gt; Servidores web alternativos o de desarrollo
+</div></code></pre>
+<h3 id="los-estados-tcp-que-vas-a-ver-en-la-terminal-netstat">Los Estados TCP que vas a ver en la terminal (<code>netstat</code>)</h3>
+<pre class="hljs"><code><div>   [ LISTENING ]               [ ESTABLISHED ]                [ TIME_WAIT ]
+        🚪                          🤝                            ⏳
+El proceso está sentado     Hay una conexión activa.       La conexión ya terminó.
+esperando que alguien       Dos máquinas están hablando    El puerto espera unos
+toque el timbre en ese      y transfiriendo datos          segundos antes de quedar
+puerto (actúa de servidor). activamente.                   libre otra vez.
+</div></code></pre>
+<h3 id="%C2%BFqu%C3%A9-es-un-socket">¿Qué es un Socket?</h3>
+<p>Un <strong>Socket</strong> es la unión inseparable de:
+$$\text{Socket} = \text{Dirección IP} : \text{Puerto} : \text{Protocolo}$$
+<em>Ejemplo:</em> <code>192.168.1.35:49820:TCP</code><br>
+Una conexión en Internet se produce cuando el <strong>Socket de tu PC</strong> se conecta con el <strong>Socket del Servidor remoto</strong>.</p>
+<h3 id="la-misi%C3%B3n-detective-vincular-el-puerto-con-el-pid">La Misión Detective: Vincular el Puerto con el PID</h3>
+<p>En una consola con <code>netstat -ano</code>, cada socket muestra una columna al final: el <strong>PID</strong> (<em>Process ID</em>).</p>
+<ul>
+<li>Si ves el puerto <code>8080</code> en estado <code>LISTENING</code>, significa que algún programa en tu máquina está escuchando conexiones.</li>
+<li>Mirás su PID (por ejemplo, <code>4812</code>).</li>
+<li>Vas al Administrador de Tareas (pestaña Detalles) o ejecutás en PowerShell: <code>Get-Process -Id 4812</code>.</li>
+<li><strong>¡Atrapaste al culpable!</strong> Ahora sabés exactamente qué ejecutable abrió ese puerto. En ciberseguridad, así es como se detectan troyanos y puertas traseras.</li>
+</ul>
+<hr>
+<h2 id="7-%C3%A1rbol-de-decisi%C3%B3n-del-t%C3%A9cnico-%22no-hay-internet%22">7. Árbol de Decisión del Técnico: &quot;No Hay Internet&quot;</h2>
+<p>Cuando un usuario te llama diciendo <em>&quot;Se cayó internet&quot;</em>, un técnico profesional no prueba cosas al azar ni reinicia la PC a ciegas. Sigue este árbol de descarte lógico por capas:</p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    START(["El usuario no puede navegar"]) --> P1["1. ping 127.0.0.1<br>(Probar loopback)"]
+
+    P1 -- "Falla" --> ERR1["❌ FALLA LOCAL CRÍTICA<br>La pila de red de Windows o el driver de red están rotos.<br>Solución: Reparar driver o Winsock."]
+    P1 -- "Responde OK" --> P2["2. ipconfig /all<br>(Revisar datos IP)"]
+
+    P2 -- "¿IP es 169.254.x.x?" --> ERR2["❌ FALLA DE DHCP (APIPA)<br>El cable está desconectado o el router no asigna IPs.<br>Solución: Revisar cable, Wi-Fi o servidor DHCP."]
+    P2 -- "IP válida (ej: 192.168.x.x)" --> P3["3. ping [IP del Gateway]<br>(Probar conexión con el Router)"]
+
+    P3 -- "Falla" --> ERR3["❌ FALLA DE ENLACE LOCAL<br>Tu PC no llega al router de la sala.<br>Solución: Boca de red, switch o cable dañado."]
+    P3 -- "Responde OK" --> P4["4. ping 8.8.8.8<br>(Probar salida a Internet por IP)"]
+
+    P4 -- "Falla" --> ERR4["❌ FALLA DEL PROVEEDOR (ISP)<br>Llegás al router pero el router no sale al mundo exterior.<br>Solución: Problema del módem o del proveedor de Internet."]
+    P4 -- "Responde OK" --> P5["5. ping google.com<br>(Probar resolución DNS)"]
+
+    P5 -- "Falla" --> ERR5["❌ FALLA DE DNS<br>¡Hay Internet por IP pero no traduce nombres!<br>Solución: Configurar DNS alternativo (8.8.8.8 o 1.1.1.1)."]
+    P5 -- "Responde OK" --> P6["6. Test-NetConnection google.com -Port 443<br>(Probar servicio web)"]
+
+    P6 -- "Falla" --> ERR6["❌ BLOQUEO DE PUERTO O FIREWALL<br>Hay red y DNS, pero el puerto 443 está filtrado.<br>Solución: Revisar reglas de firewall o proxy."]
+    P6 -- "TcpTestSucceeded: True" --> OK["✅ RED 100% OPERATIVA<br>Si una página específica no abre, es problema del navegador o del servidor remoto."]
+
+    style START fill:#f9f,stroke:#333,stroke-width:2px
+    style OK fill:#9f9,stroke:#333,stroke-width:2px
+    style ERR1 fill:#f99,stroke:#333
+    style ERR2 fill:#f99,stroke:#333
+    style ERR3 fill:#f99,stroke:#333
+    style ERR4 fill:#f99,stroke:#333
+    style ERR5 fill:#f99,stroke:#333
+    style ERR6 fill:#f99,stroke:#333
+</div></code></pre>
+<hr>
+<h2 id="8-resumen-de-comandos-cl%C3%ADnicos-para-la-terminal">8. Resumen de Comandos Clínicos para la Terminal</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Qué querés averiguar</th>
+<th style="text-align:left">En Símbolo del Sistema (CMD)</th>
+<th style="text-align:left">En PowerShell</th>
+<th style="text-align:left">Para qué se usa en la práctica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Mi configuración completa</strong></td>
+<td style="text-align:left"><code>ipconfig /all</code></td>
+<td style="text-align:left"><code>Get-NetIPConfiguration</code></td>
+<td style="text-align:left">Ver tu IP, máscara, gateway, MAC y servidores DNS.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Conectividad básica</strong></td>
+<td style="text-align:left"><code>ping [destino]</code></td>
+<td style="text-align:left"><code>Test-Connection [destino]</code></td>
+<td style="text-align:left">Medir si el otro equipo responde y la latencia.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Traducir un nombre a IP</strong></td>
+<td style="text-align:left"><code>nslookup [dominio]</code></td>
+<td style="text-align:left"><code>Resolve-DnsName [dominio]</code></td>
+<td style="text-align:left">Probar si el servidor DNS está respondiendo bien.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Ver la memoria de nombres</strong></td>
+<td style="text-align:left"><code>ipconfig /displaydns</code></td>
+<td style="text-align:left"><code>Get-DnsClientCache</code></td>
+<td style="text-align:left">Ver las páginas que Windows ya resolvió recientemente.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Camino que hace el paquete</strong></td>
+<td style="text-align:left"><code>tracert [destino]</code></td>
+<td style="text-align:left"><code>Test-NetConnection -TraceRoute</code></td>
+<td style="text-align:left">Ver todos los routers intermedios y dónde se corta la señal.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Probar un puerto remoto</strong></td>
+<td style="text-align:left"><em>(No tiene nativo simple)</em></td>
+<td style="text-align:left"><code>Test-NetConnection [IP] -Port [N]</code></td>
+<td style="text-align:left">Saber si un servicio remoto (como web en 443) está escuchando.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Ver puertos abiertos y PIDs</strong></td>
+<td style="text-align:left"><code>netstat -ano</code></td>
+<td style="text-align:left"><code>Get-NetTCPConnection</code></td>
+<td style="text-align:left">Auditar qué puertos están en <code>LISTENING</code> y quién es el dueño.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Identificar proceso por PID</strong></td>
+<td style="text-align:left"><code>tasklist /fi &quot;PID eq [N]&quot;</code></td>
+<td style="text-align:left"><code>Get-Process -Id [N]</code></td>
+<td style="text-align:left">Saber qué programa exacto abrió una conexión sospechosa.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="%F0%9F%92%A1-consejo-final-para-el-laboratorio">💡 Consejo Final para el Laboratorio:</h3>
+<p>No intentes memorizar comandos de memoria sin sentido. Cada vez que escribas un comando en la pantalla negra, pensá:</p>
+<blockquote>
+<p><strong>&quot;¿Qué le estoy preguntando al Sistema Operativo? ¿A qué capa pertenece este dato?&quot;</strong><br>
+Esa es la diferencia entre un operador común y un verdadero técnico en informática.</p>
+</blockquote>
+
+</body>
+</html>

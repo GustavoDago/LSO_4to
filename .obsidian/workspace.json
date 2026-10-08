@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2do_semestre/compendio_completo_modulos_1_2_3.md",
+                "file": "2do_semestre/repaso_y_evaluacion_parcial/clase4_evaluacion_parcial/modelos_evaluacion_parcial.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "compendio_completo_modulos_1_2_3"
+              "title": "modelos_evaluacion_parcial"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2do_semestre/compendio_completo_modulos_1_2_3.md",
+                "file": "2do_semestre/repaso_y_evaluacion_parcial/clase4_evaluacion_parcial/modelos_evaluacion_parcial.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "2do_semestre/compendio_completo_modulos_1_2_3.md",
+                "file": "2do_semestre/repaso_y_evaluacion_parcial/clase4_evaluacion_parcial/modelos_evaluacion_parcial.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "2do_semestre/compendio_completo_modulos_1_2_3.md",
+                "file": "2do_semestre/repaso_y_evaluacion_parcial/clase4_evaluacion_parcial/modelos_evaluacion_parcial.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -189,5 +189,8 @@
     }
   },
   "active": "e07d692f7e2fa25e",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "2do_semestre/tp_integrador_final/consigna_desafio_hibrido.md",
+    "2do_semestre/compendio_completo_modulos_1_2_3.md"
+  ]
 }

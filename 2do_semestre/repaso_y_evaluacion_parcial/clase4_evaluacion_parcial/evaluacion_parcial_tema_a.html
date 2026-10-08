@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>evaluacion_parcial_tema_a.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="evaluaci%C3%B3n-parcial--modelo-de-examen-tema-a">Evaluación Parcial — Modelo de Examen (Tema A)</h1>
+<h2 id="laboratorio-de-sistemas-operativos-lso--4%C2%BA-a%C3%B1o">Laboratorio de Sistemas Operativos (LSO) — 4.º Año</h2>
+<h3 id="tecnicatura-en-inform%C3%A1tica-personal-y-profesional-res-382809">Tecnicatura en Informática Personal y Profesional (Res. 3828/09)</h3>
+<h3 id="eje-de-evaluaci%C3%B3n-almacenamiento-seguridadpermisos-y-arquitectura-de-memoria">Eje de Evaluación: Almacenamiento, Seguridad/Permisos y Arquitectura de Memoria</h3>
+<blockquote>
+<p><strong>Documento de Referencia Exclusivo:</strong> compendio_completo_modulos_1_2_3.md<br>
+<strong>Criterio de Evaluación:</strong> Rigor técnico, precisión conceptual, justificación arquitectónica y ejecución correcta en laboratorio.<br>
+<strong>Escala de Calificación y Modalidad (Total: 10 Puntos):</strong></p>
+<ul>
+<li>📝 <strong>Parte 1 (Teoría Conceptual - 4 Puntos):</strong> Las 3 preguntas deben ser <strong>respondidas en papel, de forma manuscrita/por escrito</strong>, con vocabulario técnico y debida justificación (1.33 puntos c/u).</li>
+<li>💻 <strong>Parte 2 (Práctica en Laboratorio - 6 Puntos):</strong> 3 tareas prácticas (2 puntos c/u), acreditadas mediante sus respectivas <strong>capturas de pantalla subidas a Google Classroom</strong>.</li>
+</ul>
+</blockquote>
+<hr>
+<h1 id="%F0%9F%93%9D-tema-a">📝 TEMA A</h1>
+<h3 id="ponderaci%C3%B3n-del-tema-a">Ponderación del Tema A:</h3>
+<ul>
+<li><strong>Parte 1: Teoría (4 Puntos):</strong> Preguntas 1, 2 y 3 (1.33 pts c/u).</li>
+<li><strong>Parte 2: Práctica en Laboratorio (6 Puntos):</strong> Práctica 1 (CMD - Almacenamiento), Práctica 2 (PowerShell - Memoria) y Práctica 3 (Aplicaciones - Seguridad) (2 pts c/u).</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%93%8C-parte-1-preguntas-conceptuales-de-examen-4-puntos">📌 PARTE 1: Preguntas Conceptuales de Examen (4 Puntos)</h2>
+<blockquote>
+<p>✍️ <em>Nota obligatoria:</em> Estas preguntas deben responderse <strong>en papel, por escrito</strong>, utilizando letra clara y vocabulario técnico riguroso.</p>
+</blockquote>
+<ol>
+<li>
+<p><strong>Arquitectura de Particionado y el Límite de los 2 TB (1.33 Puntos):</strong><br>
+Un técnico informático debe instalar una unidad de disco rígido de <strong>4 TB</strong> en una estación de trabajo con Windows 11.</p>
+<ul>
+<li>Explica detalladamente por qué es técnicamente imposible aprovechar la totalidad del disco si se inicializa bajo el esquema <strong>MBR</strong>, justificando matemáticamente la relación entre el direccionamiento LBA de 32 bits y el tamaño estándar de sector.</li>
+<li>Justifica dos razones arquitectónicas por las cuales el estándar <strong>GPT</strong> supera esta limitación y ofrece mayor tolerancia a fallos ante la corrupción de datos.</li>
+</ul>
+</li>
+<li>
+<p><strong>Seguridad Local, Identidades y Resolución de Conflictos NTFS (1.33 Puntos):</strong><br>
+En un servidor con Windows 11, un usuario llamado <code>Carlos</code> pertenece simultáneamente al grupo local <code>Tecnicos</code> y al grupo <code>Pasantes</code>. Sobre una carpeta compartida confidencial (<code>D:\Auditoria</code>), la Lista de Control de Acceso Discrecional (<strong>DACL</strong>) posee las siguientes dos reglas (<em>ACEs</em>):</p>
+<ul>
+<li><code>Tecnicos</code>: <strong>Permitir (Allow)</strong> — Control Total (F).</li>
+<li><code>Pasantes</code>: <strong>Denegar (Deny)</strong> — Lectura y Ejecución (RX).</li>
+</ul>
+<p><em>Responde y justifica:</em></p>
+<ul>
+<li>¿Podrá <code>Carlos</code> ingresar a la carpeta y leer su contenido? Explica qué regla jerárquica estricta aplica el Administrador de Referencia de Seguridad (<strong>SRM</strong>) del kernel para resolver este conflicto.</li>
+<li>Si el administrador del sistema cambia el nombre de la cuenta de usuario de <code>Carlos</code> a <code>Carlos_Jefe</code>, ¿pierde sus accesos o se deben reconfigurar las reglas de la carpeta? Justifica tu respuesta utilizando el concepto de <strong>SID (<em>Security Identifier</em>)</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Arquitectura de Memoria: Aislamiento del VAS y Anillos de CPU (1.33 Puntos):</strong><br>
+En una computadora con Windows 11 de 64 bits, se están ejecutando al mismo tiempo el navegador web (<code>chrome.exe</code>) y un editor de texto (<code>notepad.exe</code>).</p>
+<ul>
+<li>Explica en qué consiste el concepto de <strong>&quot;La Ilusión Contigua&quot;</strong> que brinda la Memoria Virtual y cómo la <strong>MMU (<em>Memory Management Unit</em>)</strong> garantiza que dos procesos puedan utilizar exactamente la misma dirección lógica (ej. <code>0x00400000</code>) sin interferir entre sí.</li>
+<li>Si un proceso que corre en Modo Usuario (<strong>Ring 3</strong>) intenta forzar una lectura directa a una dirección del núcleo del sistema operativo (<strong>Ring 0</strong>), ¿qué componente detecta la infracción, qué excepción se dispara y qué acción inmediata toma Windows con dicho proceso?</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="%F0%9F%92%BB-parte-2-pr%C3%A1ctica-en-laboratorio-6-puntos">💻 PARTE 2: Práctica en Laboratorio (6 Puntos)</h2>
+<h3 id="%F0%9F%94%B2-pr%C3%A1ctica-1-cmd--aprovisionamiento-de-unidad-virtual-vhdx-en-diskpart-2-puntos">🔲 Práctica 1: CMD — Aprovisionamiento de Unidad Virtual VHDX en <code>diskpart</code> (2 Puntos)</h3>
+<ol>
+<li>Abre una ventana de <strong>Símbolo del sistema (CMD)</strong> como Administrador.</li>
+<li>Inicia el intérprete <code>diskpart</code> y ejecuta la siguiente secuencia de comandos:<pre class="hljs"><code><div>diskpart
+create vdisk file="C:\Temp\TemaA.vhdx" maximum=<span class="hljs-number">128</span> <span class="hljs-built_in">type</span>=expandable
+select vdisk file="C:\Temp\TemaA.vhdx"
+attach vdisk
+<span class="hljs-built_in">convert</span> gpt
+create partition primary
+<span class="hljs-built_in">format</span> <span class="hljs-built_in">fs</span>=ntfs quick <span class="hljs-built_in">label</span>="TEMA_A"
+assign letter=V
+list volume
+</div></code></pre>
+</li>
+<li>📸 <strong>Captura Obligatoria 1:</strong> Toma una captura de pantalla de la ventana de CMD donde se observe la ejecución de los comandos y la tabla de <code>list volume</code> mostrando la unidad <code>V:</code> montada con formato NTFS y etiqueta <code>TEMA_A</code>.</li>
+</ol>
+<hr>
+<h3 id="%F0%9F%94%B2-pr%C3%A1ctica-2-powershell--auditor%C3%ADa-de-procesos-por-ram-f%C3%ADsica-working-set-2-puntos">🔲 Práctica 2: PowerShell — Auditoría de Procesos por RAM Física (Working Set) (2 Puntos)</h3>
+<ol>
+<li>Abre una consola de <strong>PowerShell</strong>.</li>
+<li>Ejecuta la siguiente instrucción para consultar los procesos activos, ordenarlos de mayor a menor consumo de memoria RAM física real (<code>WorkingSet64</code>), calcular el valor en Megabytes y mostrar los 5 procesos principales:<pre class="hljs"><code><div><span class="hljs-built_in">Get-Process</span> | <span class="hljs-built_in">Sort-Object</span> WorkingSet64 <span class="hljs-literal">-Descending</span> | <span class="hljs-built_in">Select-Object</span> <span class="hljs-literal">-First</span> <span class="hljs-number">5</span> Id, ProcessName, <span class="hljs-selector-tag">@</span>{Name=<span class="hljs-string">"RAM_Fisica_MB"</span>; Expression={[<span class="hljs-type">math</span>]::round(<span class="hljs-variable">$_</span>.WorkingSet64 / <span class="hljs-number">1</span>MB, <span class="hljs-number">2</span>)}} | <span class="hljs-built_in">Format-Table</span> <span class="hljs-literal">-AutoSize</span>
+</div></code></pre>
+</li>
+<li>📸 <strong>Captura Obligatoria 2:</strong> Toma una captura de pantalla de la consola PowerShell mostrando la tabla resultante con los 5 procesos y sus consumos en Megabytes.</li>
+</ol>
+<hr>
+<h3 id="%F0%9F%94%B2-pr%C3%A1ctica-3-aplicaciones-gui--auditor%C3%ADa-de-permisos-efectivos-en-el-explorador-2-puntos">🔲 Práctica 3: Aplicaciones (GUI) — Auditoría de Permisos Efectivos en el Explorador (2 Puntos)</h3>
+<ol>
+<li>Abre el <strong>Explorador de Archivos</strong> (<code>Win + E</code>) y dirígete a <code>C:\Temp</code>. Crea una nueva carpeta llamada <code>Seguridad_TemaA</code>.</li>
+<li>Haz clic derecho sobre <code>Seguridad_TemaA</code> → selecciona <strong>Propiedades</strong> → ve a la pestaña <strong>Seguridad</strong> → haz clic en el botón <strong>Opciones avanzadas</strong>.</li>
+<li>En la ventana de configuración avanzada, haz clic en la pestaña superior <strong>Acceso efectivo</strong>.</li>
+<li>Haz clic en <strong>Seleccionar un usuario</strong>, escribe el nombre de tu usuario local (o <code>Usuarios</code>) y pulsa <strong>Aceptar</strong>.</li>
+<li>Haz clic en el botón <strong>Ver acceso efectivo</strong> para que el sistema calcule los permisos reales.</li>
+<li>📸 <strong>Captura Obligatoria 3:</strong> Toma una captura de pantalla donde se observe la ventana &quot;Configuración de seguridad avanzada para Seguridad_TemaA&quot; con la lista de derechos evaluados y sus respectivos tildes de estado.</li>
+</ol>
+
+</body>
+</html>

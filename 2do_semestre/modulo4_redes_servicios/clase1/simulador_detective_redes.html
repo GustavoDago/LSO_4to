@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSO Cyber-NOC | Detective de Red Windows 11</title>
+    <!-- Fuentes tipográficas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #060911;
+            --bg-panel: rgba(13, 20, 36, 0.75);
+            --bg-card: rgba(19, 31, 56, 0.65);
+            --border-glass: rgba(56, 189, 248, 0.2);
+            --border-hover: rgba(56, 189, 248, 0.5);
+            
+            --cyan-glow: #38bdf8;
+            --emerald-glow: #10b981;
+            --amber-glow: #f59e0b;
+            --rose-glow: #ef4444;
+            --violet-glow: #8b5cf6;
+            
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --text-mono: #38bdf8;
+            
+            --font-ui: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'Share Tech Mono', Consolas, 'Cascadia Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.12) 0%, transparent 60%),
+                radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                linear-gradient(rgba(15, 23, 42, 0.6) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 23, 42, 0.6) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient scanline overlay */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        /* Header Cyber-NOC */
+        header {
+            width: 100%;
+            max-width: 1100px;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(6, 9, 17, 0.85);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--emerald-glow);
+            box-shadow: 0 0 12px var(--emerald-glow);
+            animation: pulse-dot 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .brand-text h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .brand-text span {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--cyan-glow);
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-chip .val {
+            color: var(--cyan-glow);
+            font-weight: bold;
+        }
+
+        .btn-audio {
+            background: transparent;
+            border: 1px solid var(--border-glass);
+            color: var(--text-dim);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .btn-audio:hover {
+            color: #fff;
+            border-color: var(--cyan-glow);
+        }
+
+        /* Container Principal */
+        main {
+            width: 100%;
+            max-width: 1100px;
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Progress Steps */
+        .progress-bar-container {
+            width: 100%;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-bar-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .progress-track {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            height: 2px;
+            background: var(--cyan-glow);
+            box-shadow: 0 0 10px var(--cyan-glow);
+            transform: translateY(-50%);
+            z-index: 2;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        .step-node {
+            position: relative;
+            z-index: 3;
+            background: var(--bg-base);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-dim);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .step-node.active {
+            border-color: var(--cyan-glow);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            background: #0f2744;
+        }
+
+        .step-node.completed {
+            border-color: var(--emerald-glow);
+            background: var(--emerald-glow);
+            color: #000;
+        }
+
+        /* Stage Cards Container */
+        .stage-card {
+            width: 100%;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 32px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .stage-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Generic Typography in Stages */
+        .stage-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .stage-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--cyan-glow);
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .stage-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .stage-header p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-top: 6px;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Common Cyber Buttons */
+        .btn-cyber {
+            font-family: var(--font-ui);
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 12px 28px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-cyber-primary {
+            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+            color: #04101e;
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.35);
+        }
+
+        .btn-cyber-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 26px rgba(56, 189, 248, 0.55);
+        }
+
+        .btn-cyber-secondary {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+        }
+
+        .btn-cyber-secondary:hover {
+            border-color: var(--cyan-glow);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        /* ==================== STAGE 0: LOGIN & ONBOARDING ==================== */
+        .login-grid {
+            max-width: 480px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+        }
+
+        .input-cyber {
+            background: rgba(10, 16, 28, 0.8);
+            border: 1px solid var(--border-glass);
+            padding: 14px 18px;
+            border-radius: 10px;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .input-cyber:focus {
+            border-color: var(--cyan-glow);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+        }
+
+        /* ==================== STAGE 1: EL EDIFICIO POSTAL ==================== */
+        .envelope-arena {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 800px) {
+            .envelope-arena { grid-template-columns: 1fr; }
+        }
+
+        .envelope-display {
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px dashed rgba(56, 189, 248, 0.4);
+            border-radius: 14px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .envelope-slot {
+            margin-bottom: 14px;
+            padding: 12px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .envelope-slot:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .envelope-slot.active-slot {
+            border-color: var(--cyan-glow);
+            background: rgba(56, 189, 248, 0.12);
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+        }
+
+        .envelope-slot.filled {
+            border-color: var(--emerald-glow);
+            background: rgba(16, 185, 129, 0.08);
+            cursor: default;
+        }
+
+        .envelope-slot.incorrect {
+            border-color: var(--rose-glow);
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        .slot-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+        }
+
+        .slot-target {
+            min-height: 42px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .tag-pool {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .concept-tag {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .concept-tag:hover {
+            border-color: var(--cyan-glow);
+            transform: translateX(4px);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .concept-tag.used {
+            opacity: 0.35;
+            pointer-events: none;
+            border-style: dashed;
+        }
+
+        /* ==================== STAGE 2: EL VIAJE DEL PAQUETE Y TTL ==================== */
+        .ttl-simulation-box {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .router-track {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 10px;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .router-track::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            right: 30px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.15);
+            z-index: 1;
+        }
+
+        .network-node {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 80px;
+        }
+
+        .node-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .network-node.active-node .node-icon {
+            border-color: var(--cyan-glow);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+            transform: scale(1.1);
+        }
+
+        .network-node.drop-node .node-icon {
+            border-color: var(--rose-glow);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+            background: #3b111a;
+        }
+
+        .node-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-align: center;
+        }
+
+        .node-ip {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--cyan-glow);
+        }
+
+        .packet-runner {
+            position: absolute;
+            top: calc(50% - 14px);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--cyan-glow);
+            box-shadow: 0 0 16px var(--cyan-glow);
+            z-index: 10;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #000;
+            font-weight: bold;
+            transition: left 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .ttl-controls {
+            display: flex;
+            gap: 20px;
+            background: rgba(10, 16, 28, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-glass);
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .ttl-slider-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .ttl-slider-group input[type="range"] {
+            width: 200px;
+            accent-color: var(--cyan-glow);
+        }
+
+        .ttl-readout {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--cyan-glow);
+            min-width: 40px;
+        }
+
+        .ttl-log {
+            background: #040711;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 14px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #94a3b8;
+            min-height: 80px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        /* ==================== STAGE 3: EL PORTERO ELÉCTRICO ==================== */
+        .portero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 850px) {
+            .portero-grid { grid-template-columns: 1fr; }
+        }
+
+        .intercom-panel {
+            background: #090e1c;
+            border: 2px solid #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .intercom-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .doorbell {
+            background: #111a2e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 16px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .doorbell:hover {
+            border-color: var(--cyan-glow);
+            transform: translateY(-2px);
+        }
+
+        .doorbell.selected {
+            border-color: var(--cyan-glow);
+            background: rgba(56, 189, 248, 0.15);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .port-num {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .port-status-badge {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .status-listening {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--emerald-glow);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .status-established {
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--cyan-glow);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .status-closed {
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--text-dim);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .intercom-inspect {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .netstat-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        .netstat-table th, .netstat-table td {
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .netstat-table th {
+            color: var(--cyan-glow);
+            font-weight: normal;
+        }
+
+        .netstat-table tr.alert-row {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--amber-glow);
+        }
+
+        /* ==================== STAGE 4: TERMINAL CLÍNICA ==================== */
+        .terminal-box {
+            background: #030712;
+            border: 2px solid #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .terminal-titlebar {
+            background: #111827;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .t-dot.r { background: #ef4444; }
+        .t-dot.y { background: #f59e0b; }
+        .t-dot.g { background: #10b981; }
+
+        .terminal-screen {
+            padding: 20px;
+            min-height: 260px;
+            max-height: 320px;
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        .t-prompt {
+            color: var(--cyan-glow);
+        }
+
+        .terminal-input-bar {
+            display: flex;
+            padding: 12px 16px;
+            background: #090e1a;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            gap: 10px;
+        }
+
+        .terminal-input-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .quick-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .pill-cmd {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--cyan-glow);
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pill-cmd:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--cyan-glow);
+        }
+
+        .verdict-box {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .verdict-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 750px) {
+            .verdict-options { grid-template-columns: 1fr; }
+        }
+
+        .btn-verdict {
+            padding: 12px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-verdict:hover {
+            border-color: var(--amber-glow);
+            background: rgba(245, 158, 11, 0.15);
+        }
+
+        /* ==================== STAGE 5: CREDENCIAL FINAL ==================== */
+        .badge-card-outer {
+            max-width: 550px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border: 2px solid var(--cyan-glow);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.25);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge-card-outer::before {
+            content: 'LSO CERTIFIED';
+            position: absolute;
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.02);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .badge-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(56, 189, 248, 0.15);
+            border: 2px solid var(--cyan-glow);
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .badge-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .badge-subtitle {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--cyan-glow);
+            margin-bottom: 20px;
+        }
+
+        .badge-medals {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .medal-item {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cert-score-big {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--emerald-glow);
+            font-family: var(--font-mono);
+            margin: 10px 0;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .feedback-banner {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 14px;
+            font-size: 0.9rem;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .feedback-success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--emerald-glow);
+            color: #6ee7b7;
+        }
+
+        .feedback-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--rose-glow);
+            color: #fca5a5;
+        }
+
+        /* Print formatting */
+        @media print {
+            body { background: #fff !important; color: #000 !important; }
+            header, .progress-bar-container, .btn-cyber, .scanlines { display: none !important; }
+            .stage-card { display: none !important; }
+            #stage-cert { display: block !important; box-shadow: none !important; border: 2px solid #000 !important; }
+            .badge-card-outer { border: 2px solid #000 !important; background: #fff !important; color: #000 !important; }
+            .cert-score-big { color: #000 !important; }
+            .badge-subtitle, .node-ip, .stat-chip .val { color: #333 !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+
+    <!-- Header Cyber-NOC -->
+    <header>
+        <div class="brand-badge">
+            <div class="status-dot"></div>
+            <div class="brand-text">
+                <h1>LSO CYBER-NOC</h1>
+                <span>MODULO 4 • CLASE 1: DETECTIVE DE RED</span>
+            </div>
+        </div>
+
+        <div class="header-stats">
+            <div class="stat-chip">
+                <span>PUNTOS:</span>
+                <span class="val" id="score-display">0</span>
+            </div>
+            <div class="stat-chip">
+                <span>OPERADOR:</span>
+                <span class="val" id="op-display">---</span>
+            </div>
+            <button class="btn-audio" id="audio-toggle" onclick="toggleAudio()">🔊 AUDIO ON</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Barra de Progreso -->
+        <div class="progress-bar-container">
+            <div class="progress-track" id="progress-track"></div>
+            <div class="step-node active" id="node-0">0</div>
+            <div class="step-node" id="node-1">1</div>
+            <div class="step-node" id="node-2">2</div>
+            <div class="step-node" id="node-3">3</div>
+            <div class="step-node" id="node-4">4</div>
+            <div class="step-node" id="node-5">★</div>
+        </div>
+
+        <!-- ==================== ETAPA 0: INICIO ==================== -->
+        <div class="stage-card active" id="stage-0">
+            <div class="stage-header">
+                <span class="stage-badge">CENTRO DE OPERACIONES DE RED</span>
+                <h2>Misión: Diagnóstico Clínico de Red</h2>
+                <p>Las terminales de la red del laboratorio están bajo auditoría. Conectate a la consola técnica, dominá el direccionamiento y resolvé los incidentes antes del cierre de turno.</p>
+            </div>
+
+            <div class="login-grid">
+                <div class="input-group">
+                    <label>NOMBRE Y APELLIDO DEL ESTUDIANTE:</label>
+                    <input type="text" id="input-name" class="input-cyber" placeholder="Ej: Lucas Romero" autofocus>
+                </div>
+                <div class="input-group">
+                    <label>TERMINAL / EQUIPO N.º (LABORATORIO):</label>
+                    <input type="text" id="input-pc" class="input-cyber" placeholder="Ej: PC-04">
+                </div>
+                <button class="btn-cyber btn-cyber-primary" style="margin-top: 10px;" onclick="startMission()">
+                    🚀 INICIAR AUDITORÍA TÉCNICA
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== ETAPA 1: EL EDIFICIO POSTAL ==================== -->
+        <div class="stage-card" id="stage-1">
+            <div class="stage-header">
+                <span class="stage-badge">NIVEL 1 • LA METÁFORA POSTAL</span>
+                <h2>El Edificio, el Correo y el Sobre de Red</h2>
+                <p>Para enviar un mensaje desde <b>Discord</b> hacia el servidor remoto, el Sistema Operativo debe rotular la carta de red con todas sus etiquetas. Vinculá cada concepto técnico con su rol en la vida real.</p>
+            </div>
+
+            <div class="envelope-arena">
+                <!-- El Sobre de Red -->
+                <div class="envelope-display">
+                    <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--cyan-glow); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>📫 SOBRE DE RED EN TRANSMISIÓN (Winsock / tcpip.sys)</span>
+                        <span style="font-size: 0.75rem; color: var(--text-dim);" id="active-slot-hint">Hacé clic en una ranura y luego en su etiqueta</span>
+                    </div>
+
+                    <div class="envelope-slot active-slot" id="slot-mac" onclick="selectSlot('mac')">
+                        <span class="slot-label">1. Matrícula física o chasis de fábrica de la placa de red:</span>
+                        <div class="slot-target" id="target-mac">
+                            <span style="color: var(--cyan-glow); font-size: 0.85rem;">👈 Ranura activa: elegí su etiqueta a la derecha...</span>
+                        </div>
+                    </div>
+
+                    <div class="envelope-slot" id="slot-ip" onclick="selectSlot('ip')">
+                        <span class="slot-label">2. Dirección postal del edificio en la red:</span>
+                        <div class="slot-target" id="target-ip">
+                            <span style="color: var(--text-dim); font-size: 0.85rem;">[Hacé clic para seleccionar esta ranura...]</span>
+                        </div>
+                    </div>
+
+                    <div class="envelope-slot" id="slot-port" onclick="selectSlot('port')">
+                        <span class="slot-label">3. Número de timbre o departamento en el host:</span>
+                        <div class="slot-target" id="target-port">
+                            <span style="color: var(--text-dim); font-size: 0.85rem;">[Hacé clic para seleccionar esta ranura...]</span>
+                        </div>
+                    </div>
+
+                    <div class="envelope-slot" id="slot-pid" onclick="selectSlot('pid')">
+                        <span class="slot-label">4. Identidad del inquilino (proceso) que atiende la puerta:</span>
+                        <div class="slot-target" id="target-pid">
+                            <span style="color: var(--text-dim); font-size: 0.85rem;">[Hacé clic para seleccionar esta ranura...]</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banco de Etiquetas Mezcladas (Sin indicador de capa) -->
+                <div>
+                    <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-dim); margin-bottom: 12px;">
+                        🏷️ ETIQUETAS TÉCNICAS DISPONIBLES:
+                    </div>
+                    <div class="tag-pool" id="tag-pool-container">
+                        <div class="concept-tag" id="tag-port" onclick="assignTag('port')">
+                            <span>Puerto TCP/UDP (Puerto 443)</span>
+                        </div>
+                        <div class="concept-tag" id="tag-distractor" onclick="assignTag('distractor')">
+                            <span>Número de Teléfono del Proveedor (0800-FIBRA)</span>
+                        </div>
+                        <div class="concept-tag" id="tag-pid" onclick="assignTag('pid')">
+                            <span>Proceso en Ejecución (PID: 3412 / Discord.exe)</span>
+                        </div>
+                        <div class="concept-tag" id="tag-mac" onclick="assignTag('mac')">
+                            <span>Dirección MAC (00-1A-2B-3C-4D-5E)</span>
+                        </div>
+                        <div class="concept-tag" id="tag-ip" onclick="assignTag('ip')">
+                            <span>Dirección IPv4 (192.168.1.35)</span>
+                        </div>
+                    </div>
+
+                    <div id="feedback-stage1" class="feedback-banner"></div>
+
+                    <div style="margin-top: 20px; display: flex; gap: 12px;">
+                        <button class="btn-cyber btn-cyber-secondary" onclick="resetStage1()">Reiniciar</button>
+                        <button class="btn-cyber btn-cyber-primary" id="btn-next-1" style="display: none;" onclick="goToStage(2)">
+                            CONTINUAR AL NIVEL 2 ➔
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ETAPA 2: EL VIAJE DEL PAQUETE Y TTL ==================== -->
+        <div class="stage-card" id="stage-2">
+            <div class="stage-header">
+                <span class="stage-badge">NIVEL 2 • TRAZADO Y SALTO DE PAQUETES</span>
+                <h2>El Viaje del Paquete y el Secreto del TTL</h2>
+                <p>Cada router descuenta 1 al <b>Time To Live (TTL)</b>. Si llega a 0, el router descarta el paquete y responde con un mensaje de aviso, revelando su IP. ¡Así es como funciona <code>tracert</code>!</p>
+            </div>
+
+            <div class="ttl-simulation-box">
+                <div class="router-track" id="router-track">
+                    <div class="packet-runner" id="packet-runner">📦</div>
+
+                    <div class="network-node active-node" id="node-pc">
+                        <div class="node-icon">💻</div>
+                        <span class="node-name">Mi PC (Host)</span>
+                        <span class="node-ip">192.168.1.35</span>
+                    </div>
+
+                    <div class="network-node" id="node-r1">
+                        <div class="node-icon">🔀</div>
+                        <span class="node-name">Gateway (Router 1)</span>
+                        <span class="node-ip">192.168.1.1</span>
+                    </div>
+
+                    <div class="network-node" id="node-r2">
+                        <div class="node-icon">🌐</div>
+                        <span class="node-name">Router ISP (Salto 2)</span>
+                        <span class="node-ip">200.45.12.1</span>
+                    </div>
+
+                    <div class="network-node" id="node-r3">
+                        <div class="node-icon">🏢</div>
+                        <span class="node-name">Backbone (Salto 3)</span>
+                        <span class="node-ip">181.88.2.14</span>
+                    </div>
+
+                    <div class="network-node" id="node-srv">
+                        <div class="node-icon">☁️</div>
+                        <span class="node-name">Servidor Google</span>
+                        <span class="node-ip">142.250.190.46</span>
+                    </div>
+                </div>
+
+                <div class="ttl-controls">
+                    <div class="ttl-slider-group">
+                        <label style="font-family: var(--font-mono); font-size: 0.9rem;">VALOR INICIAL DE TTL:</label>
+                        <input type="range" id="ttl-slider" min="1" max="5" value="1" oninput="updateTTLSlider(this.value)">
+                        <span class="ttl-readout" id="ttl-val">1</span>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-cyber btn-cyber-primary" id="btn-fire-packet" onclick="firePacketSimulation()">
+                            ⚡ DISPARAR PAQUETE
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ttl-log" id="ttl-console-log">
+                    > Consola Tracert lista. Seleccioná TTL y dispará el paquete para analizar el ruteo...
+                </div>
+
+                <div id="feedback-stage2" class="feedback-banner"></div>
+
+                <div style="text-align: right;">
+                    <button class="btn-cyber btn-cyber-primary" id="btn-next-2" style="display: none;" onclick="goToStage(3)">
+                        CONTINUAR AL NIVEL 3 ➔
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ETAPA 3: EL PORTERO ELÉCTRICO ==================== -->
+        <div class="stage-card" id="stage-3">
+            <div class="stage-header">
+                <span class="stage-badge">NIVEL 3 • AUDITORÍA DE SOCKETS</span>
+                <h2>El Portero Eléctrico: Puertos y PIDs</h2>
+                <p>En el edificio de tu PC hay 65.535 timbres. El administrador de red detectó una conexión anómala. Inspeccioná los timbres con <code>netstat -ano</code>, identificá el puerto en <b>LISTENING</b> sospechoso y atrapá al proceso responsable.</p>
+            </div>
+
+            <div class="portero-grid">
+                <!-- Panel de Intercomunicador -->
+                <div class="intercom-panel">
+                    <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim); margin-bottom: 12px; text-transform: uppercase;">
+                        🏢 TABLERO DE PORTERO ELÉCTRICO (TIMBRES DEL EDIFICIO)
+                    </div>
+
+                    <div class="intercom-buttons">
+                        <div class="doorbell" onclick="ringPort(53)">
+                            <span class="port-num">53</span>
+                            <span class="port-status-badge status-listening">LISTENING</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">DNS Cache</span>
+                        </div>
+                        <div class="doorbell" onclick="ringPort(80)">
+                            <span class="port-num">80</span>
+                            <span class="port-status-badge status-closed">CERRADO</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">HTTP Web</span>
+                        </div>
+                        <div class="doorbell" onclick="ringPort(443)">
+                            <span class="port-num">443</span>
+                            <span class="port-status-badge status-established">ESTABLISHED</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">HTTPS Navegador</span>
+                        </div>
+                        <div class="doorbell" onclick="ringPort(445)">
+                            <span class="port-num">445</span>
+                            <span class="port-status-badge status-listening">LISTENING</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">SMB Compartido</span>
+                        </div>
+                        <div class="doorbell alert-bell" onclick="ringPort(8080)">
+                            <span class="port-num">8080</span>
+                            <span class="port-status-badge status-listening">LISTENING</span>
+                            <span style="font-size: 0.7rem; color: var(--amber-glow);">⚠️ DESCONOCIDO</span>
+                        </div>
+                        <div class="doorbell" onclick="ringPort(9090)">
+                            <span class="port-num">9090</span>
+                            <span class="port-status-badge status-listening">LISTENING</span>
+                            <span style="font-size: 0.7rem; color: var(--amber-glow);">⚠️ DESCONOCIDO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inspección Técnica netstat -->
+                <div class="intercom-inspect">
+                    <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--cyan-glow);">
+                        🔍 TABLA DE SOCKETS (netstat -ano)
+                    </div>
+
+                    <table class="netstat-table">
+                        <thead>
+                            <tr>
+                                <th>Proto</th>
+                                <th>Dirección Local</th>
+                                <th>Estado</th>
+                                <th>PID</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TCP</td>
+                                <td>0.0.0.0:53</td>
+                                <td>LISTENING</td>
+                                <td>1120</td>
+                            </tr>
+                            <tr>
+                                <td>TCP</td>
+                                <td>192.168.1.35:49712</td>
+                                <td>ESTABLISHED</td>
+                                <td>4328</td>
+                            </tr>
+                            <tr>
+                                <td>TCP</td>
+                                <td>0.0.0.0:445</td>
+                                <td>LISTENING</td>
+                                <td>4</td>
+                            </tr>
+                            <tr class="alert-row">
+                                <td>TCP</td>
+                                <td>127.0.0.1:8080</td>
+                                <td>LISTENING</td>
+                                <td><b>16028</b></td>
+                            </tr>
+                            <tr class="alert-row">
+                                <td>TCP</td>
+                                <td>127.0.0.1:9090</td>
+                                <td>LISTENING</td>
+                                <td><b>16028</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="font-size: 0.85rem; color: var(--text-dim); margin-top: 10px;">
+                        ¿Quién es el inquilino (proceso) detrás del PID <b>16028</b> que abrió el puerto 8080?
+                    </div>
+
+                    <div style="display: flex; gap: 8px; flex-direction: column;">
+                        <button class="btn-cyber btn-cyber-secondary" style="font-size: 0.8rem; padding: 8px;" onclick="checkProcess(1)">
+                            A) svchost.exe (Servicio del Sistema Windows)
+                        </button>
+                        <button class="btn-cyber btn-cyber-secondary" style="font-size: 0.8rem; padding: 8px;" onclick="checkProcess(2)">
+                            B) powershell.exe (Script de Escenario LSO en segundo plano)
+                        </button>
+                        <button class="btn-cyber btn-cyber-secondary" style="font-size: 0.8rem; padding: 8px;" onclick="checkProcess(3)">
+                            C) explorer.exe (La barra de tareas y escritorio)
+                        </button>
+                    </div>
+
+                    <div id="feedback-stage3" class="feedback-banner"></div>
+
+                    <div style="text-align: right; margin-top: 10px;">
+                        <button class="btn-cyber btn-cyber-primary" id="btn-next-3" style="display: none;" onclick="goToStage(4)">
+                            CONTINUAR AL NIVEL 4 ➔
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ETAPA 4: TERMINAL CLÍNICA ==================== -->
+        <div class="stage-card" id="stage-4">
+            <div class="stage-header">
+                <span class="stage-badge">NIVEL 4 • TERMINAL DE INCIDENTES</span>
+                <h2>Diagnóstico Clínico: "Se Cayó Internet"</h2>
+                <p>Estás frente a la terminal del laboratorio. Un usuario reporta pérdida de conectividad. Ejecutá los comandos por capas, observá la respuesta y emití el veredicto técnico correcto.</p>
+            </div>
+
+            <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.7); padding: 12px 18px; border-radius: 8px; border: 1px solid var(--border-glass);">
+                <div>
+                    <span style="font-family: var(--font-mono); color: var(--cyan-glow); font-size: 0.85rem;" id="ticket-title">
+                        🎫 TICKET #101: Terminal de Alumno sin navegación
+                    </span>
+                    <div style="font-size: 0.8rem; color: var(--text-dim);" id="ticket-desc">
+                        Síntoma: El alumno no puede abrir el navegador web ni ingresar a Classroom.
+                    </div>
+                </div>
+                <div class="stat-chip" style="font-size: 0.8rem;" id="ticket-counter">TICKET 1 DE 3</div>
+            </div>
+
+            <!-- Terminal CMD Interactiva -->
+            <div class="terminal-box">
+                <div class="terminal-titlebar">
+                    <div class="terminal-dots">
+                        <div class="t-dot r"></div>
+                        <div class="t-dot y"></div>
+                        <div class="t-dot g"></div>
+                    </div>
+                    <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">
+                        Símbolo del sistema - Windows 11 [Versión 10.0.22631]
+                    </span>
+                    <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow);">CLI NATIVO</span>
+                </div>
+
+                <div class="terminal-screen" id="term-screen">
+                    <div>Microsoft Windows [Versión 10.0.22631.3007]</div>
+                    <div>(c) Microsoft Corporation. Todos los derechos reservados.</div>
+                    <br>
+                    <div>C:\Users\Alumno>_</div>
+                </div>
+
+                <div class="terminal-input-bar">
+                    <span class="t-prompt">C:\Users\Alumno&gt;</span>
+                    <input type="text" id="term-input" placeholder="Escribí un comando o hacé clic abajo..." autocomplete="off">
+                    <button class="btn-cyber btn-cyber-primary" style="padding: 6px 16px; font-size: 0.8rem;" onclick="submitTerminalCommand()">EJECUTAR</button>
+                </div>
+            </div>
+
+            <!-- Comandos Rápidos Asistidos -->
+            <div class="quick-pills">
+                <button class="pill-cmd" onclick="quickRun('ping 127.0.0.1')">ping 127.0.0.1 (Loopback)</button>
+                <button class="pill-cmd" onclick="quickRun('ipconfig /all')">ipconfig /all</button>
+                <button class="pill-cmd" onclick="quickRun('ping 192.168.1.1')">ping 192.168.1.1 (Gateway)</button>
+                <button class="pill-cmd" onclick="quickRun('ping 8.8.8.8')">ping 8.8.8.8 (IP Internet)</button>
+                <button class="pill-cmd" onclick="quickRun('ping google.com')">ping google.com (DNS)</button>
+                <button class="pill-cmd" onclick="quickRun('tracert 8.8.8.8')">tracert 8.8.8.8</button>
+            </div>
+
+            <!-- Panel de Veredicto Técnico -->
+            <div class="verdict-box">
+                <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--amber-glow);">
+                    ⚖️ EMITIR VEREDICTO TÉCNICO TRAS ANALIZAR LA SALIDA:
+                </div>
+                <div class="verdict-options" id="verdict-buttons">
+                    <!-- Dinámico por Ticket -->
+                </div>
+                <div id="feedback-stage4" class="feedback-banner"></div>
+            </div>
+        </div>
+
+        <!-- ==================== ETAPA 5: CREDENCIAL FINAL ==================== -->
+        <div class="stage-card" id="stage-5">
+            <div class="badge-card-outer">
+                <div class="badge-avatar">🎖️</div>
+                <div class="badge-title">CREDENCIAL TÉCNICA OFICIAL</div>
+                <div class="badge-subtitle">ANALISTA DE REDES JUNIOR LSO — WINDOWS 11</div>
+
+                <div style="font-family: var(--font-mono); font-size: 1.1rem; color: #fff; margin-bottom: 4px;" id="cert-name">
+                    LUCAS ROMERO
+                </div>
+                <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-dim);" id="cert-pc">
+                    TERMINAL ASIGNADA: PC-04
+                </div>
+
+                <div class="cert-score-big" id="cert-score">100 PTS</div>
+
+                <div class="badge-medals">
+                    <div class="medal-item">📮 Maestro Postal (MAC/IP/Puerto)</div>
+                    <div class="medal-item">⏱️ Navegante de TTL</div>
+                    <div class="medal-item">🕵️ Auditor de Sockets</div>
+                    <div class="medal-item">🩺 Clínico de Capas</div>
+                </div>
+
+                <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 10px;">
+                    Laboratorio de Sistemas Operativos (LSO 4.º Año) • EEST N.º 1 • Res. 3828/09
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 14px; justify-content: center; margin-top: 24px; flex-wrap: wrap;">
+                <button class="btn-cyber btn-cyber-primary" onclick="copyClassroomReport()">
+                    📋 COPIAR REPORTE PARA GOOGLE CLASSROOM
+                </button>
+                <button class="btn-cyber btn-cyber-secondary" onclick="window.print()">
+                    🖨️ IMPRIMIR / GUARDAR CREDENCIAL EN PDF
+                </button>
+                <button class="btn-cyber btn-cyber-secondary" onclick="restartEntireGame()">
+                    🔄 REINICIAR MISIÓN
+                </button>
+            </div>
+
+            <div id="copy-feedback" style="text-align: center; color: var(--emerald-glow); font-family: var(--font-mono); font-size: 0.85rem; margin-top: 10px; display: none;">
+                ✔ ¡Reporte copiado al portapapeles! Pegalo en la entrega de tareas de Google Classroom.
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ==========================================
+        // MOTOR DE AUDIO SINTETIZADO (Web Audio API)
+        // 100% Offline y sin archivos externos
+        // ==========================================
+        let audioCtx = null;
+        let audioEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.getElementById('audio-toggle');
+            if (audioEnabled) {
+                btn.innerText = "🔊 AUDIO ON";
+                btn.style.color = "var(--text-main)";
+            } else {
+                btn.innerText = "🔇 AUDIO OFF";
+                btn.style.color = "var(--rose-glow)";
+            }
+        }
+
+        function playTone(freq, type = 'sine', duration = 0.1, gainVal = 0.15) {
+            if (!audioEnabled) return;
+            initAudio();
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playClick() {
+            playTone(800, 'square', 0.04, 0.08);
+        }
+
+        function playSuccessChime() {
+            if (!audioEnabled) return;
+            playTone(523.25, 'triangle', 0.15, 0.2); // C5
+            setTimeout(() => playTone(659.25, 'triangle', 0.15, 0.2), 90); // E5
+            setTimeout(() => playTone(783.99, 'triangle', 0.35, 0.25), 180); // G5
+        }
+
+        function playErrorBuzz() {
+            if (!audioEnabled) return;
+            playTone(180, 'sawtooth', 0.25, 0.25);
+            setTimeout(() => playTone(140, 'sawtooth', 0.3, 0.25), 120);
+        }
+
+        function playBlip() {
+            playTone(1200, 'sine', 0.06, 0.12);
+        }
+
+        // ==========================================
+        // ESTADO GLOBAL DEL JUEGO
+        // ==========================================
+        const gameState = {
+            studentName: '',
+            pcNumber: '',
+            score: 0,
+            currentStage: 0,
+            stage1Slots: { mac: false, ip: false, port: false, pid: false },
+            ttlStage2Achieved: false,
+            stage3Achieved: false,
+            ticketIndex: 0,
+            ticketsResolved: 0
+        };
+
+        function addScore(pts) {
+            gameState.score += pts;
+            document.getElementById('score-display').innerText = gameState.score;
+        }
+
+        function goToStage(num) {
+            gameState.currentStage = num;
+            playClick();
+
+            // Ocultar todas las tarjetas y mostrar la activa
+            for (let i = 0; i <= 5; i++) {
+                const stage = document.getElementById(`stage-${i}`);
+                if (stage) stage.classList.remove('active');
+                const node = document.getElementById(`node-${i}`);
+                if (node) {
+                    node.classList.remove('active');
+                    if (i < num) node.classList.add('completed');
+                }
+            }
+
+            const targetStage = document.getElementById(`stage-${num}`);
+            if (targetStage) targetStage.classList.add('active');
+
+            const targetNode = document.getElementById(`node-${num}`);
+            if (targetNode) targetNode.classList.add('active');
+
+            // Actualizar barra de progreso
+            const track = document.getElementById('progress-track');
+            track.style.width = `${(num / 5) * 100}%`;
+
+            if (num === 1) {
+                shuffleTags();
+                updateSlotHighlights();
+            }
+            if (num === 4) initTicketStage();
+            if (num === 5) renderCertificate();
+        }
+
+        // ==========================================
+        // ETAPA 0: INICIO
+        // ==========================================
+        function startMission() {
+            const name = document.getElementById('input-name').value.trim();
+            const pc = document.getElementById('input-pc').value.trim();
+
+            if (!name) {
+                alert("Por favor, ingresá tu Nombre y Apellido para la acreditación técnica.");
+                return;
+            }
+
+            gameState.studentName = name;
+            gameState.pcNumber = pc || "PC-LAB";
+            document.getElementById('op-display').innerText = gameState.studentName.split(' ')[0];
+
+            playSuccessChime();
+            goToStage(1);
+        }
+
+        // ==========================================
+        // ETAPA 1: EL EDIFICIO POSTAL
+        // ==========================================
+        let activeSlot = 'mac';
+
+        function selectSlot(slotType) {
+            if (gameState.stage1Slots[slotType]) return; // ya completado
+            playClick();
+            activeSlot = slotType;
+            updateSlotHighlights();
+        }
+
+        function updateSlotHighlights() {
+            const slots = ['mac', 'ip', 'port', 'pid'];
+            slots.forEach(s => {
+                const el = document.getElementById(`slot-${s}`);
+                const target = document.getElementById(`target-${s}`);
+                if (!gameState.stage1Slots[s]) {
+                    if (s === activeSlot) {
+                        el.classList.add('active-slot');
+                        target.innerHTML = `<span style="color: var(--cyan-glow); font-size: 0.85rem;">👈 Ranura activa: elegí su etiqueta a la derecha...</span>`;
+                    } else {
+                        el.classList.remove('active-slot');
+                        target.innerHTML = `<span style="color: var(--text-dim); font-size: 0.85rem;">[Hacé clic para seleccionar esta ranura...]</span>`;
+                    }
+                }
+            });
+        }
+
+        function shuffleTags() {
+            const pool = document.getElementById('tag-pool-container');
+            if (!pool) return;
+            for (let i = pool.children.length; i >= 0; i--) {
+                pool.appendChild(pool.children[Math.random() * i | 0]);
+            }
+        }
+
+        function assignTag(type) {
+            playClick();
+            const feedback = document.getElementById('feedback-stage1');
+
+            if (type === 'distractor') {
+                playErrorBuzz();
+                feedback.className = "feedback-banner feedback-error";
+                feedback.style.display = "block";
+                feedback.innerHTML = "❌ <b>Distractor:</b> El número de teléfono del proveedor no es una etiqueta que el Kernel agregue al sobre de red.";
+                return;
+            }
+
+            if (!activeSlot || gameState.stage1Slots[activeSlot]) {
+                const nextEmpty = ['mac', 'ip', 'port', 'pid'].find(k => !gameState.stage1Slots[k]);
+                if (nextEmpty) {
+                    activeSlot = nextEmpty;
+                    updateSlotHighlights();
+                } else {
+                    return;
+                }
+            }
+
+            // Comprobar si la etiqueta elegida corresponde a la ranura activa
+            if (type === activeSlot) {
+                const map = {
+                    mac: { slot: 'slot-mac', target: 'target-mac', text: '✔ Dirección MAC (Física / Chasis)', tagId: 'tag-mac' },
+                    ip: { slot: 'slot-ip', target: 'target-ip', text: '✔ Dirección IPv4 (Calle y Número)', tagId: 'tag-ip' },
+                    port: { slot: 'slot-port', target: 'target-port', text: '✔ Puerto TCP/UDP (Timbre / Depto)', tagId: 'tag-port' },
+                    pid: { slot: 'slot-pid', target: 'target-pid', text: '✔ Proceso / PID (Inquilino que atiende)', tagId: 'tag-pid' }
+                };
+
+                const item = map[activeSlot];
+                document.getElementById(item.target).innerHTML = `<span style="color: var(--emerald-glow); font-weight: bold;">${item.text}</span>`;
+                const slotEl = document.getElementById(item.slot);
+                slotEl.classList.remove('active-slot');
+                slotEl.classList.add('filled');
+                document.getElementById(item.tagId).classList.add('used');
+                gameState.stage1Slots[activeSlot] = true;
+                addScore(5);
+                playBlip();
+
+                feedback.className = "feedback-banner feedback-success";
+                feedback.style.display = "block";
+                feedback.innerHTML = `✅ ¡Correcto! Asignaste la etiqueta adecuada para este campo.`;
+
+                // Pasar a la siguiente ranura vacía
+                const remaining = ['mac', 'ip', 'port', 'pid'].find(k => !gameState.stage1Slots[k]);
+                if (remaining) {
+                    activeSlot = remaining;
+                    updateSlotHighlights();
+                } else {
+                    activeSlot = null;
+                    playSuccessChime();
+                    addScore(5); // bonus
+                    feedback.innerHTML = "🎉 ¡Excelente! Descubriste los 4 campos del sobre de red sin pistas.";
+                    document.getElementById('btn-next-1').style.display = "inline-flex";
+                }
+            } else {
+                playErrorBuzz();
+                const explanations = {
+                    mac: "La dirección MAC es la matrícula física de la placa, no va en esta ranura.",
+                    ip: "La dirección IP identifica el edificio en la red, no va en esta ranura.",
+                    port: "El puerto identifica el timbre o departamento (servicio), no va en esta ranura.",
+                    pid: "El proceso/PID es el inquilino que ejecuta el programa en el sistema, no va en esta ranura."
+                };
+                feedback.className = "feedback-banner feedback-error";
+                feedback.style.display = "block";
+                feedback.innerHTML = `❌ <b>Ubicación incorrecta:</b> ${explanations[type] || "Esa etiqueta no corresponde a la ranura seleccionada."}`;
+            }
+        }
+
+        function resetStage1() {
+            playClick();
+            activeSlot = 'mac';
+            gameState.stage1Slots = { mac: false, ip: false, port: false, pid: false };
+            ['mac', 'ip', 'port', 'pid'].forEach(k => {
+                const el = document.getElementById(`slot-${k}`);
+                el.classList.remove('filled', 'active-slot');
+                document.getElementById(`tag-${k}`).classList.remove('used');
+            });
+            document.getElementById('tag-distractor').classList.remove('used');
+            document.getElementById('feedback-stage1').style.display = "none";
+            document.getElementById('btn-next-1').style.display = "none";
+            updateSlotHighlights();
+            shuffleTags();
+        }
+
+        // ==========================================
+        // ETAPA 2: EL VIAJE DEL PAQUETE Y TTL
+        // ==========================================
+        function updateTTLSlider(val) {
+            document.getElementById('ttl-val').innerText = val;
+            playClick();
+        }
+
+        function firePacketSimulation() {
+            const ttl = parseInt(document.getElementById('ttl-slider').value);
+            const btn = document.getElementById('btn-fire-packet');
+            const runner = document.getElementById('packet-runner');
+            const log = document.getElementById('ttl-console-log');
+            const feedback = document.getElementById('feedback-stage2');
+
+            btn.disabled = true;
+            runner.style.display = "flex";
+            runner.innerText = ttl;
+
+            // Nodos: PC (0), R1 (1), R2 (2), R3 (3), Servidor (4)
+            const nodes = ['node-pc', 'node-r1', 'node-r2', 'node-r3', 'node-srv'];
+            nodes.forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.remove('active-node', 'drop-node');
+            });
+
+            log.innerHTML = `> Enviando Echo Request ICMP con TTL inicial = ${ttl}...<br>`;
+            playBlip();
+
+            // Mapeo de porcentajes de avance
+            const positions = [5, 27, 50, 73, 95];
+            runner.style.left = `${positions[0]}%`;
+
+            let currentHop = 0;
+            let currentTTL = ttl;
+
+            const interval = setInterval(() => {
+                currentHop++;
+
+                if (currentHop < positions.length) {
+                    runner.style.left = `${positions[currentHop]}%`;
+                    document.getElementById(nodes[currentHop]).classList.add('active-node');
+                    playTone(600 + (currentHop * 100), 'sine', 0.08);
+
+                    currentTTL--;
+                    runner.innerText = currentTTL;
+
+                    if (currentHop === 1) log.innerHTML += `> Salto 1: Router Gateway (192.168.1.1) decrece TTL a ${currentTTL}.<br>`;
+                    if (currentHop === 2) log.innerHTML += `> Salto 2: Router ISP (200.45.12.1) decrece TTL a ${currentTTL}.<br>`;
+                    if (currentHop === 3) log.innerHTML += `> Salto 3: Backbone (181.88.2.14) decrece TTL a ${currentTTL}.<br>`;
+                    if (currentHop === 4) log.innerHTML += `> Salto 4: ¡Destino alcanzado! Servidor Google (142.250.190.46) responde Echo Reply.<br>`;
+
+                    // Si TTL llegó a 0 en un router intermedio
+                    if (currentTTL === 0 && currentHop < 4) {
+                        clearInterval(interval);
+                        document.getElementById(nodes[currentHop]).classList.add('drop-node');
+                        runner.style.background = "var(--rose-glow)";
+                        runner.innerText = "✖";
+                        playErrorBuzz();
+
+                        log.innerHTML += `<span style="color: var(--amber-glow);">[!] TTL AGOTADO (TTL=0) en salto ${currentHop}. El router descarta el paquete y responde ICMP 'Time Exceeded'.</span><br>`;
+                        
+                        feedback.className = "feedback-banner feedback-success";
+                        feedback.style.display = "block";
+                        feedback.innerHTML = `💡 <b>¡Efecto Tracert demostrado!</b> El router del salto ${currentHop} reveló su identidad porque el paquete murió allí.`;
+                        
+                        btn.disabled = false;
+                        if (!gameState.ttlStage2Achieved) {
+                            addScore(10);
+                            gameState.ttlStage2Achieved = true;
+                            document.getElementById('btn-next-2').style.display = "inline-flex";
+                        }
+                        return;
+                    }
+
+                    // Si llegó con éxito al servidor final (TTL >= 4)
+                    if (currentHop === 4 && currentTTL >= 0) {
+                        clearInterval(interval);
+                        playSuccessChime();
+                        runner.style.background = "var(--emerald-glow)";
+                        log.innerHTML += `<span style="color: var(--emerald-glow);">[✓] ¡Paquete entregado con éxito al servidor final!</span><br>`;
+                        
+                        feedback.className = "feedback-banner feedback-success";
+                        feedback.style.display = "block";
+                        feedback.innerHTML = "🎉 <b>¡Llegada triunfal!</b> El paquete tenía suficiente vida para cruzar todos los routers hasta Google.";
+
+                        btn.disabled = false;
+                        if (!gameState.ttlStage2Achieved) {
+                            addScore(10);
+                            gameState.ttlStage2Achieved = true;
+                        }
+                        document.getElementById('btn-next-2').style.display = "inline-flex";
+                    }
+                }
+            }, 650);
+        }
+
+        // ==========================================
+        // ETAPA 3: EL PORTERO ELÉCTRICO
+        // ==========================================
+        function ringPort(port) {
+            playTone(900, 'triangle', 0.1);
+            document.querySelectorAll('.doorbell').forEach(b => b.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+        }
+
+        function checkProcess(opt) {
+            playClick();
+            const feedback = document.getElementById('feedback-stage3');
+
+            if (opt === 2) {
+                // Correcto: powershell.exe del setup
+                playSuccessChime();
+                addScore(25);
+                feedback.className = "feedback-banner feedback-success";
+                feedback.style.display = "block";
+                feedback.innerHTML = "🎯 <b>¡Culpable identificado!</b> En el laboratorio de clase, el script <code>setup_clase1_redes.ps1</code> ejecutó un proceso <code>powershell.exe</code> en segundo plano que abrió los sockets 8080 y 9090. ¡Así se detectan puertas traseras!";
+                document.getElementById('btn-next-3').style.display = "inline-flex";
+            } else {
+                playErrorBuzz();
+                feedback.className = "feedback-banner feedback-error";
+                feedback.style.display = "block";
+                feedback.innerHTML = "❌ Ese no es el ejecutable. Recordá que en la práctica de laboratorio ejecutamos un script en PowerShell para preparar el escenario.";
+            }
+        }
+
+        // ==========================================
+        // ETAPA 4: TERMINAL CLÍNICA
+        // ==========================================
+        const tickets = [
+            {
+                id: 101,
+                title: "TICKET #101: Terminal con 'Red No Identificada'",
+                desc: "La computadora no puede cargar ninguna página. El alumno asegura tener el cable conectado.",
+                responses: {
+                    "ipconfig /all": `Configuracion IP de Windows\n\nAdaptador de Ethernet Ethernet0:\n   Estado de los medios. . . . : Conectado\n   Direccion IPv4. . . . . . . : 169.254.88.14(Preferido)\n   Mascara de subred . . . . . : 255.255.0.0\n   Puerta de enlace predet. . : \n   Servidor DHCP . . . . . . . : No responde\n   Servidores DNS. . . . . . . : `,
+                    "ping 127.0.0.1": `Haciendo ping a 127.0.0.1 con 32 bytes de datos:\nRespuesta desde 127.0.0.1: bytes=32 tiempo<1m TTL=128\nRespuesta desde 127.0.0.1: bytes=32 tiempo<1m TTL=128\nPaquetes: enviados = 2, recibidos = 2, perdidos = 0`,
+                    "ping 192.168.1.1": `Haciendo ping a 192.168.1.1 con 32 bytes de datos:\nHost de destino inaccesible.\nHost de destino inaccesible.`,
+                    "ping 8.8.8.8": `Haciendo ping a 8.8.8.8 con 32 bytes de datos:\nHost de destino inaccesible.`,
+                    "ping google.com": `La solicitud de ping no pudo encontrar el host google.com. Compruebe el nombre y vuelva a intentarlo.`
+                },
+                options: [
+                    { text: "Falla de Servidor DHCP (IP de emergencia APIPA 169.254)", correct: true },
+                    { text: "Falla de resolución DNS (El cable funciona bien)", correct: false },
+                    { text: "La placa madre está quemada (Falla de hardware)", correct: false }
+                ],
+                explanation: "Al ver la IP 169.254.88.14 y la puerta de enlace vacía, diagnosticamos instantáneamente falla de DHCP (APIPA)."
+            },
+            {
+                id: 102,
+                title: "TICKET #102: La PC llega al router pero no a Internet",
+                desc: "El usuario puede transferir archivos con sus compañeros del aula, pero no navega en páginas web.",
+                responses: {
+                    "ipconfig /all": `Configuracion IP de Windows\n\nAdaptador de Ethernet Ethernet0:\n   Direccion IPv4. . . . . . . : 192.168.1.44(Preferido)\n   Mascara de subred . . . . . : 255.255.255.0\n   Puerta de enlace predet. . : 192.168.1.1\n   Servidores DNS. . . . . . . : 8.8.8.8`,
+                    "ping 127.0.0.1": `Respuesta desde 127.0.0.1: bytes=32 tiempo<1m TTL=128 (OK)`,
+                    "ping 192.168.1.1": `Respuesta desde 192.168.1.1: bytes=32 tiempo=1ms TTL=64 (OK: Gateway responde)`,
+                    "ping 8.8.8.8": `Haciendo ping a 8.8.8.8:\nTiempo de espera agotado para esta solicitud.\nTiempo de espera agotado para esta solicitud.`,
+                    "ping google.com": `La solicitud de ping no pudo encontrar el host google.com.`
+                },
+                options: [
+                    { text: "Falla local de cable de red", correct: false },
+                    { text: "Caída del enlace externo / Módem del Proveedor (ISP)", correct: true },
+                    { text: "Pila de red tcpip.sys dañada en Windows", correct: false }
+                ],
+                explanation: "Llegamos perfecto al router (192.168.1.1 responde con 1ms), pero el router no sale al exterior (8.8.8.8 da tiempo agotado). Falla el proveedor."
+            },
+            {
+                id: 103,
+                title: "TICKET #103: Funciona por IP pero no abren nombres",
+                desc: "Curioso: WhatsApp Web conectado envía mensajes, pero ninguna página web abre por su nombre.",
+                responses: {
+                    "ipconfig /all": `Direccion IPv4: 192.168.1.55 | Gateway: 192.168.1.1 | DNS: 192.168.1.250 (Falso)`,
+                    "ping 127.0.0.1": `Respuesta desde 127.0.0.1: bytes=32 tiempo<1m TTL=128`,
+                    "ping 192.168.1.1": `Respuesta desde 192.168.1.1: bytes=32 tiempo=1ms TTL=64`,
+                    "ping 8.8.8.8": `Respuesta desde 8.8.8.8: bytes=32 tiempo=14ms TTL=118 (¡HAY INTERNET POR IP!)`,
+                    "ping google.com": `La solicitud de ping no pudo encontrar el host google.com.`,
+                    "nslookup google.com": `Servidor: UnKnown\nAddress: 192.168.1.250\n*** DNS request timed out.`
+                },
+                options: [
+                    { text: "Falla de resolución de nombres (Servidor DNS caído)", correct: true },
+                    { text: "El cable de red está desconectado", correct: false },
+                    { text: "Windows Defender Firewall bloqueó todo el tráfico IP", correct: false }
+                ],
+                explanation: "El ping a 8.8.8.8 responde perfecto (hay salida al mundo), pero google.com falla. Es el caso clásico de falla de DNS."
+            }
+        ];
+
+        function initTicketStage() {
+            const ticket = tickets[gameState.ticketIndex];
+            document.getElementById('ticket-title').innerText = ticket.title;
+            document.getElementById('ticket-desc').innerText = ticket.desc;
+            document.getElementById('ticket-counter').innerText = `TICKET ${gameState.ticketIndex + 1} DE ${tickets.length}`;
+
+            const screen = document.getElementById('term-screen');
+            screen.innerHTML = `<div>Microsoft Windows [Versión 10.0.22631.3007]</div><div>(c) Microsoft Corporation. Terminal de diagnóstico para ${ticket.title}</div><br><div>C:\\Users\\Alumno>_</div>`;
+
+            // Opciones de veredicto
+            const btnContainer = document.getElementById('verdict-buttons');
+            btnContainer.innerHTML = '';
+            ticket.options.forEach((opt, idx) => {
+                const b = document.createElement('button');
+                b.className = 'btn-verdict';
+                b.innerText = opt.text;
+                b.onclick = () => evaluateVerdict(opt.correct, ticket.explanation);
+                btnContainer.appendChild(b);
+            });
+
+            document.getElementById('feedback-stage4').style.display = "none";
+        }
+
+        function quickRun(cmd) {
+            document.getElementById('term-input').value = cmd;
+            submitTerminalCommand();
+        }
+
+        function submitTerminalCommand() {
+            const input = document.getElementById('term-input');
+            const cmd = input.value.trim().toLowerCase();
+            if (!cmd) return;
+
+            playClick();
+            const screen = document.getElementById('term-screen');
+            const ticket = tickets[gameState.ticketIndex];
+
+            // Buscar respuesta simulada
+            let out = ticket.responses[cmd];
+            if (!out) {
+                if (cmd === 'cls') {
+                    screen.innerHTML = `<div>C:\\Users\\Alumno>_</div>`;
+                    input.value = '';
+                    return;
+                }
+                out = `'${cmd}' no se reconoce como un comando interno o externo, programa o archivo por lotes ejecutable.`;
+            }
+
+            screen.innerHTML += `<div style="color: var(--cyan-glow); margin-top: 8px;">C:\\Users\\Alumno&gt; ${cmd}</div><div style="white-space: pre-wrap; color: #cbd5e1; font-size: 0.82rem;">${out}</div><br>`;
+            screen.scrollTop = screen.scrollHeight;
+            input.value = '';
+        }
+
+        // Enter key in terminal input
+        document.getElementById('term-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitTerminalCommand();
+        });
+
+        function evaluateVerdict(isCorrect, explanation) {
+            playClick();
+            const feedback = document.getElementById('feedback-stage4');
+
+            if (isCorrect) {
+                playSuccessChime();
+                addScore(10);
+                gameState.ticketsResolved++;
+
+                feedback.className = "feedback-banner feedback-success";
+                feedback.style.display = "block";
+                feedback.innerHTML = `🎯 <b>¡Veredicto Correcto!</b> ${explanation}`;
+
+                setTimeout(() => {
+                    if (gameState.ticketIndex < tickets.length - 1) {
+                        gameState.ticketIndex++;
+                        initTicketStage();
+                    } else {
+                        // Completó todos los tickets
+                        goToStage(5);
+                    }
+                }, 2200);
+            } else {
+                playErrorBuzz();
+                feedback.className = "feedback-banner feedback-error";
+                feedback.style.display = "block";
+                feedback.innerHTML = `❌ Veredicto erróneo. Volvé a revisar las salidas de <code>ipconfig</code> y <code>ping</code> en la terminal.`;
+            }
+        }
+
+        // ==========================================
+        // ETAPA 5: CERTIFICADO Y EXPORTACIÓN
+        // ==========================================
+        function renderCertificate() {
+            playSuccessChime();
+            document.getElementById('cert-name').innerText = gameState.studentName.toUpperCase();
+            document.getElementById('cert-pc').innerText = `TERMINAL ASIGNADA: ${gameState.pcNumber.toUpperCase()}`;
+            document.getElementById('cert-score').innerText = `${gameState.score} PTS`;
+        }
+
+        function copyClassroomReport() {
+            playClick();
+            const report = `=====================================================
+INFORME DE LABORATORIO: DETECTIVE DE RED (LSO 4TO)
+Asignatura: Laboratorio de Sistemas Operativos
+Estudiante: ${gameState.studentName}
+Terminal: ${gameState.pcNumber}
+Calificación Obtenida: ${gameState.score} / 100 Puntos
+Fecha: ${new Date().toLocaleDateString('es-AR')}
+-----------------------------------------------------
+COMPETENCIAS TÉCNICAS ACREDITADAS:
+1. Modelo Postal y Capas: Relación MAC (Capa 2), IPv4 (Capa 3), Puerto TCP/UDP (Capa 4) y Proceso/PID.
+2. Comportamiento del TTL: Verificación de decremento en routers y diagnóstico salto a salto con tracert.
+3. Auditoría de Sockets: Identificación de puertos LISTENING y correlación con PIDs en netstat.
+4. Diagnóstico Clínico: Resolución por capas de incidentes de red (APIPA, Gateway, DNS).
+=====================================================`;
+
+            navigator.clipboard.writeText(report).then(() => {
+                const fb = document.getElementById('copy-feedback');
+                fb.style.display = "block";
+                setTimeout(() => fb.style.display = "none", 4000);
+            });
+        }
+
+        function restartEntireGame() {
+            if (confirm("¿Deseas reiniciar la misión desde el inicio?")) {
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

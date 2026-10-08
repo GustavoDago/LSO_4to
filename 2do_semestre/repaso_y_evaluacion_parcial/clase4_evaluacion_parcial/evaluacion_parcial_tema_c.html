@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>evaluacion_parcial_tema_c.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="evaluaci%C3%B3n-parcial--modelo-de-examen-tema-c">Evaluación Parcial — Modelo de Examen (Tema C)</h1>
+<h2 id="laboratorio-de-sistemas-operativos-lso--4%C2%BA-a%C3%B1o">Laboratorio de Sistemas Operativos (LSO) — 4.º Año</h2>
+<h3 id="tecnicatura-en-inform%C3%A1tica-personal-y-profesional-res-382809">Tecnicatura en Informática Personal y Profesional (Res. 3828/09)</h3>
+<h3 id="eje-de-evaluaci%C3%B3n-almacenamiento-seguridadpermisos-y-arquitectura-de-memoria">Eje de Evaluación: Almacenamiento, Seguridad/Permisos y Arquitectura de Memoria</h3>
+<blockquote>
+<p><strong>Documento de Referencia Exclusivo:</strong> compendio_completo_modulos_1_2_3.md<br>
+<strong>Criterio de Evaluación:</strong> Rigor técnico, precisión conceptual, justificación arquitectónica y ejecución correcta en laboratorio.<br>
+<strong>Escala de Calificación y Modalidad (Total: 10 Puntos):</strong></p>
+<ul>
+<li>📝 <strong>Parte 1 (Teoría Conceptual - 4 Puntos):</strong> Las 3 preguntas deben ser <strong>respondidas en papel, de forma manuscrita/por escrito</strong>, con vocabulario técnico y debida justificación (1.33 puntos c/u).</li>
+<li>💻 <strong>Parte 2 (Práctica en Laboratorio - 6 Puntos):</strong> 3 tareas prácticas (2 puntos c/u), acreditadas mediante sus respectivas <strong>capturas de pantalla subidas a Google Classroom</strong>.</li>
+</ul>
+</blockquote>
+<hr>
+<h1 id="%F0%9F%93%9D-tema-c">📝 TEMA C</h1>
+<h3 id="ponderaci%C3%B3n-del-tema-c">Ponderación del Tema C:</h3>
+<ul>
+<li><strong>Parte 1: Teoría (4 Puntos):</strong> Preguntas 1, 2 y 3 (1.33 pts c/u).</li>
+<li><strong>Parte 2: Práctica en Laboratorio (6 Puntos):</strong> Práctica 1 (CMD - Identidades), Práctica 2 (PowerShell - Seguridad) y Práctica 3 (Aplicaciones - Memoria/Hardware) (2 pts c/u).</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%93%8C-parte-1-preguntas-conceptuales-de-examen-4-puntos">📌 PARTE 1: Preguntas Conceptuales de Examen (4 Puntos)</h2>
+<blockquote>
+<p>✍️ <em>Nota obligatoria:</em> Estas preguntas deben responderse <strong>en papel, por escrito</strong>, utilizando letra clara y vocabulario técnico riguroso.</p>
+</blockquote>
+<ol>
+<li>
+<p><strong>Discos Virtuales en Windows (VHD/VHDX) y Gestión CLI con <code>diskpart</code> (1.33 Puntos):</strong><br>
+En el laboratorio de la escuela se requiere implementar entornos de práctica aislados para los alumnos sin modificar el congelador de disco (<em>Deep Freeze</em>) ni reconfigurar particiones físicas.</p>
+<ul>
+<li>Explica dos ventajas arquitectónicas del formato <strong>VHDX</strong> sobre el formato heredado <strong>VHD</strong>, prestando especial atención a la capacidad máxima y a la resiliencia ante cortes imprevistos de energía eléctrica.</li>
+<li>Diferencia técnicamente entre un disco virtual de <strong>tamaño fijo (<em>fixed</em>)</strong> y uno <strong>dinámico / expandible (<em>expandable</em>)</strong>. ¿Por qué para una netbook escolar con almacenamiento reducido se recomienda configurar el tipo dinámico?</li>
+<li>Escribe la secuencia de comandos exacta en <code>diskpart</code> para:
+<ol>
+<li>Desconectar (<em>desmontar</em>) un disco virtual ubicado en <code>C:\Temp\DiscoLSO.vhdx</code>.</li>
+<li>Volver a conectarlo (<em>montarlo</em>) posteriormente sin reiniciar el equipo.</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Control de Cuentas de Usuario (UAC) y Permisos POSIX (1.33 Puntos):</strong></p>
+<ul>
+<li><strong>Parte A (Windows):</strong> Describe cómo funciona la arquitectura de <strong>Token Dividido</strong> del Control de Cuentas de Usuario (<strong>UAC</strong>) cuando un usuario administrador inicia sesión cotidiana, y explica por qué se utiliza el <strong>Escritorio Seguro (<em>Secure Desktop</em>)</strong> cuando aparece la ventana de consentimiento.</li>
+<li><strong>Parte B (Linux):</strong> Un alumno ejecuta el comando <code>chmod 644 /laboratorio</code> sobre un directorio. Al intentar ingresar con el comando <code>cd /laboratorio</code>, la terminal le arroja el error: <code>Permiso denegado</code>. Explica qué permiso esencial le falta al usuario sobre el directorio (Lectura <code>r</code>, Escritura <code>w</code> o Ejecución <code>x</code>) y justifica técnicamente qué significa tener permiso de ejecución (<code>x</code>) sobre una carpeta en Linux.</li>
+</ul>
+</li>
+<li>
+<p><strong>Diagnóstico Clínico de Memoria y Pools del Kernel (1.33 Puntos):</strong><br>
+Un técnico en soporte analiza el consumo de recursos de un servidor mediante el Administrador de Tareas y PowerShell.</p>
+<ul>
+<li>Explica con claridad la diferencia entre el <strong>Working Set (Espacio de Trabajo / RAM Física)</strong> de un proceso y su <strong>Commit Size (Memoria Confirmada / Privada)</strong>. ¿Por qué el <em>Commit Size</em> puede ser significativamente mayor que la memoria física que el proceso tiene cargada en ese momento?</li>
+<li>En el espacio de Modo Núcleo de Windows existen el <strong>Paged Pool (Grupo Paginado)</strong> y el <strong>Non-Paged Pool (Grupo No Paginado)</strong>. Explica por qué es críticamente peligroso que ocurra una fuga de memoria (<em>memory leak</em>) en un controlador dentro del <strong>Non-Paged Pool</strong> y por qué el sistema operativo no puede mitigar esa falla enviando páginas al <code>pagefile.sys</code>.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="%F0%9F%92%BB-parte-2-pr%C3%A1ctica-en-laboratorio-6-puntos">💻 PARTE 2: Práctica en Laboratorio (6 Puntos)</h2>
+<h3 id="%F0%9F%94%B2-pr%C3%A1ctica-1-cmd--inspecci%C3%B3n-de-identidades-sid-y-cuentas-locales-2-puntos">🔲 Práctica 1: CMD — Inspección de Identidades (SID y Cuentas Locales) (2 Puntos)</h3>
+<ol>
+<li>Abre una ventana de <strong>Símbolo del sistema (CMD)</strong>.</li>
+<li>Ejecuta los comandos de inspección de identidades y usuarios locales:<pre class="hljs"><code><div>whoami /user
+<span class="hljs-built_in">net</span> user
+</div></code></pre>
+</li>
+<li>📸 <strong>Captura Obligatoria 1:</strong> Toma una captura de pantalla de la ventana de CMD donde se observen la salida completa de <code>whoami /user</code> (mostrando el nombre de usuario y su código SID con el RID final) y la tabla de cuentas locales arrojada por <code>net user</code>.</li>
+</ol>
+<hr>
+<h3 id="%F0%9F%94%B2-pr%C3%A1ctica-2-powershell--auditor%C3%ADa-estructurada-de-reglas-dacl-con-get-acl-2-puntos">🔲 Práctica 2: PowerShell — Auditoría Estructurada de Reglas DACL con <code>Get-Acl</code> (2 Puntos)</h3>
+<ol>
+<li>Abre una consola de <strong>PowerShell</strong>.</li>
+<li>Ejecuta la siguiente instrucción para auditar las entradas de control de acceso (ACEs) configuradas en la carpeta <code>C:\Temp</code> (o <code>C:\Windows</code>), extrayendo de forma tabular la identidad, el derecho específico y el tipo de regla:<pre class="hljs"><code><div>(<span class="hljs-built_in">Get-Acl</span> <span class="hljs-string">"C:\Temp"</span>).Access | <span class="hljs-built_in">Select-Object</span> IdentityReference, FileSystemRights, AccessControlType, IsInherited | <span class="hljs-built_in">Format-Table</span> <span class="hljs-literal">-AutoSize</span>
+</div></code></pre>
+</li>
+<li>📸 <strong>Captura Obligatoria 2:</strong> Toma una captura de pantalla de la consola PowerShell mostrando la tabla resultante con las columnas <code>IdentityReference</code>, <code>FileSystemRights</code>, <code>AccessControlType</code> e <code>IsInherited</code>.</li>
+</ol>
+<hr>
+<h3 id="%F0%9F%94%B2-pr%C3%A1ctica-3-aplicaciones-gui--auditor%C3%ADa-de-cpu-y-memoria-en-el-administrador-de-tareas-2-puntos">🔲 Práctica 3: Aplicaciones (GUI) — Auditoría de CPU y Memoria en el Administrador de Tareas (2 Puntos)</h3>
+<ol>
+<li>Presiona las teclas <strong><code>Ctrl + Shift + Esc</code></strong> para abrir el <strong>Administrador de Tareas</strong>.</li>
+<li>Dirígete a la pestaña lateral <strong>Rendimiento</strong> y haz clic en <strong>CPU</strong>.</li>
+<li>Observa en la zona inferior derecha las métricas de hardware: <strong>Caché L1, Caché L2 y Caché L3</strong>, además de los procesadores lógicos y núcleos.</li>
+<li>📸 <strong>Captura Obligatoria 3:</strong> Toma una captura de pantalla de la ventana del Administrador de Tareas en la sección de Rendimiento donde se aprecien con claridad los tamaños de memoria Caché de la CPU y los datos de arquitectura del equipo.</li>
+</ol>
+
+</body>
+</html>

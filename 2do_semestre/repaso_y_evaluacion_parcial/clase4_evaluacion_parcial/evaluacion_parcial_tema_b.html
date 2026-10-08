@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>evaluacion_parcial_tema_b.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="evaluaci%C3%B3n-parcial--modelo-de-examen-tema-b">Evaluación Parcial — Modelo de Examen (Tema B)</h1>
+<h2 id="laboratorio-de-sistemas-operativos-lso--4%C2%BA-a%C3%B1o">Laboratorio de Sistemas Operativos (LSO) — 4.º Año</h2>
+<h3 id="tecnicatura-en-inform%C3%A1tica-personal-y-profesional-res-382809">Tecnicatura en Informática Personal y Profesional (Res. 3828/09)</h3>
+<h3 id="eje-de-evaluaci%C3%B3n-almacenamiento-seguridadpermisos-y-arquitectura-de-memoria">Eje de Evaluación: Almacenamiento, Seguridad/Permisos y Arquitectura de Memoria</h3>
+<blockquote>
+<p><strong>Documento de Referencia Exclusivo:</strong> compendio_completo_modulos_1_2_3.md<br>
+<strong>Criterio de Evaluación:</strong> Rigor técnico, precisión conceptual, justificación arquitectónica y ejecución correcta en laboratorio.<br>
+<strong>Escala de Calificación y Modalidad (Total: 10 Puntos):</strong></p>
+<ul>
+<li>📝 <strong>Parte 1 (Teoría Conceptual - 4 Puntos):</strong> Las 3 preguntas deben ser <strong>respondidas en papel, de forma manuscrita/por escrito</strong>, con vocabulario técnico y debida justificación (1.33 puntos c/u).</li>
+<li>💻 <strong>Parte 2 (Práctica en Laboratorio - 6 Puntos):</strong> 3 tareas prácticas (2 puntos c/u), acreditadas mediante sus respectivas <strong>capturas de pantalla subidas a Google Classroom</strong>.</li>
+</ul>
+</blockquote>
+<hr>
+<h1 id="%F0%9F%93%9D-tema-b">📝 TEMA B</h1>
+<h3 id="ponderaci%C3%B3n-del-tema-b">Ponderación del Tema B:</h3>
+<ul>
+<li><strong>Parte 1: Teoría (4 Puntos):</strong> Preguntas 1, 2 y 3 (1.33 pts c/u).</li>
+<li><strong>Parte 2: Práctica en Laboratorio (6 Puntos):</strong> Práctica 1 (CMD - Seguridad), Práctica 2 (PowerShell - Almacenamiento) y Práctica 3 (Aplicaciones - Memoria) (2 pts c/u).</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%93%8C-parte-1-preguntas-conceptuales-de-examen-4-puntos">📌 PARTE 1: Preguntas Conceptuales de Examen (4 Puntos)</h2>
+<blockquote>
+<p>✍️ <em>Nota obligatoria:</em> Estas preguntas deben responderse <strong>en papel, por escrito</strong>, utilizando letra clara y vocabulario técnico riguroso.</p>
+</blockquote>
+<ol>
+<li>
+<p><strong>Estructura Interna de NTFS y Asignación por Clusters (1.33 Puntos):</strong><br>
+Al particionar y preparar un volumen con <code>diskpart</code> se ejecuta la instrucción: <code>format fs=ntfs quick label=&quot;DATOS&quot;</code>.</p>
+<ul>
+<li>Explica qué funciones críticas cumplen la <strong>MFT (<em>Master File Table</em>)</strong> y el diario de transacciones (<strong>Journaling / <code>$LogFile</code></strong>) en la integridad de los datos ante cortes repentinos de energía.</li>
+<li>Si en dicho volumen con clusters estándar de <strong>4 KB (4096 bytes)</strong> se almacena un archivo de texto liviano que pesa <strong>600 bytes</strong>, calcula cuánto espacio exacto se desperdicia, explica cómo se denomina técnicamente este fenómeno (<em>Slack Space</em>) y por qué se produce.</li>
+</ul>
+</li>
+<li>
+<p><strong>Control de Accesos, Herencia NTFS y Recuperación de Recursos (1.33 Puntos):</strong><br>
+Un administrador debe configurar un directorio protegido en <code>C:\Empresa\Balances</code>.</p>
+<ul>
+<li>Explica la diferencia entre los modificadores de ruptura de herencia <code>/inheritance:d</code> y <code>/inheritance:r</code> del comando <code>icacls</code>, detallando en qué estado queda la lista de permisos (DACL) en cada caso.</li>
+<li>Si el único administrador que tenía acceso a una carpeta bloqueada es dado de baja y la carpeta queda sin permisos accesibles para nadie, ¿qué comando de consola permite recuperar el control de dicho recurso (<code>takeown</code>) y qué derecho inalienable de bajo nivel adquiere quien se convierte en su <strong>Owner (Propietario)</strong>?</li>
+</ul>
+</li>
+<li>
+<p><strong>Gestión de Paginación y Diagnóstico de Rendimiento (1.33 Puntos):</strong><br>
+Durante una jornada de trabajo, una estación de trabajo comienza a responder con extrema lentitud: el puntero del mouse se congela periódicamente y el Administrador de Tareas reporta que la actividad del disco de sistema está permanentemente al <strong>100%</strong>, aun cuando el procesador tiene baja carga de cálculo.</p>
+<ul>
+<li>Explica la diferencia técnica y de impacto en el rendimiento entre un <strong>Soft Page Fault (Fallo de Página Suave)</strong> y un <strong>Hard Page Fault (Fallo de Página Duro)</strong>.</li>
+<li>Justifica con precisión cómo se denomina este cuadro de degradación patológica (<strong>Hiperpaginación / <em>Thrashing</em></strong>) y describe la secuencia de eventos que ocurre entre la memoria RAM física saturada, el archivo <code>pagefile.sys</code> y la suspensión de hilos del procesador.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="%F0%9F%92%BB-parte-2-pr%C3%A1ctica-en-laboratorio-6-puntos">💻 PARTE 2: Práctica en Laboratorio (6 Puntos)</h2>
+<h3 id="%F0%9F%94%B2-pr%C3%A1ctica-1-cmd--ruptura-de-herencia-y-restricci%C3%B3n-con-icacls-2-puntos">🔲 Práctica 1: CMD — Ruptura de Herencia y Restricción con <code>icacls</code> (2 Puntos)</h3>
+<ol>
+<li>Abre una ventana de <strong>Símbolo del sistema (CMD)</strong> como Administrador.</li>
+<li>Crea el directorio de prueba y configura la seguridad mediante comandos de consola:<pre class="hljs"><code><div><span class="hljs-built_in">mkdir</span> C:\Temp\Seguridad_TemaB
+icacls "C:\Temp\Seguridad_TemaB" /inheritance:d
+icacls "C:\Temp\Seguridad_TemaB" /remove "Usuarios"
+icacls "C:\Temp\Seguridad_TemaB"
+</div></code></pre>
+</li>
+<li>📸 <strong>Captura Obligatoria 1:</strong> Toma una captura de pantalla de la ventana de CMD donde se aprecie la salida del comando final <code>icacls</code>, verificando que la herencia fue deshabilitada y que el grupo <code>Usuarios</code> ya no forma parte de la DACL.</li>
+</ol>
+<hr>
+<h3 id="%F0%9F%94%B2-pr%C3%A1ctica-2-powershell--auditor%C3%ADa-de-vol%C3%BAmenes-y-espacio-ntfs-2-puntos">🔲 Práctica 2: PowerShell — Auditoría de Volúmenes y Espacio NTFS (2 Puntos)</h3>
+<ol>
+<li>Abre una consola de <strong>PowerShell</strong>.</li>
+<li>Ejecuta la siguiente instrucción para consultar los volúmenes del sistema con letra asignada formateados en NTFS, mostrando su letra de unidad, etiqueta de volumen, tamaño total en GB y espacio disponible en GB:<pre class="hljs"><code><div><span class="hljs-built_in">Get-Volume</span> | <span class="hljs-built_in">Where-Object</span> { <span class="hljs-variable">$_</span>.DriveLetter <span class="hljs-operator">-ne</span> <span class="hljs-variable">$null</span> <span class="hljs-operator">-and</span> <span class="hljs-variable">$_</span>.FileSystem <span class="hljs-operator">-eq</span> <span class="hljs-string">"NTFS"</span> } | <span class="hljs-built_in">Select-Object</span> DriveLetter, FileSystemLabel, FileSystem, <span class="hljs-selector-tag">@</span>{Name=<span class="hljs-string">"Total_GB"</span>; Expression={[<span class="hljs-type">math</span>]::round(<span class="hljs-variable">$_</span>.Size / <span class="hljs-number">1</span>GB, <span class="hljs-number">2</span>)}}, <span class="hljs-selector-tag">@</span>{Name=<span class="hljs-string">"Libre_GB"</span>; Expression={[<span class="hljs-type">math</span>]::round(<span class="hljs-variable">$_</span>.SizeRemaining / <span class="hljs-number">1</span>GB, <span class="hljs-number">2</span>)}} | <span class="hljs-built_in">Format-Table</span> <span class="hljs-literal">-AutoSize</span>
+</div></code></pre>
+</li>
+<li>📸 <strong>Captura Obligatoria 2:</strong> Toma una captura de pantalla de la consola PowerShell mostrando la tabla estructurada con los volúmenes NTFS, sus capacidades y el espacio libre.</li>
+</ol>
+<hr>
+<h3 id="%F0%9F%94%B2-pr%C3%A1ctica-3-aplicaciones-gui--distribuci%C3%B3n-de-memoria-en-el-monitor-de-recursos-2-puntos">🔲 Práctica 3: Aplicaciones (GUI) — Distribución de Memoria en el Monitor de Recursos (2 Puntos)</h3>
+<ol>
+<li>Presiona las teclas <strong><code>Win + R</code></strong>, escribe <strong><code>resmon</code></strong> y presiona <strong>Enter</strong> para iniciar el <strong>Monitor de Recursos</strong>.</li>
+<li>Haz clic en la pestaña superior <strong>Memoria</strong>.</li>
+<li>Localiza el panel central inferior titulado <strong>Memoria física</strong> donde figura la barra horizontal cromática que detalla los estados de la RAM (Hardware reservado, En uso, Modificada, En espera y Libre).</li>
+<li>📸 <strong>Captura Obligatoria 3:</strong> Toma una captura de pantalla de la ventana del Monitor de Recursos enfocando claramente la barra de memoria física con sus segmentos de colores y los valores en MB de cada estado.</li>
+</ol>
+
+</body>
+</html>
