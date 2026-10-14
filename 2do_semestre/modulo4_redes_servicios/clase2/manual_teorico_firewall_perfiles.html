@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>manual_teorico_firewall_perfiles.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="manual-te%C3%B3rico-de-c%C3%A1tedra-perfiles-de-red-y-windows-defender-firewall">Manual Teórico de Cátedra: Perfiles de Red y Windows Defender Firewall</h1>
+<h2 id="laboratorio-de-sistemas-operativos-lso--4%C2%BA-a%C3%B1o">Laboratorio de Sistemas Operativos (LSO) — 4.º Año</h2>
+<h3 id="tecnicatura-en-inform%C3%A1tica-personal-y-profesional-res-382809">Tecnicatura en Informática Personal y Profesional (Res. 3828/09)</h3>
+<h3 id="m%C3%B3dulo-4-redes-recursos-compartidos-y-seguridad--clase-2">Módulo 4: Redes, Recursos Compartidos y Seguridad — Clase 2</h3>
+<hr>
+<h2 id="%F0%9F%8E%AF-fundamentaci%C3%B3n-del-socket-abierto-a-la-seguridad-perimetral">🎯 Fundamentación: Del Socket Abierto a la Seguridad Perimetral</h2>
+<p>En la clase anterior aprendimos que un proceso (como un navegador, un juego o un servidor web) puede pedirle al Sistema Operativo abrir un <strong>puerto TCP/UDP</strong> y quedarse escuchando (<code>LISTENING</code>). Vimos que la combinación de <strong>IP + Puerto</strong> forma un <strong>Socket</strong>.</p>
+<p>Pero esto plantea una alarma inmediata de ciberseguridad:</p>
+<blockquote>
+<p><em>Si cualquier programa puede abrir un puerto en nuestra computadora, ¿cualquier otra máquina de la red local o de Internet puede enviarnos datos o conectarse sin control?</em></p>
+</blockquote>
+<p>La respuesta en los sistemas operativos modernos es <strong>NO</strong>. Entre la placa de red física y los sockets de los procesos existe un guardián implacable administrado por el Kernel de Windows: el <strong>Windows Defender Firewall</strong> (Cortafuegos del Sistema Operativo).</p>
+<hr>
+<h2 id="1-la-gran-met%C3%A1fora-el-guardia-de-seguridad-en-la-entrada-del-edificio">1. La Gran Metáfora: El Guardia de Seguridad en la Entrada del Edificio</h2>
+<p>Siguiendo nuestra analogía del edificio y el correo postal:</p>
+<pre class="hljs"><code><div>+-----------------------------------------------------------------------------------------+
+|                                    LA ANALOGÍA POSTAL                                   |
++------------------------------------+----------------------------------------------------+
+| Concepto de Red y Seguridad        | Equivalente en el Mundo Real                       |
++------------------------------------+----------------------------------------------------+
+| Dirección IP                       | La dirección de la calle del edificio.            |
+| Puerto TCP/UDP                     | El timbre de cada departamento.                    |
+| Proceso (PID)                      | El inquilino que vive adentro y atiende.           |
+| Windows Defender Firewall          | La garita de seguridad / portería del edificio.   |
+| Regla Inbound (Entrante)           | La lista de visitas que tienen permiso de entrar.  |
+| Regla Outbound (Saliente)          | El permiso de los vecinos para salir a la calle.   |
+| Perfil Público vs. Privado         | ¿El edificio está en una peatonal o en un barrio?  |
++------------------------------------+----------------------------------------------------+
+</div></code></pre>
+<h3 id="%C2%BFc%C3%B3mo-act%C3%BAa-el-firewall">¿Cómo actúa el Firewall?</h3>
+<p>Cuando llega una carta o un visitante desde la red exterior:</p>
+<ol>
+<li>El paquete golpea la puerta del sistema operativo.</li>
+<li>El <strong>Firewall inspecciona la etiqueta</strong>: ¿De qué IP viene? ¿A qué puerto (timbre) se dirige? ¿Qué protocolo usa?</li>
+<li>El Firewall consulta su <strong>Libro de Reglas</strong>:
+<ul>
+<li>Si hay una regla explícita que dice <strong>PERMITIR (Allow)</strong>, el paquete pasa y llega al proceso.</li>
+<li>Si no hay regla que lo autorice, el paquete es <strong>DESCARTADO SILENCIOSAMENTE (Drop / Block)</strong>. El inquilino (proceso) ni siquiera se entera de que alguien tocó el timbre.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="2-direcciones-de-tr%C3%A1fico-inbound-entrada-vs-outbound-salida">2. Direcciones de Tráfico: Inbound (Entrada) vs. Outbound (Salida)</h2>
+<p>Un firewall de host (<em>Host-based Firewall</em>) categoriza todo el tráfico en dos sentidos:</p>
+<pre><code class="language-mermaid"><div class="mermaid">graph LR
+    subgraph EXTERIOR["Red Externa / Internet / LAN"]
+        EXT["Paquetes de Datos"]
+    end
+
+    subgraph WINDOWS["Windows 11 (Kernel)"]
+        FW{"Windows Defender Firewall"}
+        PROC["Proceso Local: Chrome, Discord, Servidor"]
+    end
+
+    EXT -->|"1. Tráfico Inbound (Entrante)"| FW
+    FW -->|"¿Regla Allow?"| PROC
+    FW -.->|"Por Defecto: BLOCK"| DROP["Descartado (DROP)"]
+
+    PROC -->|"2. Tráfico Outbound (Saliente)"| FW
+    FW -->|"Por Defecto: ALLOW"| EXT
+</div></code></pre>
+<h3 id="reglas-inbound-tr%C3%A1fico-entrante">Reglas Inbound (Tráfico Entrante)</h3>
+<ul>
+<li>Son los paquetes que <strong>otra máquina inicia</strong> hacia la nuestra (alguien llama a nuestra IP:puerto).</li>
+<li><strong>Política por defecto en Windows:</strong> <strong>BLOQUEAR (Block)</strong>.</li>
+<li>Si instalás un servidor web (puerto 80/443), una base de datos MySQL (puerto 3306) o compartís una carpeta (puerto SMB 445), nadie podrá conectarse a menos que crees una <strong>Regla de Entrada</strong> que abra ese puerto.</li>
+</ul>
+<h3 id="reglas-outbound-tr%C3%A1fico-saliente">Reglas Outbound (Tráfico Saliente)</h3>
+<ul>
+<li>Son las conexiones que <strong>nuestros propios programas inician</strong> hacia el exterior (cuando abrís <code>google.com</code> o descargás de Steam).</li>
+<li><strong>Política por defecto en Windows:</strong> <strong>PERMITIR (Allow)</strong>.</li>
+<li>Como confiamos en el usuario que usa la máquina, Windows deja salir prácticamente todo.</li>
+</ul>
+<h3 id="%F0%9F%92%A1-concepto-clave-firewall-con-inspecci%C3%B3n-de-estado-stateful-firewall">💡 Concepto Clave: Firewall con Inspección de Estado (<em>Stateful Firewall</em>)</h3>
+<p>Una duda típica de los estudiantes es:</p>
+<blockquote>
+<p><em>&quot;Si las reglas Inbound bloquean la entrada por defecto... ¿cómo hace la página de Google para entrar a mi máquina cuando yo navego?&quot;</em></p>
+</blockquote>
+<p>La respuesta es que Windows Firewall es <strong>con estado (Stateful)</strong>:</p>
+<ul>
+<li>Cuando Chrome envía una petición saliente (<em>Outbound</em>) al servidor de Google, el Firewall anota en una tabla temporal: <em>&quot;Chrome inició una conversación con la IP X en el puerto 443&quot;</em>.</li>
+<li>Cuando los datos de Google vuelven a tu máquina (<em>Inbound</em>), el Firewall reconoce que <strong>son la respuesta legítima a una conexión saliente previa</strong> y los deja pasar automáticamente.</li>
+<li>Solo se bloquean las conexiones entrantes que <strong>nadie desde adentro pidió</strong>.</li>
+</ul>
+<hr>
+<h2 id="3-los-3-perfiles-de-red-en-windows-11">3. Los 3 Perfiles de Red en Windows 11</h2>
+<p>Windows clasifica cada placa de red activa en uno de tres <strong>Perfiles de Ubicación de Red</strong>. El comportamiento del firewall cambia radicalmente según el perfil:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Característica</th>
+<th style="text-align:left">Perfil Público (<em>Public</em>) 🌐</th>
+<th style="text-align:left">Perfil Privado (<em>Private</em>) 🏠</th>
+<th style="text-align:left">Perfil de Dominio (<em>Domain</em>) 🏢</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Escenario típico</strong></td>
+<td style="text-align:left">Aeropuertos, cafeterías, Wi-Fi público, redes desconocidas.</td>
+<td style="text-align:left">Red de tu casa, red del laboratorio escolar protegida.</td>
+<td style="text-align:left">Red corporativa unida a un Dominio Active Directory.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Nivel de confianza</strong></td>
+<td style="text-align:left"><strong>Cero confianza.</strong></td>
+<td style="text-align:left">Confianza media / alta.</td>
+<td style="text-align:left">Administrado centralmente por el Administrador de Red.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Detección de redes</strong></td>
+<td style="text-align:left"><strong>Desactivada.</strong> Tu PC es invisible para los demás.</td>
+<td style="text-align:left"><strong>Activada.</strong> Otras PC pueden ver tu equipo en la red.</td>
+<td style="text-align:left">Controlada por directivas de grupo (GPO).</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Compartir archivos e impresoras</strong></td>
+<td style="text-align:left"><strong>Bloqueado terminantemente.</strong></td>
+<td style="text-align:left"><strong>Permitido</strong> (según configuración de carpetas).</td>
+<td style="text-align:left">Permitido para recursos de la empresa.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Respuesta a <code>ping</code> (ICMP)</strong></td>
+<td style="text-align:left">Bloqueada.</td>
+<td style="text-align:left">Bloqueada por defecto (se puede habilitar).</td>
+<td style="text-align:left">Habitualmente habilitada para monitoreo.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>Regla de Oro del Técnico:</strong><br>
+Si te conectás a una red Wi-Fi en un bar o plaza y Windows te pregunta <em>&quot;¿Deseas permitir que otros equipos de esta red encuentren tu PC?&quot;</em>, responder <strong>SÍ</strong> pone tu perfil en <strong>Privado</strong> y abre las puertas del firewall. Responder <strong>NO</strong> activa el perfil <strong>Público</strong>, la opción más segura.</p>
+</blockquote>
+<hr>
+<h2 id="4-el-gran-misterio-de-laboratorio-%C2%BFpor-qu%C3%A9-falla-el-ping-entre-compa%C3%B1eros">4. El Gran Misterio de Laboratorio: ¿Por qué falla el <code>ping</code> entre compañeros?</h2>
+<p>En el laboratorio de la escuela es muy común que un alumno intente hacer:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">ping</span> <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">45</span> (la IP <span class="hljs-built_in">del</span> compañero de banco)
+</div></code></pre>
+<p>Y obtenga:</p>
+<pre class="hljs"><code><div>Tiempo de espera agotado para esta solicitud. (Request timed out)
+</div></code></pre>
+<p>Muchos estudiantes creen erróneamente: <em>&quot;El cable está roto&quot;</em> o <em>&quot;La red no anda&quot;</em>.<br>
+<strong>La realidad:</strong> El cable funciona perfecto. El paquete ICMP llegó a la placa de red del compañero, pero el <strong>Windows Defender Firewall lo frenó en seco</strong> y lo descartó sin avisar.</p>
+<h3 id="la-regla-responsable-icmpv4-in">La Regla Responsable: ICMPv4-In</h3>
+<p>El protocolo de <code>ping</code> se llama <strong>ICMP</strong> (Protocolo de Mensajes de Control de Internet).
+En Windows 11, la regla predefinida:</p>
+<pre class="hljs"><code><div>Compartir archivos e impresoras (solicitud de eco: ICMPv4-In)
+</div></code></pre>
+<p>Viene <strong>deshabilitada por defecto</strong> en el perfil Público (y muchas veces en el Privado) para evitar que atacantes escaneen la red descubriendo qué computadoras están encendidas (<em>Network Reconnaissance</em>).</p>
+<hr>
+<h2 id="5-auditor%C3%ADa-del-firewall-con-powershell-comandos-para-t%C3%A9cnicos">5. Auditoría del Firewall con PowerShell (Comandos para Técnicos)</h2>
+<p>En entornos corporativos o educativos congelados (como nuestro laboratorio con Deep Freeze), los técnicos auditamos la seguridad usando la consola sin necesidad de abrir interfaces lentas.</p>
+<h3 id="1-ver-qu%C3%A9-perfil-tiene-asignado-nuestra-conexi%C3%B3n-actual">1. Ver qué perfil tiene asignado nuestra conexión actual</h3>
+<pre class="hljs"><code><div><span class="hljs-built_in">Get-NetConnectionProfile</span>
+</div></code></pre>
+<p><em>Muestra el nombre de la red, la interfaz y si está categorizada como <code>Public</code> o <code>Private</code>.</em></p>
+<h3 id="2-auditar-el-estado-general-de-los-perfiles-del-firewall">2. Auditar el estado general de los perfiles del Firewall</h3>
+<pre class="hljs"><code><div><span class="hljs-built_in">Get-NetFirewallProfile</span> | <span class="hljs-built_in">Select-Object</span> Name, Enabled, DefaultInboundAction, DefaultOutboundAction
+</div></code></pre>
+<p><em>Muestra si el firewall está activo en Dominio, Privado y Público, y cuál es la acción por defecto.</em></p>
+<h3 id="3-buscar-si-una-regla-espec%C3%ADfica-est%C3%A1-activa">3. Buscar si una regla específica está activa</h3>
+<pre class="hljs"><code><div><span class="hljs-comment"># Buscar reglas relacionadas con PING (ICMPv4)</span>
+<span class="hljs-built_in">Get-NetFirewallRule</span> <span class="hljs-literal">-DisplayName</span> <span class="hljs-string">"*eco*"</span> | <span class="hljs-built_in">Select-Object</span> DisplayName, Enabled, Direction, Action
+
+<span class="hljs-comment"># Buscar reglas relacionadas con el Escritorio Remoto (RDP)</span>
+<span class="hljs-built_in">Get-NetFirewallRule</span> <span class="hljs-literal">-DisplayGroup</span> <span class="hljs-string">"Escritorio remoto"</span> | <span class="hljs-built_in">Select-Object</span> DisplayName, Enabled, Profile
+</div></code></pre>
+<h3 id="4-probar-conectividad-hacia-un-puerto-espec%C3%ADfico-el-sustituto-moderno-de-telnet">4. Probar conectividad hacia un puerto específico (El sustituto moderno de telnet)</h3>
+<pre class="hljs"><code><div><span class="hljs-built_in">Test-NetConnection</span> <span class="hljs-literal">-ComputerName</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> <span class="hljs-literal">-Port</span> <span class="hljs-number">8080</span>
+</div></code></pre>
+<p><em>Si devuelve <code>TcpTestSucceeded: True</code>, el puerto está abierto y el firewall permite la conexión.</em></p>
+<hr>
+<h2 id="6-s%C3%ADntesis-conceptual-del-m%C3%B3dulo">6. Síntesis Conceptual del Módulo</h2>
+<pre><code class="language-mermaid"><div class="mermaid">graph TD
+    CABLE["Cable de Red / Wi-Fi (Capa 1 y 2)"] --> IP["Dirección IP de la PC (Capa 3)"]
+    IP --> PROFILE{"¿Qué Perfil tiene la Red?"}
+    PROFILE -->|"Público"| FWPUB["Firewall: Máxima restricción / Oculto"]
+    PROFILE -->|"Privado"| FWPRIV["Firewall: Permite compartir / Descubrimiento"]
+    
+    FWPUB --> FILTER{"Inspección de Reglas Inbound"}
+    FWPRIV --> FILTER
+    
+    FILTER -->|"Regla Allow"| SOCKET["Socket (IP:Puerto)"]
+    FILTER -->|"No autorizada"| BASURA["Descarte silencioso (DROP)"]
+    
+    SOCKET --> PROCESS["Proceso en Ejecución (PID)"]
+</div></code></pre>
+<p>Con estos conceptos claros, pasamos a la práctica en el laboratorio para auditar nuestras terminales, comprobar los bloqueos reales entre puestos y analizar escenarios de ataque.</p>
+
+</body>
+</html>

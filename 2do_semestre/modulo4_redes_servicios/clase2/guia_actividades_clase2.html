@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>guia_actividades_clase2.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="gu%C3%ADa-de-actividades-de-laboratorio-n%C2%BA-2-perfiles-de-red-y-windows-defender-firewall">Guía de Actividades de Laboratorio N.º 2: Perfiles de Red y Windows Defender Firewall</h1>
+<h2 id="laboratorio-de-sistemas-operativos-lso--4%C2%BA-a%C3%B1o">Laboratorio de Sistemas Operativos (LSO) — 4.º Año</h2>
+<h3 id="tecnicatura-en-inform%C3%A1tica-personal-y-profesional-res-382809">Tecnicatura en Informática Personal y Profesional (Res. 3828/09)</h3>
+<h3 id="m%C3%B3dulo-4-redes-recursos-compartidos-y-seguridad--clase-2">Módulo 4: Redes, Recursos Compartidos y Seguridad — Clase 2</h3>
+<hr>
+<ul>
+<li><strong>Estudiante(s):</strong> __________________________________________________</li>
+<li><strong>Fecha:</strong> ___ / ___ / 2026</li>
+<li><strong>Terminal / Equipo N.º:</strong> ________</li>
+<li><strong>Sistema Operativo:</strong> Windows 11 (Laboratorio / Netbook)</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%8E%AF-objetivos-de-aprendizaje">🎯 Objetivos de Aprendizaje</h2>
+<ol>
+<li>Completar la auditoría de <strong>Sockets y Procesos (PID)</strong> y el razonamiento del <strong>Caso Clínico por capas</strong> iniciado en la clase anterior.</li>
+<li>Identificar el <strong>Perfil de Red activo</strong> (Público vs. Privado) y comprender sus implicancias en la seguridad perimetral del equipo.</li>
+<li>Auditar la configuración de <strong>Windows Defender Firewall</strong> (<code>Inbound</code> vs. <code>Outbound</code>) mediante PowerShell.</li>
+<li>Experimentar en parejas por qué el tráfico <code>ping</code> (ICMP) y conexiones a puertos abiertos son bloqueados o permitidos entre terminales del laboratorio.</li>
+<li>Evaluar riesgos reales de seguridad vinculados a la exposición indebida de puertos en redes no confiables.</li>
+</ol>
+<h2 id="%F0%9F%A7%AD-requisitos-previos-y-entorno">🧭 Requisitos Previos y Entorno</h2>
+<ul>
+<li>Terminal del laboratorio con Windows 11. <strong>No requiere privilegios de administrador.</strong></li>
+<li>En caso de reinicio de la terminal (por Deep Freeze), volver a ejecutar el setup:<pre class="hljs"><code><div>powershell <span class="hljs-literal">-ExecutionPolicy</span> Bypass <span class="hljs-operator">-File</span> .\setup_clase2_firewall.ps1
+</div></code></pre>
+</li>
+<li>Herramientas: <strong>PowerShell</strong> y <strong>Símbolo del sistema (CMD)</strong>.</li>
+</ul>
+<hr>
+<h2 id="%E2%8F%B3-fase-0-cierre-y-consolidaci%C3%B3n-de-la-clase-1-primeros-45-min">⏳ FASE 0: Cierre y Consolidación de la Clase 1 (Primeros 45 min)</h2>
+<blockquote>
+<p>💡 <em>En la clase 1 completamos hasta la Parte 3 (Ruteo y Latencia). En esta fase completamos las partes 4 y 5 pendientes.</em></p>
+</blockquote>
+<h3 id="paso-01-actividad-detective-sockets-y-procesos">Paso 0.1: Actividad Detective (Sockets y Procesos)</h3>
+<ol>
+<li>Abrí <strong>PowerShell</strong> y buscá el socket en escucha:<pre class="hljs"><code><div><span class="hljs-built_in">Get-NetTCPConnection</span> <span class="hljs-literal">-LocalPort</span> <span class="hljs-number">8080</span>,<span class="hljs-number">9090</span> | <span class="hljs-built_in">Select-Object</span> LocalAddress, LocalPort, State, OwningProcess
+</div></code></pre>
+</li>
+<li>Con el número que figura en <code>OwningProcess</code> (PID), descubrí qué proceso es:<pre class="hljs"><code><div><span class="hljs-built_in">Get-Process</span> <span class="hljs-literal">-Id</span> &lt;PID_detectado&gt;
+</div></code></pre>
+</li>
+<li>Completá:
+<ul>
+<li><strong>PID detectado:</strong> ____________</li>
+<li><strong>Nombre del proceso ejecutable:</strong> __________________________________</li>
+<li><strong>¿Qué pasaría si ese proceso fuese un programa desconocido descargado de Internet?</strong>
+<hr>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="paso-02-caso-cl%C3%ADnico-%22no-hay-internet%22">Paso 0.2: Caso Clínico &quot;No Hay Internet&quot;</h3>
+<p>Completá el cuadro deduciendo en qué capa está la falla técnica:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Escenario</th>
+<th style="text-align:left">Síntomas</th>
+<th style="text-align:center">Capa afectada</th>
+<th style="text-align:left">Diagnóstico técnico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>A</strong></td>
+<td style="text-align:left">IP <code>169.254.x.x</code> asignada; no responde el router.</td>
+<td style="text-align:center"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>B</strong></td>
+<td style="text-align:left"><code>ping 127.0.0.1</code> OK, <code>ping gateway</code> OK, <code>ping 8.8.8.8</code> falla.</td>
+<td style="text-align:center"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>C</strong></td>
+<td style="text-align:left"><code>ping 8.8.8.8</code> responde OK, pero <code>ping google.com</code> falla.</td>
+<td style="text-align:center"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-03-trivia-kahoot-de-clase-1-%F0%9F%8F%86">Paso 0.3: Trivia Kahoot de Clase 1 🏆</h3>
+<ul>
+<li>Unirse a la partida proyectada por el docente con el pin de juego para evaluar la fijación de conceptos de la Clase 1.</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%94%AC-parte-1-auditor%C3%ADa-del-perfil-de-red-activo">🔬 PARTE 1: Auditoría del Perfil de Red Activo</h2>
+<p>Windows clasifica cada red a la que te conectás como <strong>Pública</strong> o <strong>Privada</strong>. Vamos a auditar la conexión actual del laboratorio.</p>
+<ol>
+<li>En <strong>PowerShell</strong>, ejecutá:<pre class="hljs"><code><div><span class="hljs-built_in">Get-NetConnectionProfile</span>
+</div></code></pre>
+</li>
+<li>Registrá los datos obtenidos:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Parámetro</th>
+<th style="text-align:left">Valor Obtenido en tu Terminal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Name (Nombre de la red):</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>InterfaceAlias (Adaptador):</strong></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>NetworkCategory (Perfil):</strong></td>
+<td style="text-align:left"><code>Public</code> / <code>Private</code> / <code>DomainAuthenticated</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>IPv4Connectivity:</strong></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="%F0%9F%93%9D-pregunta-de-an%C3%A1lisis-1">📝 Pregunta de Análisis 1:</h3>
+<p>Si estuvieras conectado al Wi-Fi de una cafetería o estación de tren, ¿cuál perfil debería estar activo obligatoriamente y por qué? ¿Qué riesgo corrés si queda en <code>Private</code>?</p>
+<blockquote>
+<p><strong>Respuesta:</strong></p>
+<hr>
+<hr>
+</blockquote>
+<hr>
+<h2 id="%F0%9F%94%AC-parte-2-inspecci%C3%B3n-de-pol%C3%ADticas-del-firewall">🔬 PARTE 2: Inspección de Políticas del Firewall</h2>
+<p>El Firewall tiene una política predeterminada para cada perfil de red.</p>
+<ol>
+<li>Ejecutá en <strong>PowerShell</strong>:<pre class="hljs"><code><div><span class="hljs-built_in">Get-NetFirewallProfile</span> | <span class="hljs-built_in">Select-Object</span> Name, Enabled, DefaultInboundAction, DefaultOutboundAction
+</div></code></pre>
+</li>
+<li>Completá la tabla con los valores observados:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Perfil (Name)</th>
+<th style="text-align:center">¿Habilitado? (Enabled)</th>
+<th style="text-align:center">Tráfico Entrante (Inbound)</th>
+<th style="text-align:center">Tráfico Saliente (Outbound)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Domain</strong></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Private</strong></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Public</strong></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="%F0%9F%93%9D-pregunta-de-an%C3%A1lisis-2">📝 Pregunta de Análisis 2:</h3>
+<p>¿Por qué la política predeterminada para el tráfico entrante (<em>Inbound</em>) es <code>Block</code> mientras que la de salida (<em>Outbound</em>) es <code>Allow</code>? ¿Qué principio de seguridad fundamenta esta decisión?</p>
+<blockquote>
+<p><strong>Respuesta:</strong></p>
+<hr>
+<hr>
+</blockquote>
+<hr>
+<h2 id="%F0%9F%94%AC-parte-3-el-enigma-del-ping-icmpv4-y-la-regla-oculta">🔬 PARTE 3: El Enigma del PING (ICMPv4) y la Regla Oculta</h2>
+<p>En este laboratorio vamos a comprobar por qué las computadoras de la escuela parecen &quot;invisibles&quot; al comando <code>ping</code>.</p>
+<ol>
+<li>
+<p>Preguntale la dirección IPv4 a tu compañero de banco de la terminal de al lado (usando <code>ipconfig</code>).</p>
+<ul>
+<li><strong>IP de la máquina vecina:</strong> ________________________</li>
+</ul>
+</li>
+<li>
+<p>Desde tu terminal, intentá hacerle ping:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">ping</span> &lt;IP_de_tu_compañero&gt;
+</div></code></pre>
+<ul>
+<li><strong>¿Respondió con bytes o arrojó &quot;Tiempo de espera agotado&quot;?</strong> ______________________</li>
+</ul>
+</li>
+<li>
+<p>Ahora vamos a auditar en PowerShell por qué ocurrió eso, buscando la regla que controla el ping:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">Get-NetFirewallRule</span> <span class="hljs-literal">-DisplayName</span> <span class="hljs-string">"*eco*"</span> | <span class="hljs-built_in">Select-Object</span> DisplayName, Enabled, Direction, Action, Profile
+</div></code></pre>
+</li>
+<li>
+<p>Observá el campo <code>Enabled</code> de la regla <strong>Compartir archivos e impresoras (solicitud de eco: ICMPv4-In)</strong>:</p>
+<ul>
+<li><strong>¿La regla está en <code>True</code> o <code>False</code>?</strong> ____________</li>
+<li><strong>¿En qué perfiles de red aplica?</strong> ________________</li>
+</ul>
+</li>
+</ol>
+<h3 id="%F0%9F%93%9D-pregunta-de-an%C3%A1lisis-3">📝 Pregunta de Análisis 3:</h3>
+<p>¿Por qué Windows 11 desactiva por defecto la respuesta a los paquetes de ping provenientes de otras máquinas en la red? ¿Qué ventaja táctica le da esto contra un atacante que escanea la red local?</p>
+<blockquote>
+<p><strong>Respuesta:</strong></p>
+<hr>
+<hr>
+</blockquote>
+<hr>
+<h2 id="%F0%9F%94%AC-parte-4-experimento-cruzado-en-parejas-socket-vs-firewall">🔬 PARTE 4: Experimento Cruzado en Parejas (Socket vs. Firewall)</h2>
+<p>En la Actividad 0 dejamos corriendo un servicio en el puerto local <strong>8080</strong> de tu máquina.</p>
+<ol>
+<li>
+<p>Probá conectarte <strong>desde tu propia máquina</strong> (local):</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">Test-NetConnection</span> <span class="hljs-literal">-ComputerName</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> <span class="hljs-literal">-Port</span> <span class="hljs-number">8080</span>
+</div></code></pre>
+<ul>
+<li><strong>Resultado de TcpTestSucceeded:</strong> <code>True</code> / <code>False</code></li>
+</ul>
+</li>
+<li>
+<p>Ahora pedile a tu compañero que, <strong>desde su máquina</strong>, intente probar ese mismo puerto en tu IP:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">Test-NetConnection</span> <span class="hljs-literal">-ComputerName</span> &lt;TU_IP&gt; <span class="hljs-literal">-Port</span> <span class="hljs-number">8080</span>
+</div></code></pre>
+<ul>
+<li><strong>Resultado de TcpTestSucceeded desde la máquina de tu compañero:</strong> <code>True</code> / <code>False</code></li>
+</ul>
+</li>
+<li>
+<p>Analicen juntos el resultado:</p>
+</li>
+</ol>
+<h3 id="%F0%9F%93%9D-pregunta-de-an%C3%A1lisis-4">📝 Pregunta de Análisis 4:</h3>
+<p>Si el proceso estaba corriendo y el socket estaba en <code>LISTENING</code>, ¿quién frenó la conexión cuando vino desde la máquina vecina y por qué motivo?</p>
+<blockquote>
+<p><strong>Respuesta:</strong></p>
+<hr>
+<hr>
+</blockquote>
+<hr>
+<h2 id="%F0%9F%94%AC-parte-5-caso-de-ciberseguridad-aplicada">🔬 PARTE 5: Caso de Ciberseguridad Aplicada</h2>
+<p>En mayo de 2017, el ataque global del ransomware <strong>WannaCry</strong> infectó a más de 200.000 computadoras en 150 países en pocas horas. El virus se propagaba automáticamente escaneando el puerto <strong>TCP 445 (SMB)</strong> de cualquier equipo conectado a la red.</p>
+<ol>
+<li>Verificá si tu equipo tiene reglas de entrada para el servicio SMB (puerto 445):<pre class="hljs"><code><div><span class="hljs-built_in">Get-NetFirewallPortFilter</span> | <span class="hljs-built_in">Where-Object</span> LocalPort <span class="hljs-operator">-eq</span> <span class="hljs-number">445</span>
+</div></code></pre>
+</li>
+<li>Reflexioná con tu compañero y respondé:
+<ul>
+<li>Si una notebook corporativa se conecta a la red Wi-Fi de un hotel con el perfil configurado en <strong>Privado</strong> y sin actualizar, ¿qué le permite hacer un gusano como WannaCry?</li>
+<li>¿De qué manera el perfil <strong>Público</strong> y el Firewall salvan a esa notebook aunque el usuario no sea experto en seguridad?</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>Conclusión Técnica:</strong></p>
+<hr>
+<hr>
+</blockquote>
+<hr>
+<h2 id="%F0%9F%A7%B9-cierre-y-restauraci%C3%B3n">🧹 Cierre y Restauración</h2>
+<ol>
+<li>Guardá tus respuestas en el informe de la clase o completá el formulario de Classroom.</li>
+<li>Ejecutá el script de limpieza antes de retirarte:<pre class="hljs"><code><div>powershell <span class="hljs-literal">-ExecutionPolicy</span> Bypass <span class="hljs-operator">-File</span> .\restaurar_clase2_firewall.ps1
+</div></code></pre>
+</li>
+<li>Participá del <strong>Kahoot de Cierre de la Clase 2</strong> (10 preguntas).</li>
+</ol>
+
+</body>
+</html>
