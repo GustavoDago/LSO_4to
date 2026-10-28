@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El Portero — Simulador de Reglas del Firewall · LSO 4.º · Módulo 4 · Clase 3</title>
+<meta name="description" content="Simulador offline para aprender a armar reglas del firewall de Windows: 5 desafíos con explicación de por qué cada conexión pasa o no pasa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1020;--bg2:#121a33;--card:rgba(22,30,58,.72);--line:rgba(148,163,255,.18);
+  --txt:#eef1ff;--mut:#9aa4c7;--acc:#7c9cff;--acc2:#b48cff;--ok:#34d399;--bad:#fb7185;--warn:#fbbf24;
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Outfit','Segoe UI',system-ui,sans-serif;color:var(--txt);min-height:100vh;
+  background:radial-gradient(1200px 600px at 10% -10%,#26307a 0,transparent 60%),radial-gradient(900px 500px at 110% 10%,#4b2a7a 0,transparent 55%),var(--bg)}
+header{padding:22px 28px 16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+h1{margin:0;font-size:1.6rem;font-weight:800;letter-spacing:-.01em}
+h1 span{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:4px 0 0;color:var(--mut);font-size:.95rem}
+.who-am-i{display:flex;gap:10px;align-items:center}
+.who-am-i input{width:220px}
+.stars{font-size:1.35rem;letter-spacing:4px}
+.bar{height:8px;background:#1d2547;border-radius:99px;overflow:hidden;width:220px;margin-top:6px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ok),var(--acc));transition:width .6s cubic-bezier(.2,.8,.2,1)}
+main{display:grid;grid-template-columns:300px 1fr;gap:20px;padding:20px 28px 40px;max-width:1400px;margin:0 auto}
+@media(max-width:980px){main{grid-template-columns:1fr}}
+.card{background:var(--card);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:18px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.card h2{margin:0 0 12px;font-size:1.05rem;font-weight:700;color:#c9d3ff;display:flex;align-items:center;gap:8px}
+.chal{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:rgba(10,14,30,.6);color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:8px;cursor:pointer;font:inherit;font-size:.95rem;transition:.18s}
+.chal:hover{border-color:var(--acc);transform:translateX(4px)}
+.chal.sel{border-color:var(--acc);background:linear-gradient(90deg,rgba(124,156,255,.18),rgba(180,140,255,.08))}
+.chal .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#1d2547;font-weight:700;flex:none}
+.chal.done .n{background:var(--ok);color:#052e1f}
+.story{font-size:1.02rem;line-height:1.55}
+.cast{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;background:#1a2244;border:1px solid var(--line);font-size:.85rem;color:#d7ddff}
+.pill code{font-family:var(--mono);font-size:.78rem;color:var(--mut)}
+.hintbtn{margin-top:12px;background:none;border:1px dashed var(--warn);color:var(--warn);border-radius:10px;padding:6px 12px;cursor:pointer;font:inherit;font-size:.88rem}
+.hint{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.35);color:#fde68a;font-size:.92rem}
+.hint.show{display:block;animation:pop .25s ease}
+.q{margin:14px 0 6px;font-weight:600;font-size:.95rem;color:#dfe5ff}
+.q small{color:var(--mut);font-weight:400}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{flex:1;min-width:120px;background:rgba(10,14,30,.6);color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;font:inherit;font-size:.95rem;transition:.15s;line-height:1.2}
+.seg button small{display:block;color:var(--mut);font-size:.72rem;font-family:var(--mono);margin-top:2px}
+.seg button:hover{border-color:var(--acc)}
+.seg button.on{border-color:var(--acc);background:linear-gradient(135deg,rgba(124,156,255,.28),rgba(180,140,255,.18));box-shadow:0 0 0 3px rgba(124,156,255,.15)}
+.seg.act button[data-v=Allow].on{border-color:var(--ok);background:rgba(52,211,153,.18);box-shadow:0 0 0 3px rgba(52,211,153,.15)}
+.seg.act button[data-v=Block].on{border-color:var(--bad);background:rgba(251,113,133,.18);box-shadow:0 0 0 3px rgba(251,113,133,.15)}
+input,textarea{width:100%;background:rgba(10,14,30,.75);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:.95rem}
+input:focus,textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(124,156,255,.2)}
+input:disabled{opacity:.35}
+textarea{font-family:var(--mono);font-size:.85rem;min-height:80px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.row{grid-template-columns:1fr}}
+.preview{margin-top:16px;display:grid;gap:10px}
+.say{padding:12px 14px;border-radius:12px;background:rgba(124,156,255,.1);border:1px solid rgba(124,156,255,.3);font-size:1rem}
+.say b{color:#fff}
+.ps{padding:12px 14px;border-radius:12px;background:#070a16;border:1px solid var(--line);font-family:var(--mono);font-size:.82rem;color:#a5f3fc;overflow-x:auto;white-space:pre-wrap;word-break:break-word}
+.ps .k{color:#c4b5fd}.ps .v{color:#fde68a}
+.lbl{font-size:.75rem;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin-bottom:-4px}
+.btn{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0b1020;border:0;border-radius:12px;padding:11px 18px;font:inherit;font-weight:700;cursor:pointer;transition:.15s;font-size:1rem}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(124,156,255,.35)}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+.btn.big{font-size:1.1rem;padding:13px 26px}
+.msg{margin-top:10px;font-size:.95rem;min-height:1.3em}
+.good{color:var(--ok)}.err{color:var(--bad)}
+.rule{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(10,14,30,.6);border:1px solid var(--line);margin-bottom:10px;animation:pop .25s ease}
+.rule.Allow{border-left:5px solid var(--ok)}.rule.Block{border-left:5px solid var(--bad)}
+.rule .ico{font-size:1.5rem}
+.rule .t{font-weight:700}
+.rule .d{color:var(--mut);font-size:.9rem;margin-top:2px}
+.rule .tools button{background:none;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:5px 9px;cursor:pointer;margin-left:4px;font-size:.85rem}
+.rule .tools button:hover{border-color:var(--acc)}
+.empty{color:var(--mut);font-size:.92rem;padding:8px 2px}
+.test{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 14px;border-radius:14px;margin-bottom:10px;background:rgba(10,14,30,.6);border:1px solid var(--line);opacity:0;transform:translateY(8px);animation:in .35s ease forwards}
+.test.pass{border-color:rgba(52,211,153,.45)}.test.fail{border-color:rgba(251,113,133,.6);background:rgba(251,113,133,.06)}
+.test .who{font-weight:600}
+.test .why{font-size:.88rem;color:var(--mut);margin-top:3px}
+.test .tip{font-size:.88rem;color:#fecdd3;margin-top:4px}
+.res{text-align:right;font-size:.85rem;white-space:nowrap}
+.res b{display:block;font-size:1.4rem}
+.verdict{margin-top:14px;padding:14px;border-radius:14px;font-size:1.05rem;font-weight:600;display:none}
+.verdict.ok{display:block;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.5);color:#a7f3d0;animation:pop .3s ease}
+.verdict.no{display:block;background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.5);color:#fecdd3}
+details summary{cursor:pointer;color:var(--mut);font-size:.92rem}
+.trophy{display:none;text-align:center;padding:22px;border-radius:18px;margin-bottom:18px;background:linear-gradient(135deg,rgba(52,211,153,.2),rgba(124,156,255,.2));border:1px solid rgba(52,211,153,.5)}
+.trophy.show{display:block;animation:pop .4s ease}
+.trophy .big{font-size:3rem}
+.legend{font-size:.85rem;color:var(--mut);line-height:1.5}
+.confetti{position:fixed;top:-20px;font-size:1.4rem;pointer-events:none;z-index:99;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.2}}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes in{to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>🛡️ <span>El Portero</span> — Simulador de reglas del firewall</h1>
+    <p class="sub">LSO 4.º Año · Módulo 4 · Clase 3 · Sos la <b>PC-21</b> (<code>192.168.10.21</code>) del aula <code>192.168.10.x</code></p>
+  </div>
+  <div class="who-am-i">
+    <div>
+      <input id="alumno" placeholder="✍️ Tu nombre y apellido" aria-label="Nombre del alumno">
+      <div class="bar"><i id="barFill"></i></div>
+    </div>
+    <div class="stars" id="stars" aria-label="Progreso">☆☆☆☆☆</div>
+  </div>
+</header>
+
+<main>
+  <aside>
+    <div class="card">
+      <h2>🎯 Desafíos</h2>
+      <div id="chalList"></div>
+    </div>
+    <div class="card legend">
+      <h2>📋 Cómo decide el portero</h2>
+      1️⃣ ¿Alguna regla lo <b style="color:var(--bad)">bloquea</b>? → no pasa.<br>
+      2️⃣ ¿Alguna regla lo <b style="color:var(--ok)">permite</b>? → pasa.<br>
+      3️⃣ ¿Ninguna regla? → lo que <b>entra</b> no pasa · lo que <b>sale</b> pasa.<br><br>
+      ⭐ Lo que no completás vale para <b>todos</b>.<br>
+      ⭐ Si hay un SÍ y un NO, <b>gana el NO</b>.
+    </div>
+  </aside>
+
+  <section>
+    <div class="trophy" id="trophy">
+      <div class="big">🏆</div>
+      <h2 style="justify-content:center">¡Superaste los 5 desafíos!</h2>
+      <p id="trophyName">Sacale una captura a esta pantalla y subila a Classroom.</p>
+    </div>
+
+    <div class="card">
+      <h2 id="chalTitle">Desafío</h2>
+      <div class="story" id="chalStory"></div>
+      <div class="cast" id="chalCast"></div>
+      <button class="hintbtn" id="hintBtn" onclick="toggleHint()">💡 Necesito una pista</button>
+      <div class="hint" id="hint"></div>
+    </div>
+
+    <div class="card">
+      <h2>📝 Armá tu regla (la ficha)</h2>
+
+      <div class="q">1. ¿Entra o sale?</div>
+      <div class="seg" data-k="dir">
+        <button data-v="In" id="opt-dir-in">⬇️ Entra a mi PC<small>Inbound</small></button>
+        <button data-v="Out" id="opt-dir-out">⬆️ Sale de mi PC<small>Outbound</small></button>
+      </div>
+
+      <div class="q">2. ¿Lo dejo pasar?</div>
+      <div class="seg act" data-k="act">
+        <button data-v="Allow" id="opt-act-allow">✅ Permitir<small>Allow</small></button>
+        <button data-v="Block" id="opt-act-block">⛔ Bloquear<small>Block</small></button>
+      </div>
+
+      <div class="q">3. ¿Qué tipo de conexión? <small>· y a qué puerto (timbre)</small></div>
+      <div class="seg" data-k="type">
+        <button data-v="TCP" id="opt-type-tcp">🔔 Conexión a un puerto<small>TCP</small></button>
+        <button data-v="ICMP" id="opt-type-ping">🏓 Ping<small>ICMPv4</small></button>
+        <button data-v="Any" id="opt-type-any">🌐 Todo<small>Any</small></button>
+      </div>
+      <div style="margin-top:8px"><input id="port" placeholder="Número de puerto (ej.: 8080). Vacío = todos los puertos" inputmode="numeric"></div>
+
+      <div class="q">4. ¿Quién? <small>· la otra PC (IP remota)</small></div>
+      <div class="seg" data-k="who">
+        <button data-v="Any" id="opt-who-any">🌍 Cualquiera<small>Any</small></button>
+        <button data-v="LocalSubnet" id="opt-who-lan">🏫 Las PC del aula<small>LocalSubnet</small></button>
+        <button data-v="IP" id="opt-who-ip">🎯 Una PC puntual<small>IP</small></button>
+      </div>
+      <div style="margin-top:8px"><input id="ip" placeholder="IP de esa PC (ej.: 192.168.10.66)"></div>
+
+      <div class="q">5. ¿Qué programa? <small>· opcional</small></div>
+      <div class="seg" data-k="prog">
+        <button data-v="Any" id="opt-prog-any">🧩 Cualquiera</button>
+        <button data-v="curl.exe" id="opt-prog-curl">⌨️ curl.exe</button>
+        <button data-v="chrome.exe" id="opt-prog-chrome">🌐 chrome.exe</button>
+      </div>
+
+      <div class="row" style="margin-top:14px">
+        <input id="rname" placeholder="Nombre de la regla (opcional)">
+        <div></div>
+      </div>
+
+      <div class="preview">
+        <div class="lbl">🗣️ En palabras</div>
+        <div class="say" id="say"></div>
+        <div class="lbl">💻 En PowerShell (así la crearía un administrador)</div>
+        <div class="ps" id="ps"></div>
+      </div>
+      <button class="btn" style="margin-top:14px" id="btnAdd" onclick="addFromForm()">➕ Agregar a la lista del portero</button>
+      <div id="msg" class="msg"></div>
+
+      <details style="margin-top:16px">
+        <summary>🤓 Modo experto: pegar un comando de PowerShell o netsh</summary>
+        <textarea id="cmd" style="margin-top:10px" placeholder='New-NetFirewallRule -DisplayName "Web" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8080 -RemoteAddress LocalSubnet'></textarea>
+        <button class="btn ghost" style="margin-top:8px" id="btnCmd" onclick="addFromCmd()">Agregar desde comando</button>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>📋 La lista del portero <small style="color:var(--mut);font-weight:400">(tus reglas)</small></h2>
+      <div id="rules"></div>
+    </div>
+
+    <div class="card">
+      <h2>🧪 ¿Funciona? Mandá a los visitantes</h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn big" id="btnTest" onclick="validate()">🚪 ¡Probar!</button>
+        <button class="btn ghost" id="btnReset" onclick="resetChal()">↺ Empezar este desafío de nuevo</button>
+      </div>
+      <div id="tests" style="margin-top:14px"></div>
+      <div id="verdict" class="verdict"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ===================== Escenario ===================== */
+const LAN = '192.168.10.0/24';
+const PEOPLE = {
+  '192.168.10.30': {e:'👩‍💻', n:'Sofi', d:'PC del aula'},
+  '192.168.10.45': {e:'🧑‍💻', n:'Tomi', d:'PC del aula'},
+  '192.168.10.66': {e:'🦠', n:'Lucas', d:'PC del aula hackeada'},
+  '8.8.8.8':       {e:'🕶️', n:'Un desconocido', d:'de Internet'},
+  '93.184.216.34': {e:'🌍', n:'una página web', d:'en Internet'}
+};
+const PROGS = {'curl.exe':'⌨️','chrome.exe':'🌐','telnet.exe':'📟'};
+const PATHS = {'curl.exe':'C:\\Windows\\System32\\curl.exe','chrome.exe':'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'};
+const IN  = (type,port,ip) => ({d:'In',type,port,ip});
+const OUT = (prog,port,ip) => ({d:'Out',type:'TCP',port,ip,prog});
+
+const CH = [
+ { t:'Abrí el puerto 8080 para el aula',
+   story:'Tenés un <b>servidor de prueba</b> escuchando en el puerto <b>8080</b>. Querés que <b>tus compañeros del aula</b> puedan entrar, pero <b>nadie de Internet</b>. Y ojo: solo el 8080, ningún otro puerto.',
+   cast:['192.168.10.30','8.8.8.8'],
+   hint:'Entra · Permitir · Conexión a un puerto: 8080 · Quién: las PC del aula.',
+   tests:[[IN('TCP',8080,'192.168.10.30'),'Allow'],[IN('TCP',8080,'8.8.8.8'),'Block'],[IN('TCP',3389,'192.168.10.30'),'Block']] },
+ { t:'Que el aula te pueda hacer ping',
+   story:'El profe quiere comprobar con <b>ping</b> que tu PC está encendida. Dejá que <b>el aula</b> te haga ping, pero <b>no</b> un desconocido de Internet.',
+   cast:['192.168.10.30','8.8.8.8'],
+   hint:'El ping no usa puerto: elegí el tipo "Ping". Entra · Permitir · Quién: las PC del aula.',
+   tests:[[IN('ICMP',null,'192.168.10.30'),'Allow'],[IN('ICMP',null,'8.8.8.8'),'Block']] },
+ { t:'Lucas fue hackeado: bloquealo',
+   story:'Ya hay una regla que deja entrar <b>a todo el aula</b> al puerto 8080. Pero la PC de <b>Lucas</b> (<code>192.168.10.66</code>) tiene un virus 🦠. Lucas <b>no tiene que poder entrar</b>, y el resto del aula sí. <b>No borres</b> la regla que ya está.',
+   cast:['192.168.10.30','192.168.10.66'],
+   seed:[{name:'Web 8080 aula',dir:'In',act:'Allow',type:'TCP',port:'8080',who:'LocalSubnet',prog:'Any'}],
+   hint:'Acordate: si hay un SÍ y un NO, gana el NO. Agregá una regla: Entra · Bloquear · Todo · Una PC puntual: 192.168.10.66.',
+   tests:[[IN('TCP',8080,'192.168.10.30'),'Allow'],[IN('TCP',8080,'192.168.10.66'),'Block'],[IN('TCP',8080,'8.8.8.8'),'Block']],
+   check:rs => rs.some(r=>r.name==='Web 8080 aula') ? null : 'Borraste la regla "Web 8080 aula". La idea era agregar un NO, sin sacar el SÍ. Tocá "Empezar de nuevo".' },
+ { t:'Bloqueá curl.exe sin cortar Chrome',
+   story:'En el laboratorio no se quiere que se use <b>curl.exe</b> para descargar cosas. Pero <b>Chrome tiene que seguir andando</b>. Ojo: los dos usan los mismos puertos (80 y 443).',
+   cast:[],
+   progs:['curl.exe','chrome.exe'],
+   hint:'Si bloqueás el puerto 443, ¡Chrome también se queda sin Internet! Usá la pregunta 5: Sale · Bloquear · Todo · Cualquiera · Programa: curl.exe.',
+   tests:[[OUT('curl.exe',443,'93.184.216.34'),'Block'],[OUT('curl.exe',80,'93.184.216.34'),'Block'],[OUT('chrome.exe',443,'93.184.216.34'),'Allow']] },
+ { t:'Arreglá la regla rota',
+   story:'Martina quería que <b>el aula</b> entre a su servidor del puerto <b>8080</b>. Escribió la regla <b>"Mi server"</b>, pero no anda. Tiene <b>2 errores</b> y además <b>abre de más</b>. Usá ✏️ para corregirla (o borrala y hacela de nuevo).',
+   cast:['192.168.10.30','8.8.8.8'],
+   seed:[{name:'Mi server',dir:'Out',act:'Allow',type:'TCP',port:'8081',who:'Any',prog:'Any'}],
+   hint:'Mirá la dirección (¿entra o sale?), el número de puerto y el "quién". Tiene que quedar: Entra · Permitir · 8080 · Las PC del aula.',
+   tests:[[IN('TCP',8080,'192.168.10.30'),'Allow'],[IN('TCP',8080,'8.8.8.8'),'Block']],
+   check:rs => rs.some(r=>r.dir==='Out'&&r.act==='Allow'&&r.who==='Any') ? 'La regla rota (Sale · Permitir · Cualquiera) sigue en la lista. Corregila o borrala para dejar la lista prolija.' : null }
+];
+
+/* ===================== Estado ===================== */
+const KEY = 'lso4_m4c3_portero';
+let cur = 0, passed = new Set(), store = CH.map(c => clone(c.seed||[]));
+const f = {dir:'In', act:'Allow', type:'TCP', who:'Any', prog:'Any'};
+function clone(x){return JSON.parse(JSON.stringify(x))}
+try{ const s = JSON.parse(localStorage.getItem(KEY)||'null');
+  if(s){ passed = new Set(s.passed||[]); if(s.store&&s.store.length===CH.length) store = s.store; document.getElementById('alumno').value = s.name||''; } }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify({passed:[...passed], store, name:document.getElementById('alumno').value})) }catch(e){} }
+document.getElementById('alumno').addEventListener('input', ()=>{save(); paintTrophy()});
+
+/* ===================== Motor ===================== */
+const ip2n = s => s.split('.').reduce((a,b)=>a*256+(+b),0);
+function inCidr(ip,c){const [b,m]=c.split('/');const mask=m===undefined?32:+m;const sh=Math.pow(2,32-mask);return Math.floor(ip2n(ip)/sh)===Math.floor(ip2n(b)/sh)}
+const validIp = s => /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(\/\d{1,2})?$/.test(s) && s.split('/')[0].split('.').every(n=>+n<=255);
+function whoMatch(who,ip){
+  if(!who || who==='Any') return true;
+  return who.split(',').some(s=>{s=s.trim(); if(/^localsubnet$/i.test(s)) return inCidr(ip,LAN); return validIp(s) && inCidr(ip,s)});
+}
+function portMatch(spec,port){
+  if(!spec || spec==='Any') return true;
+  if(port==null) return false;
+  return String(spec).split(',').some(s=>{const r=s.trim().split('-');return r.length===2?port>=+r[0]&&port<=+r[1]:+r[0]===port});
+}
+const base = p => String(p).replace(/"/g,'').toLowerCase().split(/[\\/]/).pop();
+function matches(r,k){
+  if(r.dir!==k.d) return false;
+  if(r.type!=='Any' && r.type!==k.type) return false;
+  if(r.type==='TCP' && !portMatch(r.port,k.port)) return false;
+  if(!whoMatch(r.who,k.ip)) return false;
+  if(r.prog!=='Any' && (!k.prog || base(r.prog)!==base(k.prog))) return false;
+  return true;
+}
+function evaluate(rules,k){
+  const m = rules.filter(r=>matches(r,k));
+  const b = m.find(r=>r.act==='Block'), a = m.find(r=>r.act==='Allow');
+  if(b) return {res:'Block', rule:b, why: a ? `⛔ La regla "${b.name}" lo bloqueó (aunque "${a.name}" lo permitía: ¡gana el NO!)` : `⛔ La regla "${b.name}" lo bloqueó`};
+  if(a) return {res:'Allow', rule:a, why:`✅ La regla "${a.name}" lo dejó pasar`};
+  return k.d==='In' ? {res:'Block', rule:null, why:'⛔ Ninguna regla lo autorizó: lo que entra sin permiso, no pasa'}
+                    : {res:'Allow', rule:null, why:'✅ Ninguna regla lo frenó: lo que sale, pasa por defecto'};
+}
+function tipFor(exp,e,k){
+  if(exp==='Allow' && !e.rule) return '💡 Falta una regla que lo deje pasar. Revisá: ¿entra o sale?, el puerto y el "quién".';
+  if(exp==='Allow' && e.rule) return `💡 La regla "${e.rule.name}" lo está frenando. ¿Bloquea a más gente de la que debería?`;
+  if(exp==='Block' && e.rule) return `💡 La regla "${e.rule.name}" abre de más. ¿Pusiste "Cualquiera" o te faltó el puerto?`;
+  return '💡 Falta una regla que bloquee esta salida.';
+}
+
+/* ===================== Textos ===================== */
+function whoText(r){
+  if(r.who==='Any') return r.dir==='In' ? 'desde <b>cualquier PC</b>' : 'hacia <b>cualquier destino</b>';
+  if(/^localsubnet$/i.test(r.who)) return r.dir==='In' ? 'solo desde <b>las PC del aula</b>' : 'solo hacia <b>las PC del aula</b>';
+  return (r.dir==='In'?'solo desde':'solo hacia')+` la PC <b>${esc(r.who)}</b>`;
+}
+function phrase(r){
+  const verb = (r.act==='Allow'?'✅ <b>Dejar</b> ':'⛔ <b>NO dejar</b> ') + (r.dir==='In'?'<b>ENTRAR</b>':'<b>SALIR</b>');
+  let what = r.type==='ICMP' ? 'el <b>ping</b>' : r.type==='Any' ? '<b>todo</b> el tráfico' :
+             (r.port==='Any' ? 'conexiones a <b>todos los puertos</b>' : `conexiones al puerto <b>${esc(r.port)}</b>`);
+  let prog = r.prog==='Any' ? '' : ` del programa <b>${esc(base(r.prog))}</b>`;
+  return `${verb} ${what}${prog} ${whoText(r)}.`;
+}
+function psCmd(r){
+  const p = (k,v)=>` <span class="k">-${k}</span> <span class="v">${esc(v)}</span>`;
+  let s = 'New-NetFirewallRule' + p('DisplayName',`"${r.name}"`) + p('Direction',r.dir==='In'?'Inbound':'Outbound') + p('Action',r.act);
+  if(r.type==='TCP'){ s += p('Protocol','TCP'); if(r.port!=='Any') s += p(r.dir==='In'?'LocalPort':'RemotePort', r.port); }
+  if(r.type==='ICMP') s += p('Protocol','ICMPv4');
+  if(r.who!=='Any') s += p('RemoteAddress', r.who);
+  if(r.prog!=='Any') s += p('Program', `"${PATHS[base(r.prog)]||r.prog}"`);
+  return s;
+}
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ===================== Formulario ===================== */
+document.querySelectorAll('.seg').forEach(g=>{
+  g.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ f[g.dataset.k]=b.dataset.v; paintForm(); }));
+});
+['port','ip','rname'].forEach(id=>document.getElementById(id).addEventListener('input',paintForm));
+function formRule(){
+  const port = document.getElementById('port').value.trim();
+  const ip = document.getElementById('ip').value.trim();
+  return { name: document.getElementById('rname').value.trim() || ('Regla '+(store[cur].length+1)),
+           dir:f.dir, act:f.act, type:f.type, port: f.type==='TCP' && port ? port : 'Any',
+           who: f.who==='IP' ? (ip||'¿IP?') : f.who, prog:f.prog };
+}
+function paintForm(){
+  document.querySelectorAll('.seg').forEach(g=>g.querySelectorAll('button').forEach(b=>b.classList.toggle('on', f[g.dataset.k]===b.dataset.v)));
+  document.getElementById('port').disabled = f.type!=='TCP';
+  document.getElementById('ip').disabled = f.who!=='IP';
+  const r = formRule();
+  document.getElementById('say').innerHTML = phrase(r);
+  document.getElementById('ps').innerHTML = psCmd(r);
+}
+function checkRule(r){
+  if(r.type==='TCP' && r.port!=='Any' && !/^\d+(-\d+)?(,\d+(-\d+)?)*$/.test(r.port)) throw new Error('El puerto tiene que ser un número (ej.: 8080).');
+  if(r.type==='TCP' && r.port!=='Any' && r.port.split(/[,-]/).some(n=>+n<1||+n>65535)) throw new Error('Los puertos van del 1 al 65535.');
+  if(r.who!=='Any' && !/^localsubnet$/i.test(r.who) && !r.who.split(',').every(x=>validIp(x.trim()))) throw new Error('Escribí una IP válida (ej.: 192.168.10.66).');
+  return r;
+}
+function say(t,ok){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+(ok?'good':'err')}
+function addFromForm(){
+  try{ const r = checkRule(formRule()); store[cur].push(r); document.getElementById('rname').value=''; say(`✅ Agregaste "${r.name}" a la lista del portero.`,true); save(); renderRules(); paintForm(); clearTests(); }
+  catch(e){ say('❌ '+e.message,false) }
+}
+function editRule(i){
+  const r = store[cur].splice(i,1)[0];
+  f.dir=r.dir; f.act=r.act; f.type=r.type; f.prog=PATHS[base(r.prog)]?base(r.prog):(r.prog==='Any'?'Any':base(r.prog));
+  f.who = r.who==='Any'?'Any':/^localsubnet$/i.test(r.who)?'LocalSubnet':'IP';
+  document.getElementById('port').value = r.port==='Any'?'':r.port;
+  document.getElementById('ip').value = f.who==='IP'?r.who:'';
+  document.getElementById('rname').value = r.name;
+  say(`✏️ "${r.name}" está en el formulario: corregila y volvé a agregarla.`,true);
+  save(); renderRules(); paintForm(); clearTests();
+  document.getElementById('opt-dir-in').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function delRule(i){ store[cur].splice(i,1); save(); renderRules(); clearTests(); }
+
+/* ===================== Modo experto ===================== */
+function tokens(s){const t=[];s.replace(/"([^"]*)"|'([^']*)'|(\S+)/g,(m,a,b,c)=>{t.push(a!==undefined?a:b!==undefined?b:c)});return t}
+function normalize(o){
+  const r = {name:o.name||('Regla '+(store[cur].length+1)), dir:o.dir||'In', act:o.act||'Allow', type:'Any', port:'Any', who:o.who||'Any', prog:o.prog?base(o.prog):'Any'};
+  const pr = (o.proto||'any').toLowerCase();
+  if(pr.startsWith('icmp')) r.type='ICMP'; else if(pr==='tcp') r.type='TCP'; else if(pr==='udp') throw new Error('En este simulador usamos TCP (y el ping). Cambiá UDP por TCP.'); 
+  const port = r.dir==='In' ? (o.lp||o.rp) : (o.rp||o.lp);
+  if(port){ if(r.type!=='TCP') throw new Error('Para elegir un puerto hay que indicar -Protocol TCP.'); r.port=port; }
+  return checkRule(r);
+}
+function parsePS(s){
+  const t = tokens(s.replace(/`\s*\r?\n/g,' ')); const o = {};
+  for(let i=1;i<t.length;i++){ const k=t[i].toLowerCase(), v=t[i+1]; const take=()=>{i++;return v||''};
+    if(k==='-displayname'||k==='-name') o.name=take();
+    else if(k==='-direction') o.dir=/^out/i.test(take())?'Out':'In';
+    else if(k==='-action') o.act=/^block/i.test(take())?'Block':'Allow';
+    else if(k==='-protocol') o.proto=take();
+    else if(k==='-localport') o.lp=take();
+    else if(k==='-remoteport') o.rp=take();
+    else if(k==='-remoteaddress') o.who=take();
+    else if(k==='-program') o.prog=take();
+    else if(k.startsWith('-')) take();
+  }
+  return normalize(o);
+}
+function parseNetsh(s){
+  const kv={}; s.replace(/(\w+)=("[^"]*"|\S+)/g,(m,k,v)=>{kv[k.toLowerCase()]=v.replace(/"/g,'')});
+  return normalize({name:kv.name, dir:/^out/i.test(kv.dir||'in')?'Out':'In', act:/^block/i.test(kv.action||'allow')?'Block':'Allow',
+                    proto:kv.protocol, lp:kv.localport, rp:kv.remoteport, who:kv.remoteip, prog:kv.program});
+}
+function addFromCmd(){
+  const s = document.getElementById('cmd').value.trim();
+  try{
+    let r;
+    if(/new-netfirewallrule/i.test(s)) r=parsePS(s);
+    else if(/netsh\s+advfirewall\s+firewall\s+add\s+rule/i.test(s)) r=parseNetsh(s);
+    else throw new Error('No reconozco el comando. Tiene que empezar con New-NetFirewallRule o netsh advfirewall firewall add rule.');
+    store[cur].push(r); document.getElementById('cmd').value=''; say(`✅ Agregaste "${r.name}" desde el comando.`,true); save(); renderRules(); clearTests();
+  }catch(e){ say('❌ '+e.message,false) }
+}
+
+/* ===================== Render ===================== */
+function renderList(){
+  document.getElementById('chalList').innerHTML = CH.map((c,i)=>
+    `<button class="chal ${i===cur?'sel':''} ${passed.has(i)?'done':''}" id="chal-${i+1}" onclick="sel(${i})"><span class="n">${passed.has(i)?'✓':i+1}</span>${c.t}</button>`).join('');
+  document.getElementById('stars').textContent = CH.map((_,i)=>passed.has(i)?'★':'☆').join('');
+  document.getElementById('barFill').style.width = (passed.size/CH.length*100)+'%';
+  paintTrophy();
+}
+function paintTrophy(){
+  const t = document.getElementById('trophy'); const n = document.getElementById('alumno').value.trim();
+  t.classList.toggle('show', passed.size===CH.length);
+  document.getElementById('trophyName').innerHTML = (n?`<b>${esc(n)}</b> — `:'') + 'Sacale una captura a esta pantalla y subila a Classroom. 📸';
+}
+function renderChal(){
+  const c = CH[cur];
+  document.getElementById('chalTitle').textContent = `Desafío ${cur+1} de ${CH.length}: ${c.t}`;
+  document.getElementById('chalStory').innerHTML = c.story;
+  document.getElementById('chalCast').innerHTML =
+    (c.cast||[]).map(ip=>`<span class="pill">${PEOPLE[ip].e} ${PEOPLE[ip].n} <code>${ip}</code></span>`).join('') +
+    (c.progs||[]).map(p=>`<span class="pill">${PROGS[p]} ${p}</span>`).join('');
+  const h = document.getElementById('hint'); h.textContent = c.hint; h.classList.remove('show');
+  document.getElementById('hintBtn').textContent = '💡 Necesito una pista';
+}
+function renderRules(){
+  const rs = store[cur];
+  document.getElementById('rules').innerHTML = rs.length ? rs.map((r,i)=>`
+    <div class="rule ${r.act}">
+      <div class="ico">${r.act==='Allow'?'✅':'⛔'}</div>
+      <div><div class="t">${esc(r.name)}</div><div class="d">${phrase(r)}</div></div>
+      <div class="tools"><button title="Editar" onclick="editRule(${i})">✏️</button><button title="Borrar" onclick="delRule(${i})">🗑️</button></div>
+    </div>`).join('') :
+    '<div class="empty">La lista está vacía. Sin reglas, el portero hace lo de siempre: <b>no deja entrar a nadie</b> y <b>deja salir a todos</b>.</div>';
+}
+function clearTests(){ document.getElementById('tests').innerHTML=''; const v=document.getElementById('verdict'); v.className='verdict'; v.textContent=''; }
+function visitor(k){
+  if(k.d==='In'){ const p=PEOPLE[k.ip]; const act = k.type==='ICMP' ? 'quiere <b>hacerte ping</b> 🏓' : `quiere <b>entrar</b> a tu puerto <b>${k.port}</b>`;
+    return `${p.e} <b>${p.n}</b> (${p.d}) ${act}`; }
+  return `${PROGS[k.prog]||'🧩'} <b>${k.prog}</b> quiere <b>salir</b> a ${PEOPLE[k.ip]?PEOPLE[k.ip].n:k.ip} (puerto ${k.port})`;
+}
+function validate(){
+  const c = CH[cur], rs = store[cur]; let ok = true;
+  document.getElementById('tests').innerHTML = c.tests.map(([k,exp],i)=>{
+    const e = evaluate(rs,k), good = e.res===exp; ok = ok && good;
+    const want = exp==='Allow' ? 'tendría que <b style="color:var(--ok)">pasar</b>' : 'tendría que <b style="color:var(--bad)">quedar afuera</b>';
+    return `<div class="test ${good?'pass':'fail'}" style="animation-delay:${i*.18}s">
+      <div><div class="who">${visitor(k)}</div><div class="why">Esperado: ${want} · ${e.why}</div>${good?'':`<div class="tip">${tipFor(exp,e,k)}</div>`}</div>
+      <div class="res"><b>${good?'✅':'❌'}</b>${e.res==='Allow'?'Pasó':'No pasó'}</div></div>`;
+  }).join('');
+  const extra = ok && c.check ? c.check(rs) : null;
+  const v = document.getElementById('verdict');
+  setTimeout(()=>{
+    if(ok && !extra){ v.className='verdict ok'; v.textContent='🎉 ¡Desafío superado! El portero hizo exactamente lo que tenía que hacer.';
+      const first = !passed.has(cur); passed.add(cur); save(); renderList(); if(first) confetti(); }
+    else { v.className='verdict no'; v.textContent = extra || 'Todavía no. Mirá los ❌: ahí te dice quién pasó (o no) y por qué. Revisá tu ficha.';
+      passed.delete(cur); save(); renderList(); }
+  }, c.tests.length*180+150);
+}
+function confetti(){
+  const em=['🎉','⭐','✅','🛡️','✨'];
+  for(let i=0;i<36;i++){ const s=document.createElement('div'); s.className='confetti'; s.textContent=em[i%em.length];
+    s.style.left=Math.random()*100+'vw'; s.style.animationDuration=(1.8+Math.random()*1.6)+'s'; s.style.animationDelay=(Math.random()*.4)+'s';
+    document.body.appendChild(s); setTimeout(()=>s.remove(),4000); }
+}
+function toggleHint(){ const h=document.getElementById('hint'); h.classList.toggle('show');
+  document.getElementById('hintBtn').textContent = h.classList.contains('show') ? '🙈 Ocultar pista' : '💡 Necesito una pista'; }
+function sel(i){ cur=i; renderList(); renderChal(); renderRules(); clearTests(); say('',true); paintForm(); }
+function resetChal(){ store[cur]=clone(CH[cur].seed||[]); passed.delete(cur); save(); renderList(); renderRules(); clearTests(); say('↺ Desafío reiniciado.',true); }
+
+sel(0);
+</script>
+</body>
+</html>

@@ -17,7 +17,7 @@
 | :---: | :--- | :--- | :---: |
 | **1** (Jue 8/10) | Diagnóstico TCP/IP, DNS, ruteo y sockets/puertos ↔ PID | `ipconfig`, `ping`, `tracert`, `nslookup`, `netstat -ano`, `Get-NetTCPConnection`, `Test-NetConnection` | ✅ [clase1](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/modulo4_redes_servicios/clase1) |
 | **2** | Cierre de Sockets, Perfiles de Red y Windows Defender Firewall | `Get-NetConnectionProfile`, `Get-NetFirewallProfile`, `Get-NetFirewallRule`, `Test-NetConnection` | ✅ [clase2](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/modulo4_redes_servicios/clase2) |
-| **3** | Reglas de filtrado Inbound/Outbound | `netsh advfirewall`, `New-NetFirewallRule` | ⏳ |
+| **3** | Reglas de filtrado Inbound/Outbound | `netsh advfirewall`, `New-NetFirewallRule` | ✅ [clase3](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/modulo4_redes_servicios/clase3) |
 | **4** | Recursos compartidos SMB y mapeo de unidades | `net share`, `net use`, `Get-SmbShare` | ⏳ |
 | **5** | Matriz de permisos efectivos: SMB vs NTFS | `icacls`, `Get-SmbShareAccess` | ⏳ |
 
@@ -35,4 +35,5 @@
 ## 🗂️ Material desarrollado
 * [`clase1/`](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/modulo4_redes_servicios/clase1): manual teórico, guía de actividades, setup/restauración `.ps1`, variante netbooks, resumen NotebookLM, Kahoot (10 preguntas × 4 opciones), Google Form y simulador.
 * [`clase2/`](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/modulo4_redes_servicios/clase2): manual teórico de firewall y perfiles, guía de actividades (cierre de guía 1 + auditoría de firewall), setup/restauración `.ps1` (0.0.0.0 listeners), variante netbooks, resumen NotebookLM, Kahoot (10 preguntas × 4 opciones), Google Form (`.js`/`.md`), plantilla Excel `.xlsx` y simulador interactivo web.
+* [`clase3/`](file:///f:/Mochila/Antigravity/LSO_4to/2do_semestre/modulo4_redes_servicios/clase3): manual teórico ("El Portero y su Lista"), guía de actividades adaptada a 16 años, solucionario docente, setup/demo docente/restauración `.ps1`, variante netbooks, resumen NotebookLM, Kahoot (10 preguntas × 4 opciones, `.md` + `.xlsx`), Google Form (`.js`/`.md`), versiones HTML del manual y la guía (+ `.zip`) y simulador interactivo "El Portero" (5 desafíos con retroalimentación inmediata).
 

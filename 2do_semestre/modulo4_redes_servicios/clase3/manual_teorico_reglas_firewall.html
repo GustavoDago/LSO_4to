@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual Teórico: El Portero y su Lista — Reglas del Firewall</title><meta name="description" content="Manual Teórico: El Portero y su Lista — Reglas del Firewall — LSO 4.º Año, Módulo 4, Clase 3">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Outfit','Segoe UI',system-ui,sans-serif;max-width:920px;margin:0 auto;padding:32px 24px;line-height:1.65;color:#1e293b;background:#f8fafc;font-size:1.05rem}
+h1{color:#3730a3;border-bottom:4px solid #818cf8;padding-bottom:8px;font-weight:800}h2{color:#4338ca;margin-top:2em;font-weight:700}h3{color:#6d28d9}
+table{border-collapse:separate;border-spacing:0;width:100%;margin:1em 0;font-size:.95rem;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(30,41,59,.08)}
+th,td{border-bottom:1px solid #e2e8f0;padding:8px 12px;text-align:left}th{background:#eef2ff;color:#3730a3}
+code{background:#eef2ff;color:#4338ca;padding:1px 6px;border-radius:6px;font-family:Consolas,monospace;font-size:.9em}
+pre{background:#0f172a;color:#e2e8f0;padding:14px;border-radius:12px;overflow-x:auto}pre code{background:none;color:inherit}
+blockquote{border-left:5px solid #f59e0b;background:#fffbeb;margin:1em 0;padding:8px 16px;border-radius:0 12px 12px 0}
+.mermaid{background:#fff;padding:12px;border-radius:12px;color:inherit}
+@media print{body{max-width:none;background:#fff}pre{white-space:pre-wrap}table{box-shadow:none}}</style></head><body>
+<h1>Manual Teórico: El Portero y su Lista — Reglas del Firewall</h1>
+<h2>Laboratorio de Sistemas Operativos (LSO) — 4.º Año</h2>
+<h3>Módulo 4: Redes, Recursos Compartidos y Seguridad — Clase 3</h3>
+<hr />
+<h2>🎯 ¿De qué se trata hoy?</h2>
+<p>¿Te acordás del misterio de la clase pasada? El servidor de prueba de tu compañero estaba <strong>encendido</strong> (escuchando en el puerto <code>8080</code>), pero cuando quisiste conectarte desde tu PC, la respuesta fue <code>False</code>. 🤔</p>
+<p><strong>¿Quién tuvo la culpa?</strong> El <strong>firewall de Windows</strong>. Su forma de trabajar por defecto es simple:</p>
+<blockquote>
+<p>🚪 <strong>Si nadie avisó que podés entrar, no entrás.</strong></p>
+</blockquote>
+<p>Hoy vamos a aprender a <strong>escribir esos avisos</strong>. Cada aviso se llama <strong>regla</strong>. Y vamos a aprender a escribirlos <strong>bien</strong>, porque una regla mal hecha puede dejar la puerta abierta para cualquiera.</p>
+<hr />
+<h2>1. El portero y su lista 🧍‍♂️📋</h2>
+<p>En la Clase 2 dijimos que el firewall es como el <strong>portero de un edificio</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">En el edificio</th>
+<th style="text-align: left;">En la computadora</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">🏢 La dirección del edificio</td>
+<td style="text-align: left;">La <strong>dirección IP</strong> de la PC</td>
+</tr>
+<tr>
+<td style="text-align: left;">🔔 El timbre de cada departamento</td>
+<td style="text-align: left;">El <strong>puerto</strong> (ej.: <code>8080</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;">🧑 El vecino que atiende el timbre</td>
+<td style="text-align: left;">El <strong>programa</strong> que está escuchando</td>
+</tr>
+<tr>
+<td style="text-align: left;">🧍‍♂️ El portero</td>
+<td style="text-align: left;">El <strong>firewall</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">📋 La lista del portero</td>
+<td style="text-align: left;">Las <strong>reglas</strong> del firewall</td>
+</tr>
+</tbody>
+</table>
+<p>El portero <strong>no adivina</strong>: mira su lista. Cada renglón de la lista es <strong>una regla</strong>.</p>
+<hr />
+<h2>2. Las 5 preguntas de una regla 📝</h2>
+<p>Para escribir una regla tenés que responder estas 5 preguntas. Así armás la <strong>ficha</strong> de la regla:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">#</th>
+<th style="text-align: left;">Pregunta del portero</th>
+<th style="text-align: left;">Cómo se llama en Windows</th>
+<th style="text-align: left;">Respuestas posibles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">¿La persona <strong>entra o sale</strong>?</td>
+<td style="text-align: left;"><strong>Dirección</strong></td>
+<td style="text-align: left;"><code>Inbound</code> (entra) · <code>Outbound</code> (sale)</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">¿La <strong>dejo pasar o no</strong>?</td>
+<td style="text-align: left;"><strong>Acción</strong></td>
+<td style="text-align: left;"><code>Allow</code> (permitir) · <code>Block</code> (bloquear)</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">¿A qué <strong>timbre</strong> va?</td>
+<td style="text-align: left;"><strong>Puerto</strong></td>
+<td style="text-align: left;">Un número: <code>80</code>, <code>443</code>, <code>8080</code>...</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">¿<strong>Quién</strong> es? ¿De dónde viene?</td>
+<td style="text-align: left;"><strong>IP remota</strong></td>
+<td style="text-align: left;">Cualquiera · Las PC del aula · Una PC puntual</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">¿Qué <strong>vecino</strong> lo pidió?</td>
+<td style="text-align: left;"><strong>Programa</strong> <em>(opcional)</em></td>
+<td style="text-align: left;"><code>chrome.exe</code>, <code>curl.exe</code>...</td>
+</tr>
+</tbody>
+</table>
+<h3>2.1 ¿Entra o sale? (Dirección)</h3>
+<ul>
+<li>⬇️ <strong>Inbound (entrada):</strong> otra PC quiere conectarse <strong>a la tuya</strong>. Por defecto: <strong>se bloquea</strong>.</li>
+<li>⬆️ <strong>Outbound (salida):</strong> un programa <strong>tuyo</strong> quiere conectarse afuera (ej.: Chrome abriendo YouTube). Por defecto: <strong>se permite</strong>.</li>
+</ul>
+<blockquote>
+<p>💡 Cuando abrís una página, la respuesta de la página entra sola. El firewall se acuerda de que <strong>vos la pediste</strong>. Solo frena lo que llega <strong>sin que nadie lo haya pedido</strong>.</p>
+</blockquote>
+<h3>2.2 ¿Lo dejo pasar? (Acción)</h3>
+<ul>
+<li>✅ <strong>Allow:</strong> pasa.</li>
+<li>⛔ <strong>Block:</strong> no pasa. El firewall lo descarta <strong>sin avisar</strong>: el que llamó se queda esperando.</li>
+</ul>
+<h3>2.3 ¿A qué timbre va? (Puerto)</h3>
+<p>Cada servicio tiene su "timbre" conocido:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Puerto</th>
+<th style="text-align: left;">¿Qué servicio es?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><code>80</code></td>
+<td style="text-align: left;">Páginas web</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>443</code></td>
+<td style="text-align: left;">Páginas web seguras (con candadito 🔒)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>445</code></td>
+<td style="text-align: left;">Carpetas compartidas de Windows</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>3389</code></td>
+<td style="text-align: left;">Escritorio Remoto</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>8080</code></td>
+<td style="text-align: left;">Nuestro servidor de prueba de la clase</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Los servicios como la web usan el <strong>protocolo TCP</strong>. Por eso en las reglas con puerto vas a ver <code>TCP</code>.</li>
+<li>🏓 <strong>El ping es especial:</strong> no usa puerto. En la regla se elige el tipo <strong><code>ICMPv4</code></strong> (el "idioma" del ping).</li>
+<li>En una regla de <strong>salida</strong>, el puerto es el <strong>timbre de la otra PC</strong> (ej.: bloquear que tus programas toquen el timbre <code>23</code> de cualquier servidor).</li>
+</ul>
+<h3>2.4 ¿Quién es? (IP remota)</h3>
+<p>Esta es la pregunta que <strong>más importa para la seguridad</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Opción</th>
+<th style="text-align: left;">¿Quién puede?</th>
+<th style="text-align: center;">¿Qué tan seguro?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Cualquiera</strong> (<code>Any</code>)</td>
+<td style="text-align: left;">Cualquier PC del mundo</td>
+<td style="text-align: center;">🔴 Peligroso</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Las PC del aula</strong> (<code>LocalSubnet</code>)</td>
+<td style="text-align: left;">Solo las PC de tu misma red</td>
+<td style="text-align: center;">🟡 Bien</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Una PC puntual</strong> (ej.: <code>192.168.10.30</code>)</td>
+<td style="text-align: left;">Solo esa compu</td>
+<td style="text-align: center;">🟢 Muy seguro</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <code>LocalSubnet</code> quiere decir "mi red local". Windows calcula solo cuáles son las PC de tu red, así que no hace falta escribir todas las IP.</p>
+</blockquote>
+<h3>2.5 ¿Qué programa? (opcional)</h3>
+<p>Sirve para apuntar a <strong>un solo programa</strong>. Ejemplo: bloquear <code>curl.exe</code> sin molestar a Chrome. Si bloquearas el puerto <code>443</code>, ¡te quedarías sin Chrome también! 😅</p>
+<hr />
+<h2>3. Las 3 reglas de oro ⭐</h2>
+<h3>⭐ 1. "Lo que no escribís, vale para <strong>todos</strong>"</h3>
+<p>Si en la ficha dejás una pregunta sin responder, Windows entiende <strong>"cualquiera"</strong>.
+* Sin puerto → <strong>todos</strong> los puertos.
+* Sin IP remota → <strong>cualquier</strong> PC del mundo.</p>
+<p>👉 Una regla <strong>corta</strong> es una regla <strong>muy abierta</strong>.</p>
+<h3>⭐ 2. "Si hay un SÍ y un NO, <strong>gana el NO</strong>"</h3>
+<p>Imaginá la lista de un cumple 🎂:
+* Renglón 1: <em>"Pueden entrar todos los del curso"</em> ✅
+* Renglón 2: <em>"Juan NO entra"</em> ⛔</p>
+<p>Juan es del curso, pero <strong>no entra</strong>: el <strong>NO</strong> le gana al <strong>SÍ</strong>.</p>
+<p>En el firewall pasa lo mismo: si una regla <strong>Block</strong> y una regla <strong>Allow</strong> coinciden, <strong>gana Block</strong>. No importa cuál se creó primero.</p>
+<blockquote>
+<p>🔗 <strong>Ya lo viste en el Módulo 2:</strong> en los permisos NTFS, un <strong>Denegar</strong> le gana a un <strong>Permitir</strong>. ¡Es la misma idea!</p>
+</blockquote>
+<p><strong>¿Y si quiero abrirle a todos menos a uno?</strong> Hacés <strong>dos reglas</strong>:
+1. ✅ Una que <strong>permite</strong> a todo el aula.
+2. ⛔ Otra que <strong>bloquea</strong> solo a esa PC.</p>
+<h3>⭐ 3. "Abrí <strong>lo justo</strong>"</h3>
+<p>Esto se llama <strong>mínimo privilegio</strong>: dar solo el permiso necesario, ni uno más.
+* 🟢 Mejor: <strong>una PC puntual</strong>
+* 🟡 Bien: <strong>las PC del aula</strong>
+* 🔴 Evitar: <strong>cualquiera</strong></p>
+<p>Y nunca, nunca: <em>"Permitir todo lo que entra, desde cualquiera"</em>. Eso es lo mismo que <strong>apagar el firewall</strong>. 💀</p>
+<hr />
+<h2>4. ¿Cómo decide el portero? 🤔</h2>
+<p>Cuando alguien quiere <strong>entrar</strong> a tu PC, el firewall sigue estos pasos:</p>
+<pre class="mermaid">graph TD
+    A["🙋 Alguien quiere entrar"] --> B{"¿Hay una regla BLOCK para él?"}
+    B -->|"Sí"| X["⛔ NO PASA"]
+    B -->|"No"| C{"¿Hay una regla ALLOW para él?"}
+    C -->|"Sí"| OK["✅ PASA"]
+    C -->|"No"| D["⛔ NO PASA (nadie lo autorizó)"]
+</pre>
+
+<ol>
+<li>¿Hay algún <strong>Block</strong> que coincida? → <strong>No pasa</strong>.</li>
+<li>¿Hay algún <strong>Allow</strong> que coincida? → <strong>Pasa</strong>.</li>
+<li>¿No hay ninguna regla? → <strong>No pasa</strong> (en la salida, al revés: pasa).</li>
+</ol>
+<hr />
+<h2>5. De la ficha al comando 💻</h2>
+<blockquote>
+<p>⚠️ <strong>Crear reglas necesita ser administrador.</strong> En el laboratorio las crea <strong>el profe</strong> en su PC. Ustedes las <strong>leen</strong>, las <strong>prueban</strong> y las arman en el <strong>simulador</strong>.</p>
+</blockquote>
+<h3>5.1 Un ejemplo, paso a paso</h3>
+<p><strong>Pedido:</strong> <em>"Abrir el puerto 8080 solo para las PC del aula."</em></p>
+<p><strong>Ficha:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Dirección</th>
+<th style="text-align: center;">Acción</th>
+<th style="text-align: center;">Puerto</th>
+<th style="text-align: center;">IP remota</th>
+<th style="text-align: center;">Programa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Entra</td>
+<td style="text-align: center;">Permitir</td>
+<td style="text-align: center;">TCP 8080</td>
+<td style="text-align: center;">Las PC del aula</td>
+<td style="text-align: center;">—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comando en PowerShell:</strong></p>
+<pre><code class="language-powershell">New-NetFirewallRule -DisplayName &quot;Web 8080 aula&quot; -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8080 -RemoteAddress LocalSubnet
+</code></pre>
+<p><strong>Cómo se lee cada parte:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parte del comando</th>
+<th style="text-align: left;">Qué quiere decir</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>New-NetFirewallRule</code></td>
+<td style="text-align: left;">"Crear una regla nueva de firewall"</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-DisplayName "Web 8080 aula"</code></td>
+<td style="text-align: left;">El nombre de la regla (para encontrarla después)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-Direction Inbound</code></td>
+<td style="text-align: left;">Pregunta 1: <strong>entra</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-Action Allow</code></td>
+<td style="text-align: left;">Pregunta 2: <strong>permitir</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-Protocol TCP -LocalPort 8080</code></td>
+<td style="text-align: left;">Pregunta 3: al <strong>timbre 8080</strong> de mi PC</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-RemoteAddress LocalSubnet</code></td>
+<td style="text-align: left;">Pregunta 4: solo <strong>las PC del aula</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 El comando es <strong>la ficha escrita en inglés</strong>. Si sabés armar la ficha, sabés leer el comando.</p>
+</blockquote>
+<h3>5.2 Otros ejemplos listos para leer</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Pedido</th>
+<th style="text-align: left;">Comando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">🏓 Que el aula me pueda hacer <strong>ping</strong></td>
+<td style="text-align: left;"><code>New-NetFirewallRule -DisplayName "Ping aula" -Direction Inbound -Action Allow -Protocol ICMPv4 -RemoteAddress LocalSubnet</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">⛔ <strong>Bloquear</strong> a la PC <code>192.168.10.66</code></td>
+<td style="text-align: left;"><code>New-NetFirewallRule -DisplayName "Bloquear 66" -Direction Inbound -Action Block -RemoteAddress 192.168.10.66</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">🚫 Que <strong>curl.exe</strong> no salga a Internet</td>
+<td style="text-align: left;"><code>New-NetFirewallRule -DisplayName "Sin curl" -Direction Outbound -Action Block -Program "C:\Windows\System32\curl.exe"</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>🤓 <strong>Para curiosos:</strong> en CMD existe otro comando que hace lo mismo: <code>netsh advfirewall firewall add rule name="Web 8080 aula" dir=in action=allow protocol=TCP localport=8080 remoteip=localsubnet</code>. ¡Fijate que tiene las mismas 5 respuestas!</p>
+</blockquote>
+<hr />
+<h2>6. Espiar las reglas de tu PC (¡sin ser admin!) 🔍</h2>
+<p><strong>Mirar</strong> reglas no necesita permisos especiales. Probá en PowerShell:</p>
+<pre><code class="language-powershell"># ¿Cuántas reglas dejan ENTRAR tráfico en mi PC?
+(Get-NetFirewallRule -Direction Inbound -Action Allow -Enabled True).Count
+
+# Ver las reglas del ping (nombre, si está activa y qué hace)
+Get-NetFirewallRule -DisplayName &quot;*eco*&quot; | Select-Object DisplayName, Enabled, Direction, Action
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Acción</th>
+<th style="text-align: center;">¿Necesita admin?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Ver / listar reglas</td>
+<td style="text-align: center;">❌ No</td>
+</tr>
+<tr>
+<td style="text-align: left;">Crear, cambiar o borrar reglas</td>
+<td style="text-align: center;">✅ Sí</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>7. Los 3 errores más comunes 🐛</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Error</th>
+<th style="text-align: left;">Ejemplo</th>
+<th style="text-align: left;">¿Qué pasa?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Dirección al revés</strong></td>
+<td style="text-align: left;">Querías dejar entrar y pusiste <code>Outbound</code></td>
+<td style="text-align: left;">La regla existe, pero cuida la otra puerta. Nadie entra.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Timbre equivocado</strong></td>
+<td style="text-align: left;">El servidor usa <code>8080</code> y abriste el <code>8081</code></td>
+<td style="text-align: left;">La regla nunca se usa.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Abrir de más</strong></td>
+<td style="text-align: left;">No pusiste IP remota</td>
+<td style="text-align: left;">Entra <strong>cualquiera</strong>, no solo el aula. 😱</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>🔧 <strong>Truco del técnico:</strong> siempre probá <strong>las dos caras</strong>: que <strong>entre</strong> quien tiene que entrar (<code>True</code>) y que <strong>no entre</strong> quien no tiene que entrar (<code>False</code>).</p>
+</blockquote>
+<hr />
+<h2>8. Resumen en 6 frases 🧠</h2>
+<ol>
+<li>El firewall es el <strong>portero</strong>; las <strong>reglas</strong> son su <strong>lista</strong>.</li>
+<li>Una regla responde 5 preguntas: <strong>¿entra o sale? ¿pasa o no? ¿qué puerto? ¿quién? ¿qué programa?</strong></li>
+<li>Lo que entra <strong>sin regla</strong> se <strong>bloquea</strong>; lo que sale sin regla se <strong>permite</strong>.</li>
+<li>Lo que no escribís vale para <strong>todos</strong>.</li>
+<li>Si un <strong>Allow</strong> y un <strong>Block</strong> coinciden, <strong>gana Block</strong>.</li>
+<li>Abrí <strong>lo justo</strong>: mejor una PC que el aula, y mejor el aula que cualquiera.</li>
+</ol>
+<h3>📖 Mini glosario</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Palabra</th>
+<th style="text-align: left;">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Firewall</strong></td>
+<td style="text-align: left;">Programa que decide qué conexiones pasan y cuáles no</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Regla</strong></td>
+<td style="text-align: left;">Un renglón de la lista del firewall</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Inbound / Outbound</strong></td>
+<td style="text-align: left;">Entrada / Salida</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Allow / Block</strong></td>
+<td style="text-align: left;">Permitir / Bloquear</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Puerto</strong></td>
+<td style="text-align: left;">El "timbre" de un servicio dentro de la PC</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>IP remota</strong></td>
+<td style="text-align: left;">La dirección de la <strong>otra</strong> PC</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>LocalSubnet</strong></td>
+<td style="text-align: left;">"Las PC de mi red local" (el aula)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Mínimo privilegio</strong></td>
+<td style="text-align: left;">Dar solo el permiso necesario</td>
+</tr>
+</tbody>
+</table>
+<p>¡Listo! Ahora vamos al laboratorio: el profe va a crear reglas de verdad y ustedes van a comprobar si funcionan. 🚀</p>
+<script type="module">import m from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';m.initialize({startOnLoad:true});</script>
+</body></html>

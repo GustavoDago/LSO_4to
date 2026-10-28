@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía de Actividades N.º 3: El Portero y su Lista</title><meta name="description" content="Guía de Actividades N.º 3: El Portero y su Lista — LSO 4.º Año, Módulo 4, Clase 3">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Outfit','Segoe UI',system-ui,sans-serif;max-width:920px;margin:0 auto;padding:32px 24px;line-height:1.65;color:#1e293b;background:#f8fafc;font-size:1.05rem}
+h1{color:#3730a3;border-bottom:4px solid #818cf8;padding-bottom:8px;font-weight:800}h2{color:#4338ca;margin-top:2em;font-weight:700}h3{color:#6d28d9}
+table{border-collapse:separate;border-spacing:0;width:100%;margin:1em 0;font-size:.95rem;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(30,41,59,.08)}
+th,td{border-bottom:1px solid #e2e8f0;padding:8px 12px;text-align:left}th{background:#eef2ff;color:#3730a3}
+code{background:#eef2ff;color:#4338ca;padding:1px 6px;border-radius:6px;font-family:Consolas,monospace;font-size:.9em}
+pre{background:#0f172a;color:#e2e8f0;padding:14px;border-radius:12px;overflow-x:auto}pre code{background:none;color:inherit}
+blockquote{border-left:5px solid #f59e0b;background:#fffbeb;margin:1em 0;padding:8px 16px;border-radius:0 12px 12px 0}
+.mermaid{background:#fff;padding:12px;border-radius:12px;color:inherit}
+@media print{body{max-width:none;background:#fff}pre{white-space:pre-wrap}table{box-shadow:none}}</style></head><body>
+<h1>Guía de Actividades N.º 3: El Portero y su Lista — Reglas del Firewall</h1>
+<h2>Laboratorio de Sistemas Operativos (LSO) — 4.º Año</h2>
+<h3>Módulo 4: Redes, Recursos Compartidos y Seguridad — Clase 3</h3>
+<hr />
+<ul>
+<li><strong>Estudiante(s):</strong> __________________________________________________</li>
+<li><strong>Fecha:</strong> ___ / ___ / 2026</li>
+<li><strong>PC N.º:</strong> ________</li>
+</ul>
+<hr />
+<h2>🎯 ¿Qué vas a aprender hoy?</h2>
+<ol>
+<li>Que una <strong>regla</strong> de firewall responde <strong>5 preguntas</strong>: ¿entra o sale? ¿pasa o no? ¿qué puerto? ¿quién? ¿qué programa?</li>
+<li>A <strong>pasar un pedido</strong> ("que el aula pueda entrar a mi servidor") a una <strong>ficha de regla</strong>.</li>
+<li>Que cuando un <strong>Permitir</strong> y un <strong>Bloquear</strong> chocan, <strong>gana Bloquear</strong>.</li>
+<li>A <strong>leer</strong> un comando de regla y <strong>encontrar errores</strong>.</li>
+</ol>
+<h2>🧰 Antes de empezar</h2>
+<ul>
+<li>Abrí <strong>PowerShell</strong> (Inicio → escribí <code>powershell</code> → Enter). <strong>No hace falta ser administrador.</strong></li>
+<li>Ejecutá el preparador de la clase (y otra vez si la PC se reinició):
+  <code>powershell
+  powershell -ExecutionPolicy Bypass -File .\setup_clase3_reglas.ps1</code></li>
+<li>Tené a mano el <strong>manual</strong> (<code>manual_teorico_reglas_firewall</code>) y el <strong>simulador</strong> (<code>simulador_motor_reglas.html</code>, funciona sin Internet).</li>
+</ul>
+<hr />
+<h2>⏳ FASE 0: Calentamiento (10 min)</h2>
+<p>Marcá con una ✗ la respuesta correcta:</p>
+<ol>
+<li>El firewall de Windows, <strong>por defecto</strong>, con las conexiones que <strong>entran</strong> sin permiso...
+   ☐ las deja pasar  ☐ las bloquea  ☐ pregunta al usuario</li>
+<li>En nuestra analogía, el <strong>puerto</strong> es...
+   ☐ la dirección del edificio  ☐ el portero  ☐ el timbre del departamento</li>
+<li>Si quisieras que <strong>solo</strong> las PC del aula entren a tu servidor, ¿qué le dirías al portero?</li>
+</ol>
+<hr />
+<hr />
+<h2>🔬 PARTE 1: El profe crea reglas en vivo (25 min)</h2>
+<p>El profe va a crear <strong>4 reglas</strong> en su PC. Antes y después de cada una, vas a hacer una prueba desde tu PC.</p>
+<ul>
+<li><strong>IP del profe (la proyecta en el pizarrón):</strong> ________________________</li>
+</ul>
+<p><strong>Las pruebas que vas a usar:</strong></p>
+<pre><code class="language-powershell"># ¿Puedo entrar al servidor del profe? (True = sí, False = no)
+Test-NetConnection &lt;IP_del_profe&gt; -Port 8080
+
+# ¿El profe me responde el ping?
+ping &lt;IP_del_profe&gt;
+</code></pre>
+<p>Completá la tabla (marcá o escribí):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">#</th>
+<th style="text-align: left;">Regla del profe</th>
+<th style="text-align: center;">¿Entra o sale?</th>
+<th style="text-align: center;">¿Permitir o bloquear?</th>
+<th style="text-align: center;">Puerto</th>
+<th style="text-align: center;">¿Quién?</th>
+<th style="text-align: left;">Prueba</th>
+<th style="text-align: center;">Antes</th>
+<th style="text-align: center;">Después</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Web 8080 aula</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"><code>Test-NetConnection</code></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Ping aula</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><em>(no usa)</em></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"><code>ping</code></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">Bloquear a un compañero</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><em>(todos)</em></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">El compañero elegido repite la prueba 1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">Sin curl <em>(lo prueba el profe)</em></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">El profe usa <code>curl.exe</code> y luego Chrome</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h3>🤔 Pensá y respondé</h3>
+<p><strong>a)</strong> Después de la regla 3, tu compañero bloqueado <strong>no puede entrar</strong>, aunque la regla 1 sigue diciendo que el aula sí puede. ¿Por qué? <em>(Pista: regla de oro N.º 2 y la lista del cumple 🎂)</em></p>
+<blockquote>
+<hr />
+</blockquote>
+<p><strong>b)</strong> Con la regla 4, <code>curl.exe</code> no anda pero Chrome sigue funcionando. ¿Qué pregunta de la ficha hizo posible eso?</p>
+<blockquote>
+<hr />
+</blockquote>
+<hr />
+<h2>🔬 PARTE 2: De pedido a ficha (20 min)</h2>
+<p>Sos el técnico del laboratorio y te llegan estos pedidos. Completá la <strong>ficha</strong> de cada uno. Si una pregunta no importa, poné <strong>—</strong> (que significa "cualquiera").</p>
+<p><strong>Pedido A.</strong> 🗒️ <em>"El profe tiene una página de notas en el puerto 5000. Solo las PC del aula tienen que poder entrar."</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">¿Entra o sale?</th>
+<th style="text-align: center;">¿Permitir o bloquear?</th>
+<th style="text-align: center;">Puerto</th>
+<th style="text-align: center;">¿Quién?</th>
+<th style="text-align: center;">Programa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pedido B.</strong> 🦠 <em>"La PC <code>192.168.10.99</code> tiene un virus. No tiene que poder entrar a mi PC por nada."</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">¿Entra o sale?</th>
+<th style="text-align: center;">¿Permitir o bloquear?</th>
+<th style="text-align: center;">Puerto</th>
+<th style="text-align: center;">¿Quién?</th>
+<th style="text-align: center;">Programa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pedido C.</strong> 🎮 <em>"Que el juego <code>juego.exe</code> no se pueda conectar a Internet."</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">¿Entra o sale?</th>
+<th style="text-align: center;">¿Permitir o bloquear?</th>
+<th style="text-align: center;">Puerto</th>
+<th style="text-align: center;">¿Quién?</th>
+<th style="text-align: center;">Programa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pedido D.</strong> 🏓 <em>"Que el aula me pueda hacer ping."</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">¿Entra o sale?</th>
+<th style="text-align: center;">¿Permitir o bloquear?</th>
+<th style="text-align: center;">Puerto</th>
+<th style="text-align: center;">¿Quién?</th>
+<th style="text-align: center;">Programa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h3>✍️ Completá el comando del Pedido A</h3>
+<p>Usá la tabla del manual (sección 5.1). Completá los espacios:</p>
+<pre><code class="language-text">New-NetFirewallRule -DisplayName &quot;Notas&quot; -Direction ________ -Action ________ -Protocol TCP -LocalPort ________ -RemoteAddress ________________
+</code></pre>
+<hr />
+<h2>🔬 PARTE 3: Simulador "El Portero" — 5 desafíos (30 min)</h2>
+<p>Abrí <code>simulador_motor_reglas.html</code>. Tu PC es la <strong>PC-21</strong>. Armá las reglas con el formulario (o pegando un comando) y apretá <strong>"¡Probar!"</strong>. El simulador te muestra quién pasó y quién no, y <strong>por qué</strong>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">#</th>
+<th style="text-align: left;">Desafío</th>
+<th style="text-align: center;">¿Lo superé?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Abrí el puerto 8080 para el aula</td>
+<td style="text-align: center;">☐</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Que el aula te pueda hacer ping</td>
+<td style="text-align: center;">☐</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">Lucas fue hackeado: bloquealo</td>
+<td style="text-align: center;">☐</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">Bloqueá curl.exe sin cortar Chrome</td>
+<td style="text-align: center;">☐</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">Arreglá la regla rota</td>
+<td style="text-align: center;">☐</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Puntaje final:</strong> ______ / 5 → 📸 <strong>Sacale captura</strong> para subir a Classroom.</li>
+<li>¿Cuál te costó más? ¿Por qué? ____________________________________________</li>
+</ul>
+<hr />
+<h2>🔬 PARTE 4: Detective de errores 🕵️ (10 min)</h2>
+<p>Martina quiere que la PC de al lado entre a su servidor en el puerto <strong>8080</strong>. Escribió esta regla, pero <strong>no anda</strong>:</p>
+<pre><code class="language-powershell">New-NetFirewallRule -DisplayName &quot;Mi server&quot; -Direction Outbound -Action Allow -Protocol TCP -LocalPort 8081
+</code></pre>
+<p>Encontrá los <strong>2 errores</strong> y una <strong>mejora de seguridad</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"></th>
+<th style="text-align: left;">¿Qué parte?</th>
+<th style="text-align: center;">¿Qué escribió?</th>
+<th style="text-align: center;">¿Qué debería ir?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Error 1</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: center;">Error 2</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: center;">Mejora 🛡️</td>
+<td style="text-align: left;"><em>(¿qué le falta para que no entre cualquiera?)</em></td>
+<td style="text-align: center;"><em>(nada)</em></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>🔬 PARTE 5: Espiá las reglas de tu PC 🔍 (10 min)</h2>
+<p>Mirar reglas <strong>no necesita ser administrador</strong>. Copiá estos comandos en PowerShell:</p>
+<pre><code class="language-powershell"># 1. ¿Cuántas reglas dejan ENTRAR tráfico en mi PC?
+(Get-NetFirewallRule -Direction Inbound -Action Allow -Enabled True).Count
+
+# 2. ¿Cuántas reglas BLOQUEAN la entrada?
+(Get-NetFirewallRule -Direction Inbound -Action Block -Enabled True).Count
+
+# 3. ¿Cómo están las reglas del ping?
+Get-NetFirewallRule -DisplayName &quot;*eco*&quot; | Select-Object DisplayName, Enabled, Direction, Action
+</code></pre>
+<ul>
+<li>Reglas que <strong>permiten</strong> entrar: ________  · Reglas que <strong>bloquean</strong> la entrada: ________</li>
+<li>¿Las reglas del ping están activas (<code>Enabled = True</code>)? ________ ¿Por eso nadie te podía hacer ping? ________</li>
+<li>🤔 ¿Podrías <strong>crear</strong> una regla en esta PC? ¿Por qué? ______________________________</li>
+</ul>
+<hr />
+<h2>🧹 Cierre (15 min)</h2>
+<ol>
+<li>Completá el informe que se creó en <code>%TEMP%\LSO_Redes_Clase3\informe_clase3_reglas.txt</code> (o el formulario de Classroom).</li>
+<li>Ejecutá la limpieza (copia tu informe al Escritorio):
+   <code>powershell
+   powershell -ExecutionPolicy Bypass -File .\restaurar_clase3_reglas.ps1</code></li>
+<li>¡A jugar el <strong>Kahoot de la Clase 3</strong>! 🎮 (10 preguntas)</li>
+</ol>
+<blockquote>
+<p>🏠 <strong>Desafío opcional en casa</strong> <em>(solo si tenés una PC propia con usuario administrador y permiso de un adulto)</em>: ejecutá el setup, creá la regla "Web 8080 aula" y probá entrar desde otro dispositivo de tu casa. <strong>Al terminar, ejecutá la limpieza como administrador</strong> para borrar la regla.</p>
+</blockquote>
+<script type="module">import m from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';m.initialize({startOnLoad:true});</script>
+</body></html>
